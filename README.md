@@ -26,5 +26,5 @@ To install
 git clone https://github.com/optio50/Victron_Modbus_TCP  
 cd Victron_Modbus_TCP  
 chmod +x Example.py  
-make sure you have the correct dependencies installed  
+make sure you have the correct dependencies installed  (pymodbus)
 ./Example.py  
