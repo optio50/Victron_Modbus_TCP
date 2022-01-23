@@ -16,7 +16,7 @@ Change the the instance #'s to their correct values
 
 You likely dont have the 3 temperature sensors included. Remove them or comment them out.  
 
-This file is based on a system that has victron equipment. Multiplus, Solar charger, BMV  
+This file is based on a system that has victron equipment in an ESS system. Multiplus, Solar charger, BMV  
 
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/Modbus_2022-01-18_22-58-24.png?raw=true)  
   
