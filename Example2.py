@@ -24,7 +24,7 @@ Defaults.Retries = 5
 
 Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
 Multiplus_Leds = 'y' # Y or N (case insensitive) to display Multiplus LED'S
-RefreshRate = 2      # Refresh Rate in seconds. Auto reduced to 2 seconds if LED's enabled For MQTT requests
+RefreshRate = 1      # Refresh Rate in seconds. Auto increased to 2 (from 1 second) if LED's enabled For MQTT requests
 
 # GX Device I.P Address
 ip = '192.168.20.156'
@@ -290,6 +290,12 @@ def main(stdscr):
             
             spacer()
             
+            GridSetPoint = client.read_input_registers(2700, unit=VEsystemID)
+            decoder = BinaryPayloadDecoder.fromRegisters(GridSetPoint.registers, byteorder=Endian.Big)
+            GridSetPoint = decoder.decode_16bit_int()
+            stdscr.addstr(" Grid Set Point Watts.... ",green)
+            stdscr.addstr("{:.0f} \n".format(GridSetPoint),green)
+            
             GridWatts = client.read_input_registers(820, unit=VEsystemID)
             decoder = BinaryPayloadDecoder.fromRegisters(GridWatts.registers, byteorder=Endian.Big)
             GridWatts = decoder.decode_16bit_int()
@@ -300,12 +306,6 @@ def main(stdscr):
             else:
                 stdscr.addstr("{:.0f} \n".format(GridWatts),green)
                     
-            GridSetPoint = client.read_input_registers(2700, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(GridSetPoint.registers, byteorder=Endian.Big)
-            GridSetPoint = decoder.decode_16bit_int()
-            stdscr.addstr(" Grid Set Point Watts.... ",green)
-            stdscr.addstr("{:.0f} \n".format(GridSetPoint),green)
-                    
             GridAmps = client.read_input_registers(6, unit=MultiPlusID)
             decoder = BinaryPayloadDecoder.fromRegisters(GridAmps.registers, byteorder=Endian.Big)
             GridAmps = decoder.decode_16bit_int()
@@ -313,18 +313,46 @@ def main(stdscr):
             stdscr.addstr(" Grid Amps............... ",green)
             stdscr.addstr("{:.1f} \n".format(GridAmps),green)
             
+            GridVolts = client.read_input_registers(3, unit=MultiPlusID)
+            decoder = BinaryPayloadDecoder.fromRegisters(GridVolts.registers, byteorder=Endian.Big)
+            GridVolts = decoder.decode_16bit_int()
+            GridVolts = GridVolts / 10
+            stdscr.addstr(" Grid Volts ............. ",green)
+            stdscr.addstr("{:.1f} \n".format(GridVolts),green)
+            
+            GridHZ = client.read_input_registers(9, unit=MultiPlusID)
+            decoder = BinaryPayloadDecoder.fromRegisters(GridHZ.registers, byteorder=Endian.Big)
+            GridHZ = decoder.decode_16bit_int()
+            GridHZ = GridHZ / 100
+            stdscr.addstr(" Grid Freq .............. ",green)
+            stdscr.addstr("{:.1f} \n".format(GridHZ),green)
+            
             ACoutWatts = client.read_input_registers(817, unit=VEsystemID)
             decoder = BinaryPayloadDecoder.fromRegisters(ACoutWatts.registers, byteorder=Endian.Big)
             ACoutWatts = decoder.decode_16bit_uint()
-            stdscr.addstr(" AC Load Watts........... ",green)
+            stdscr.addstr(" AC Output Watts......... ",green)
             stdscr.addstr("{:.0f} 💡 \n".format(ACoutWatts),green)
             
-            DCoutWatts = client.read_input_registers(860, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(DCoutWatts.registers, byteorder=Endian.Big)
-            DCoutWatts = decoder.decode_16bit_int()
-            stdscr.addstr(" DC Load Watts........... ",green)
-            stdscr.addstr("{:.0f} 🔋 \n".format(DCoutWatts),green)
+            ACoutAmps = client.read_input_registers(18, unit=MultiPlusID)
+            decoder = BinaryPayloadDecoder.fromRegisters(ACoutAmps.registers, byteorder=Endian.Big)
+            ACoutAmps = decoder.decode_16bit_int()
+            ACoutAmps = ACoutAmps / 10
+            stdscr.addstr(" AC Output Amps.......... ",green)
+            stdscr.addstr("{:.1f} \n".format(ACoutAmps),green)
             
+            ACoutVolts = client.read_input_registers(15, unit=MultiPlusID)
+            decoder = BinaryPayloadDecoder.fromRegisters(ACoutVolts.registers, byteorder=Endian.Big)
+            ACoutVolts = decoder.decode_16bit_int()
+            ACoutVolts = ACoutVolts / 10
+            stdscr.addstr(" AC Output Volts......... ",green)
+            stdscr.addstr("{:.0f} 🔋 \n".format(ACoutVolts),green)
+            
+            ACoutHZ = client.read_input_registers(21, unit=MultiPlusID)
+            decoder = BinaryPayloadDecoder.fromRegisters(ACoutHZ.registers, byteorder=Endian.Big)
+            ACoutHZ = decoder.decode_16bit_int()
+            ACoutHZ = ACoutHZ / 100
+            stdscr.addstr(" AC Output Freq.......... ",green)
+            stdscr.addstr("{:.0f} 🔋 \n".format(ACoutHZ),green)            
             
             GridCondition = client.read_input_registers(64, unit=MultiPlusID)
             decoder = BinaryPayloadDecoder.fromRegisters(GridCondition.registers, byteorder=Endian.Big)
