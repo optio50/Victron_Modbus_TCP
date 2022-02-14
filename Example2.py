@@ -500,7 +500,7 @@ def main(stdscr):
                 elif mains == 2:
                     stdscr.addstr(f"{'': <10}Mains       ",ltsalmon)
                     stdscr.addstr(f"🟢{'': <20}",ltsalmon | curses.A_BLINK)
-                    
+                
                 if inverter == 0:
                     stdscr.addstr("Inverting    ⚫\n",ltsalmon)
                 elif inverter == 1:
@@ -508,7 +508,7 @@ def main(stdscr):
                 elif inverter == 2:
                     stdscr.addstr("Inverting    ",ltsalmon)
                     stdscr.addstr("🟢\n",ltsalmon | curses.A_BLINK)
-                    
+                
                 if bulk == 0:
                     stdscr.addstr(f"{'': <10}Bulk        ⚫{'': <20}",ltsalmon)
                 elif bulk == 1:
@@ -530,15 +530,15 @@ def main(stdscr):
                 elif absorp == 1:
                     stdscr.addstr(f"{'': <10}Absorption  🟡{'': <20}",ltsalmon)
                 elif absorp == 2:
-                    stdscr.addstr("f{'': <10}Absorption  ",ltsalmon)
-                    stdscr.addstr("f🟡{'': <20}",ltsalmon | curses.A_BLINK)
+                    stdscr.addstr(f"{'': <10}Absorption  ",ltsalmon)
+                    stdscr.addstr(f"🟡{'': <20}",ltsalmon | curses.A_BLINK)
                 
                 if lowbatt == 0:
                     stdscr.addstr("Low Battery  ⚫\n",ltsalmon)
                 elif lowbatt == 1:
                     stdscr.addstr("Low Battery  🔴\n",ltsalmon)
                 elif lowbatt == 2:
-                    stdscr.addstr("Low Battery     ",ltsalmon)
+                    stdscr.addstr("Low Battery  ",ltsalmon)
                     stdscr.addstr("🔴\n",ltsalmon | curses.A_BLINK)
                 
                 if floatchg == 0:
@@ -554,7 +554,7 @@ def main(stdscr):
                 elif temperature == 1:
                     stdscr.addstr("Temperature  🔴\n",ltsalmon)
                 elif temperature == 2:
-                    stdscr.addstr("Temperature     ",ltsalmon)
+                    stdscr.addstr("Temperature  ",ltsalmon)
                     stdscr.addstr("🔴\n",ltsalmon | curses.A_BLINK)
                 spacer()
             else:
