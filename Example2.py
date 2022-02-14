@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+# -*- coding: utf-8 -*-
 # Modbus & mqtt must be enabled in the Vevus GX device
 
 import json
@@ -19,10 +19,8 @@ from time import strftime
 from time import gmtime
 import signal
 
-Defaults.Timeout = 25
-Defaults.Retries = 5
-
 Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+ESS_Info = 'y' # Y or N (case insensitive) to display ESS system information
 Multiplus_Leds = 'y' # Y or N (case insensitive) to display Multiplus LED'S
 RefreshRate = 1      # Refresh Rate in seconds. Auto increased to 2 (from 1 second) if LED's enabled For MQTT requests
 
@@ -41,49 +39,67 @@ BmvID = 223
 VEsystemID = 100
 
 
-
 # Local network ip address of Cerbo GX. Default port 502
 client = ModbusClient(ip, port='502')
 
+Defaults.Timeout = 25
+Defaults.Retries = 5
+
 stdscr = curses.initscr()
-curses.curs_set(False)
-curses.start_color()
-curses.use_default_colors()
+
+
+# Pathetic Progressbar :-)
+Pbar0  = " ║▒░░░░░░░░░░░░░░░░░░░║"
+Pbar10 = " ║▒▒░░░░░░░░░░░░░░░░░░║"
+Pbar20 = " ║▒▒▒▒░░░░░░░░░░░░░░░░║"
+Pbar30 = " ║▒▒▒▒▒▒░░░░░░░░░░░░░░║"
+Pbar40 = " ║▒▒▒▒▒▒▒▒░░░░░░░░░░░░║"
+Pbar50 = " ║▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░║"
+Pbar60 = " ║▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░║"
+Pbar70 = " ║▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░║"
+Pbar80 = " ║▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░║"
+Pbar90 = " ║▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░║"
+Pbar100 =" ║▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒║"
+
 
 #
 # Find More Color Numbers and Names Here.
 # https://github.com/optio50/PythonColors/blob/main/color-test.py
-curses.init_color(0, 0, 0, 0)
-curses.init_pair(100, 82, -1)  # Fluorescent Green
-curses.init_pair(101, 93, -1)  # Purple
-curses.init_pair(102, 2, -1)   # Green
-curses.init_pair(103, 226, -1) # Yellow
-curses.init_pair(104, 160, -1) # Red
-curses.init_pair(105, 37, -1)  # Cyan
-curses.init_pair(106, 202, -1) # Orange
-curses.init_pair(107, 33, -1)  # Lt Blue
-curses.init_pair(108, 21, -1)  # Blue
-curses.init_pair(109, 239, -1) # Gray
-curses.init_pair(113, 233, -1) # Gray2
-curses.init_pair(110, 197, -1) # Lt Pink
-curses.init_pair(111, 201, -1) # Pink
-curses.init_pair(112, 137, -1) # Lt Salmon
-#=======================================================================
-#=======================================================================
-fgreen = curses.color_pair(100)
-purple = curses.color_pair(101)
-green = curses.color_pair(102)
-yellow = curses.color_pair(103)
-red = curses.color_pair(104)
-cyan = curses.color_pair(105)
-orange = curses.color_pair(106)
-ltblue = curses.color_pair(107)
-blue = curses.color_pair(108)
-gray = curses.color_pair(109)
-ltpink = curses.color_pair(110)
-pink = curses.color_pair(111)
-ltsalmon = curses.color_pair(112)
-gray2 = curses.color_pair(113)
+if curses.can_change_color():
+    curses.curs_set(False)
+    curses.start_color()
+    curses.use_default_colors()    
+    curses.init_color(0, 0, 0, 0)
+    curses.init_pair(100, 82, -1)  # Fluorescent Green
+    curses.init_pair(101, 93, -1)  # Purple
+    curses.init_pair(102, 2, -1)   # Green
+    curses.init_pair(103, 226, -1) # Yellow
+    curses.init_pair(104, 160, -1) # Red
+    curses.init_pair(105, 37, -1)  # Cyan
+    curses.init_pair(106, 202, -1) # Orange
+    curses.init_pair(107, 33, -1)  # Lt Blue
+    curses.init_pair(108, 21, -1)  # Blue
+    curses.init_pair(109, 239, -1) # Gray
+    curses.init_pair(113, 233, -1) # Gray2
+    curses.init_pair(110, 197, -1) # Lt Pink
+    curses.init_pair(111, 201, -1) # Pink
+    curses.init_pair(112, 137, -1) # Lt Salmon
+    #=======================================================================
+    #=======================================================================
+    fgreen = curses.color_pair(100)
+    purple = curses.color_pair(101)
+    green = curses.color_pair(102)
+    yellow = curses.color_pair(103)
+    red = curses.color_pair(104)
+    cyan = curses.color_pair(105)
+    orange = curses.color_pair(106)
+    ltblue = curses.color_pair(107)
+    blue = curses.color_pair(108)
+    gray = curses.color_pair(109)
+    ltpink = curses.color_pair(110)
+    pink = curses.color_pair(111)
+    ltsalmon = curses.color_pair(112)
+    gray2 = curses.color_pair(113)
 
 
 def spacer():
@@ -156,25 +172,48 @@ def main(stdscr):
             decoder = BinaryPayloadDecoder.fromRegisters(BatterySOC.registers, byteorder=Endian.Big)
             BatterySOC = decoder.decode_16bit_uint()
             BatterySOC = BatterySOC / 10
-            #BatterySOC = 64
+            #BatterySOC = 9
             
-            if BatterySOC >= 90:
+            if BatterySOC <= 10:
+                BpBar = Pbar0
+                color = red
+            elif BatterySOC > 10 and BatterySOC <= 20:
+                BpBar = Pbar20
+                color = red
+            elif BatterySOC > 20 and BatterySOC <= 30:
+                BpBar = Pbar30
+                color = yellow
+            elif BatterySOC > 30 and BatterySOC <= 40:
+                BpBar = Pbar40
+                color = yellow
+            elif BatterySOC > 40 and BatterySOC <= 50:
+                BpBar = Pbar50
+                color = yellow
+            elif BatterySOC > 50 and BatterySOC <= 60:
+                BpBar = Pbar60
+                color = yellow
+            elif BatterySOC > 60 and BatterySOC <= 70:
+                BpBar = Pbar70
+                color = green
+            elif BatterySOC > 70 and BatterySOC <= 80:
+                BpBar = Pbar80
+                color = green
+            elif BatterySOC > 80 and BatterySOC <= 90:
+                BpBar = Pbar90
+                color = green
+            elif BatterySOC > 90:
+                BpBar = Pbar100
+                color = green
+            if BatterySOC >= 10:
                 stdscr.addstr(" Battery SOC............. ",cyan)
-                stdscr.addstr("{:.1f}%  ║▒▒▒▒▒▒▒▒▒▒▒▒║\n".format(BatterySOC),green | curses.A_BOLD)
-            elif BatterySOC >= 65 and BatterySOC < 90:
+                stdscr.addstr("{:.1f}% ".format(BatterySOC),color | curses.A_BOLD)
+                stdscr.addstr("🔋" + BpBar + "\n",color)
+            else:
                 stdscr.addstr(" Battery SOC............. ",cyan)
-                stdscr.addstr("{:.1f}%  ║▒▒▒▒▒▒▒▒░░░░║\n".format(BatterySOC),green)
-            elif BatterySOC >= 35 and BatterySOC < 65:
-                stdscr.addstr(" Battery SOC............. ",cyan)
-                stdscr.addstr("{:.1f}%  ║▒▒▒▒▒▒░░░░░░║\n".format(BatterySOC),yellow)
-            elif BatterySOC >= 10 and BatterySOC < 35:
-                stdscr.addstr(" Battery SOC............. ",cyan)
-                stdscr.addstr("{:.1f}%  ║▒▒▒▒░░░░░░░░║\n".format(BatterySOC),red)
-            elif BatterySOC < 10:
-                stdscr.addstr(" Battery SOC............. ",cyan)
-                stdscr.addstr("{:.1f}%".format(BatterySOC),red | curses.A_BLINK)
-                stdscr.addstr("  ║▒░░░░░░░░░░░║\n".format(BatterySOC),red)
-            
+                stdscr.addstr("{:.1f}% ".format(BatterySOC),color | curses.A_BLINK)
+                stdscr.addstr("🔋" + BpBar + "\n",color)
+                
+                
             BatteryWatts = client.read_input_registers(842, unit=VEsystemID)
             decoder = BinaryPayloadDecoder.fromRegisters(BatteryWatts.registers, byteorder=Endian.Big)
             BatteryWatts = decoder.decode_16bit_int()
@@ -199,7 +238,10 @@ def main(stdscr):
             decoder = BinaryPayloadDecoder.fromRegisters(BatteryTTG.registers, byteorder=Endian.Big)
             BatteryTTG = decoder.decode_16bit_uint()
             BatteryTTG = BatteryTTG / .01
-            BatteryTTG = timedelta(seconds = BatteryTTG)
+            if BatteryTTG == 0.0:
+                BatteryTTG = "Infinite"
+            else:
+                BatteryTTG = timedelta(seconds = BatteryTTG)
             stdscr.addstr(" Battery Time to Go...... ",cyan)
             stdscr.addstr(str(BatteryTTG) + "\n",cyan)
             
@@ -209,8 +251,29 @@ def main(stdscr):
             decoder = BinaryPayloadDecoder.fromRegisters(SolarVolts.registers, byteorder=Endian.Big)
             SolarVolts = decoder.decode_16bit_uint()
             SolarVolts = SolarVolts / 100
+            if SolarVolts <= 5:
+                SVpBar = Pbar0
+            elif SolarVolts > 10 and SolarVolts <= 20:
+                SVpBar = Pbar10
+            elif SolarVolts > 20 and SolarVolts <= 30:
+                SVpBar = Pbar20
+            elif SolarVolts > 30 and SolarVolts <= 40:
+                SVpBar = Pbar30
+            elif SolarVolts > 40 and SolarVolts <= 50:
+                SVpBar = Pbar40
+            elif SolarVolts > 50 and SolarVolts <= 60:
+                SVpBar = Pbar50
+            elif SolarVolts > 60 and SolarVolts <= 70:
+                SVpBar = Pbar60
+            elif SolarVolts > 70 and SolarVolts <= 80:
+                SVpBar = Pbar70
+            elif SolarVolts > 80 and SolarVolts <= 90:
+                SVpBar = Pbar80
+            elif SolarVolts > 90:
+                SVpBar = Pbar100
             stdscr.addstr(" PV Volts................ ",orange)
-            stdscr.addstr("{:.2f}".format(SolarVolts) + "\n",orange)
+            stdscr.addstr("{:.2f}".format(SolarVolts) + SVpBar + "\n",orange)
+            
             # Broken register 777 in GX firmware 2.81
             try:
                 SolarAmps = client.read_input_registers(777, unit=SolarChargerID)
@@ -236,23 +299,23 @@ def main(stdscr):
             ###################################
             elif SolarWatts > 49 and SolarWatts < 100:
                 stdscr.addstr(" PV Watts ............... ",orange)
-                stdscr.addstr("{:.0f} 🌞\n".format(SolarWatts),orange)
+                stdscr.addstr("{:.0f}   ║🌞░░░░░░░░░░░░░░░░║\n".format(SolarWatts),orange)
             elif SolarWatts > 99 and SolarWatts < 200:
                 stdscr.addstr(" PV Watts ............... ",orange)
-                stdscr.addstr("{:.0f} 🌞🌞\n".format(SolarWatts),orange)
+                stdscr.addstr("{:.0f}   ║🌞  🌞░░░░░░░░░░░░║\n".format(SolarWatts),orange)
             elif SolarWatts > 199 and SolarWatts < 300:
                 stdscr.addstr(" PV Watts ............... ",orange)
-                stdscr.addstr("{:.0f} 🌞🌞🌞\n".format(SolarWatts),orange)
+                stdscr.addstr("{:.0f}   ║🌞  🌞  🌞░░░░░░░░║\n".format(SolarWatts),orange)
             elif SolarWatts > 299 and SolarWatts < 350:
                 stdscr.addstr(" PV Watts ............... ",orange)
-                stdscr.addstr("{:.0f} 🌞🌞🌞🌞\n".format(SolarWatts),orange)
+                stdscr.addstr("{:.0f}   ║🌞  🌞  🌞  🌞░░░░║\n".format(SolarWatts),orange)
             elif SolarWatts > 349:
                 stdscr.addstr(" PV Watts ............... ",orange)
-                stdscr.addstr("{:.0f} 🌞🌞🌞🌞🌞\n".format(SolarWatts),orange)
+                stdscr.addstr("{:.0f}   ║🌞  🌞  🌞  🌞  🌞║\n".format(SolarWatts),orange)
             else:
                 stdscr.addstr(" PV Watts ............... ",orange)
-                stdscr.addstr("{:.0f} ⛅\n".format(SolarWatts),orange)
-                        
+                stdscr.addstr("{:.0f}   ║⛅░░░░░░░░░░░░░░░░║\n".format(SolarWatts),orange)
+
             MaxSolarWatts = client.read_input_registers(785, unit=SolarChargerID)
             decoder = BinaryPayloadDecoder.fromRegisters(MaxSolarWatts.registers, byteorder=Endian.Big)
             MaxSolarWatts = decoder.decode_16bit_uint()
@@ -331,7 +394,7 @@ def main(stdscr):
             decoder = BinaryPayloadDecoder.fromRegisters(ACoutWatts.registers, byteorder=Endian.Big)
             ACoutWatts = decoder.decode_16bit_uint()
             stdscr.addstr(" AC Output Watts......... ",green)
-            stdscr.addstr("{:.0f} 💡 \n".format(ACoutWatts),green)
+            stdscr.addstr("{:.0f} \n".format(ACoutWatts),green)
             
             ACoutAmps = client.read_input_registers(18, unit=MultiPlusID)
             decoder = BinaryPayloadDecoder.fromRegisters(ACoutAmps.registers, byteorder=Endian.Big)
@@ -345,14 +408,14 @@ def main(stdscr):
             ACoutVolts = decoder.decode_16bit_int()
             ACoutVolts = ACoutVolts / 10
             stdscr.addstr(" AC Output Volts......... ",green)
-            stdscr.addstr("{:.0f} 🔋 \n".format(ACoutVolts),green)
+            stdscr.addstr("{:.1f} \n".format(ACoutVolts),green)
             
             ACoutHZ = client.read_input_registers(21, unit=MultiPlusID)
             decoder = BinaryPayloadDecoder.fromRegisters(ACoutHZ.registers, byteorder=Endian.Big)
             ACoutHZ = decoder.decode_16bit_int()
             ACoutHZ = ACoutHZ / 100
             stdscr.addstr(" AC Output Freq.......... ",green)
-            stdscr.addstr("{:.0f} 🔋 \n".format(ACoutHZ),green)            
+            stdscr.addstr("{:.1f} \n".format(ACoutHZ),green)            
             
             GridCondition = client.read_input_registers(64, unit=MultiPlusID)
             decoder = BinaryPayloadDecoder.fromRegisters(GridCondition.registers, byteorder=Endian.Big)
@@ -374,54 +437,55 @@ def main(stdscr):
             elif VEbusStatus == 5:
                 stdscr.addstr(" System State............ Float Charging\n",ltblue)
             
-            ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
-            ESSsocLimitUser = decoder.decode_16bit_uint()
-            ESSsocLimitUser = ESSsocLimitUser / 10
-            stdscr.addstr(" ESS SOC Limit (User).... ",ltblue)
-            stdscr.addstr("{:.0f}% - Unless Grid Fails \n".format(ESSsocLimitUser),ltblue)
-           
-           # Requires Newer GX Firmware such as 2.82~4 or >
-            try:
-                ESSsocLimitDynamic = client.read_input_registers(2903, unit=VEsystemID)
-                decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitDynamic.registers, byteorder=Endian.Big)
-                ESSsocLimitDynamic = decoder.decode_16bit_uint()
-                ESSsocLimitDynamic = ESSsocLimitDynamic / 10
-                stdscr.addstr(" ESS SOC Limit (Dynamic). ",ltblue)
-                stdscr.addstr("{:.0f}%\n".format(ESSsocLimitDynamic),ltblue)
-            
-            except AttributeError:
-                stdscr.addstr(" ESS SOC Limit (Dynamic). No Value, Firmware requires. Venus OS > v2.82~4",ltblue)
-            
-            ESSbatteryLifeState = client.read_input_registers(2900, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ESSbatteryLifeState.registers, byteorder=Endian.Big)
-            ESSbatteryLifeState = decoder.decode_16bit_uint()
-            if ESSbatteryLifeState == 0:
-                stdscr.addstr(" ESS Battery Life State.. Battery Life Disabled\n",ltblue)
-            elif ESSbatteryLifeState == 1:
-                stdscr.addstr(" ESS Battery Life State.. Restarting\n",ltblue)
-            elif ESSbatteryLifeState == 2:
-                stdscr.addstr(" ESS Battery Life State.. Self-consumption\n",ltblue)
-            elif ESSbatteryLifeState == 3:
-                stdscr.addstr(" ESS Battery Life State.. Self consumption, SoC exceeds 85%\n",ltblue)
-            elif ESSbatteryLifeState == 4:
-                stdscr.addstr(" ESS Battery Life State.. Self consumption, SoC at 100%\n",ltblue)
-            elif ESSbatteryLifeState == 5:
-                stdscr.addstr(" ESS Battery Life State.. SoC below BatteryLife dynamic SoC limit\n",ltblue)
-            elif ESSbatteryLifeState == 6:
-                stdscr.addstr(" ESS Battery Life State.. SoC has been below SoC limit for more than 24 hours.\n\t\t\t  Slow Charging battery\n",ltblue)
-            elif ESSbatteryLifeState == 7:
-                stdscr.addstr(" ESS Battery Life State.. Multi is in sustain mode\n",ltblue)
-            elif ESSbatteryLifeState == 8:
-                stdscr.addstr(" ESS Battery Life State.. Recharge, SOC dropped 5% or more below MinSOC\n",ltblue)
-            elif ESSbatteryLifeState == 9:
-                stdscr.addstr(" ESS Battery Life State.. Keep batteries charged mode enabled\n",ltblue)
-            elif ESSbatteryLifeState == 10:
-                stdscr.addstr(" ESS Battery Life State.. Self consumption, SoC at or above minimum SoC\n",ltblue)
-            elif ESSbatteryLifeState == 11:
-                stdscr.addstr(" ESS Battery Life State.. Self consumption, SoC is below minimum SoC\n",ltblue)
-            elif ESSbatteryLifeState == 12:
-                stdscr.addstr(" ESS Battery Life State.. Recharge, SOC dropped 5% or more below minimum SoC\n",ltblue)
+            if ESS_Info == "Y" or Analog_Inputs == "y":
+                ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
+                decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
+                ESSsocLimitUser = decoder.decode_16bit_uint()
+                ESSsocLimitUser = ESSsocLimitUser / 10
+                stdscr.addstr(" ESS SOC Limit (User).... ",ltblue)
+                stdscr.addstr("{:.0f}% - Unless Grid Fails \n".format(ESSsocLimitUser),ltblue)
+               
+               # Requires Newer GX Firmware such as 2.82~4 or >
+                try:
+                    ESSsocLimitDynamic = client.read_input_registers(2903, unit=VEsystemID)
+                    decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitDynamic.registers, byteorder=Endian.Big)
+                    ESSsocLimitDynamic = decoder.decode_16bit_uint()
+                    ESSsocLimitDynamic = ESSsocLimitDynamic / 10
+                    stdscr.addstr(" ESS SOC Limit (Dynamic). ",ltblue)
+                    stdscr.addstr("{:.0f}%\n".format(ESSsocLimitDynamic),ltblue)
+                
+                except AttributeError:
+                    stdscr.addstr(" ESS SOC Limit (Dynamic). No Value, Firmware requires. Venus OS > v2.82~4",ltblue)
+                
+                ESSbatteryLifeState = client.read_input_registers(2900, unit=VEsystemID)
+                decoder = BinaryPayloadDecoder.fromRegisters(ESSbatteryLifeState.registers, byteorder=Endian.Big)
+                ESSbatteryLifeState = decoder.decode_16bit_uint()
+                if ESSbatteryLifeState == 0:
+                    stdscr.addstr(" ESS Battery Life State.. Battery Life Disabled\n",ltblue)
+                elif ESSbatteryLifeState == 1:
+                    stdscr.addstr(" ESS Battery Life State.. Restarting\n",ltblue)
+                elif ESSbatteryLifeState == 2:
+                    stdscr.addstr(" ESS Battery Life State.. Self-consumption\n",ltblue)
+                elif ESSbatteryLifeState == 3:
+                    stdscr.addstr(" ESS Battery Life State.. Self consumption, SoC exceeds 85%\n",ltblue)
+                elif ESSbatteryLifeState == 4:
+                    stdscr.addstr(" ESS Battery Life State.. Self consumption, SoC at 100%\n",ltblue)
+                elif ESSbatteryLifeState == 5:
+                    stdscr.addstr(" ESS Battery Life State.. SoC below BatteryLife dynamic SoC limit\n",ltblue)
+                elif ESSbatteryLifeState == 6:
+                    stdscr.addstr(" ESS Battery Life State.. SoC has been below SoC limit for more than 24 hours.\n\t\t\t  Slow Charging battery\n",ltblue)
+                elif ESSbatteryLifeState == 7:
+                    stdscr.addstr(" ESS Battery Life State.. Multi is in sustain mode\n",ltblue)
+                elif ESSbatteryLifeState == 8:
+                    stdscr.addstr(" ESS Battery Life State.. Recharge, SOC dropped 5% or more below MinSOC\n",ltblue)
+                elif ESSbatteryLifeState == 9:
+                    stdscr.addstr(" ESS Battery Life State.. Keep batteries charged mode enabled\n",ltblue)
+                elif ESSbatteryLifeState == 10:
+                    stdscr.addstr(" ESS Battery Life State.. Self consumption, SoC at or above minimum SoC\n",ltblue)
+                elif ESSbatteryLifeState == 11:
+                    stdscr.addstr(" ESS Battery Life State.. Self consumption, SoC is below minimum SoC\n",ltblue)
+                elif ESSbatteryLifeState == 12:
+                    stdscr.addstr(" ESS Battery Life State.. Recharge, SOC dropped 5% or more below minimum SoC\n",ltblue)
             
             if Multiplus_Leds == "Y" or Multiplus_Leds == "y":
                 
