@@ -22,7 +22,7 @@ If you dont have ESS enabled change the variable to turn it on and off.
 If you use Example2.py you also need to adjust the portal id value. read the comment on how to find your portal id.  
 This number is needed even with no internet access as its the name of your venus device.  
   
-Examply.py should work on a very basic system such as the venus GX device itself. Minimal requirements.  
+Examply.py should work on a very basic system such as running on the venus GX device itself. Minimal requirements.  
 Example2.py has some additional requirements and should be run on your local nix* machine.
 
 Example.py requires modbus enabled on the GX device  
