@@ -2,8 +2,18 @@
 # -*- coding: utf-8 -*-
 # Modbus & mqtt must be enabled in the Vevus GX device
 
+# Very hackish key detection :-( sorry
+# but hey, it works :-)
+
+    # M to Turn Multiplus LED's on/off
+    # E to Turn ESS display on/off
+    # A to Turn Temperature Analog inputs on/off
+    # Q to Exit
+
 import json
 import curses
+from pynput import keyboard
+from pynput.keyboard import Key, Listener
 from curses import wrapper
 import paho.mqtt.subscribe as subscribe
 from pymodbus.constants import Defaults
@@ -18,6 +28,9 @@ import time
 from time import strftime
 from time import gmtime
 import signal
+
+listener = None
+cExit = 'n'
 
 Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
 ESS_Info = 'y' # Y or N (case insensitive) to display ESS system information
@@ -46,6 +59,7 @@ Defaults.Timeout = 25
 Defaults.Retries = 5
 
 stdscr = curses.initscr()
+stdscr.nodelay(True)
 
 
 # Pathetic Progressbar :-)
@@ -68,7 +82,7 @@ Pbar100 =" ║▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒║"
 if curses.can_change_color():
     curses.curs_set(False)
     curses.start_color()
-    curses.use_default_colors()    
+    curses.use_default_colors()
     curses.init_color(0, 0, 0, 0)
     curses.init_pair(100, 82, -1)  # Fluorescent Green
     curses.init_pair(101, 93, -1)  # Purple
@@ -112,15 +126,62 @@ def clean_exit():
     stdscr.keypad(False)
     curses.echo()
     curses.endwin()
+    curses.flushinp()
     sys.exit(0)
+
+def show(key):
+    # M to Turn Multiplus LED's on/off
+    # E to Turn ESS display on/off
+    # A to Turn Temperature Analog inputs on/off
+    # Q to Exit
+    try:
+        global Multiplus_Leds
+        global ESS_Info
+        global Analog_Inputs
+        global cExit
+        if key.char == 'm':
+            if Multiplus_Leds == 'y':
+                Multiplus_Leds = 'n'
+            elif Multiplus_Leds == 'n':
+                Multiplus_Leds = 'y'
+        if key.char == 'e':
+            if ESS_Info == 'y':
+                ESS_Info = 'n'
+            elif ESS_Info == 'n':
+                ESS_Info = 'y'
+        if key.char == 'a':
+            if Analog_Inputs == 'y':
+                Analog_Inputs = 'n'
+            elif Analog_Inputs == 'n':
+                Analog_Inputs = 'y'
+        if key.char == 'q':
+            cExit = 'y'
+            Listener.StopException
+    
+    except AttributeError:
+        pass
+
 
 
 def main(stdscr):
     
     while True:
-            
+        
+        
+        # Collect all event until released
+        #with Listener(on_press = show) as listener:
         # MQTT subscribe to get LED values on the Multiplus
         # The LEDS are not available on ModBusTCP AFAIK
+        global listener
+        global cExit
+        
+        if listener == None:  
+            listener = Listener(on_press = show,suppress=False)
+            listener.start()
+        
+        if cExit == 'y':
+            clean_exit()
+            
         if Multiplus_Leds == "Y" or Multiplus_Leds == "y":
             
             msg = subscribe.simple("N/"+VRMid+"/vebus/276/Leds/Mains", hostname=ip)
@@ -251,7 +312,7 @@ def main(stdscr):
             decoder = BinaryPayloadDecoder.fromRegisters(SolarVolts.registers, byteorder=Endian.Big)
             SolarVolts = decoder.decode_16bit_uint()
             SolarVolts = SolarVolts / 100
-            if SolarVolts <= 5:
+            if SolarVolts <= 10:
                 SVpBar = Pbar0
             elif SolarVolts > 10 and SolarVolts <= 20:
                 SVpBar = Pbar10
@@ -437,7 +498,7 @@ def main(stdscr):
             elif VEbusStatus == 5:
                 stdscr.addstr(" System State............ Float Charging\n",ltblue)
             
-            if ESS_Info == "Y" or Analog_Inputs == "y":
+            if ESS_Info == "Y" or ESS_Info == "y":
                 ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
                 decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
                 ESSsocLimitUser = decoder.decode_16bit_uint()
@@ -605,18 +666,19 @@ def main(stdscr):
             # ### End Cerbo GX Analog Temperature Inputs   ##
             # ############################################### 
             
-            stdscr.addstr("\nCtrl-C to Exit",gray2)
+            stdscr.addstr("\nCtrl-C or q to Exit",gray2)
+            #stdscr.noutrefresh()
             stdscr.refresh()
+            stdscr.erase()
             if Multiplus_Leds == "Y" or Multiplus_Leds == "y" and RefreshRate == 1:
                 time.sleep(2)
             else:
                 time.sleep(RefreshRate)
-            stdscr.erase()
-            
+    
+        
         except AttributeError:
             continue
-            
+        
         except KeyboardInterrupt:
             clean_exit()
 wrapper(main)
-
