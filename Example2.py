@@ -2,24 +2,26 @@
 # -*- coding: utf-8 -*-
 # Modbus & mqtt must be enabled in the Venus GX device
 
-# Very hackish key detection :-( sorry
-# but hey, it works :-)
 
     # M to Turn Multiplus LED's on/off
     # E to Turn ESS display on/off
     # A to Turn Analog inputs (Temperature) on/off
     # Q to Exit
 
+
 import json
 import curses
-from pynput import keyboard
-from pynput.keyboard import Key, Listener
 from curses import wrapper
 import paho.mqtt.subscribe as subscribe
 from pymodbus.constants import Defaults
 from pymodbus.constants import Endian
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.payload import BinaryPayloadDecoder
+################
+import argparse
+import struct
+from pymodbus.client.sync import ModbusTcpClient
+################
 from datetime import datetime
 from datetime import timedelta
 import sys
@@ -35,7 +37,7 @@ cExit = 'n'
 Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
 ESS_Info = 'y' # Y or N (case insensitive) to display ESS system information
 Multiplus_Leds = 'y' # Y or N (case insensitive) to display Multiplus LED'S
-RefreshRate = 1      # Refresh Rate in seconds. Auto increased to 2 (from 1 second) if LED's enabled For MQTT requests
+RefreshRate = 1.5      # Refresh Rate in seconds. Auto increased to 2 (from 1 second) if LED's enabled For MQTT requests
 
 # GX Device I.P Address
 ip = '192.168.20.156'
@@ -116,6 +118,9 @@ if curses.can_change_color():
     gray2 = curses.color_pair(113)
 
 
+
+
+
 def spacer():
     stdscr.addstr("="*80 + "\n",gray)
 
@@ -129,58 +134,15 @@ def clean_exit():
     curses.flushinp()
     sys.exit(0)
 
-def show(key):
-    # M to Turn Multiplus LED's display on/off
-    # E to Turn ESS display on/off
-    # A to Turn Temperature Analog inputs display on/off
-    # Q to Exit
-    try:
-        global Multiplus_Leds
-        global ESS_Info
-        global Analog_Inputs
-        global cExit
-        if key.char == 'm':
-            if Multiplus_Leds == 'y':
-                Multiplus_Leds = 'n'
-            elif Multiplus_Leds == 'n':
-                Multiplus_Leds = 'y'
-        if key.char == 'e':
-            if ESS_Info == 'y':
-                ESS_Info = 'n'
-            elif ESS_Info == 'n':
-                ESS_Info = 'y'
-        if key.char == 'a':
-            if Analog_Inputs == 'y':
-                Analog_Inputs = 'n'
-            elif Analog_Inputs == 'n':
-                Analog_Inputs = 'y'
-        if key.char == 'q':
-            cExit = 'y'
-            Listener.StopException
-
-    except AttributeError:
-        pass
-
-
 
 def main(stdscr):
+    stdscr.nodelay(True)
 
     while True:
-
-
-        # Collect all event until released
-        #with Listener(on_press = show) as listener:
-        # MQTT subscribe to get LED values on the Multiplus
-        # The LEDS are not available on ModBusTCP AFAIK
-        global listener
-        global cExit
-
-        if listener == None:
-            listener = Listener(on_press = show,suppress=False)
-            listener.start()
-
-        if cExit == 'y':
-            clean_exit()
+        
+        
+        stdscr.clear()
+        
 
         if Multiplus_Leds == "Y" or Multiplus_Leds == "y":
 
@@ -502,10 +464,14 @@ def main(stdscr):
                 ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
                 decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
                 ESSsocLimitUser = decoder.decode_16bit_uint()
+                ESSsocLimitUser_W = ESSsocLimitUser # Global variable to be used in the on press function
                 ESSsocLimitUser = ESSsocLimitUser / 10
                 stdscr.addstr(" ESS SOC Limit (User).... ",ltblue)
-                stdscr.addstr("{:.0f}% - Unless Grid Fails \n".format(ESSsocLimitUser),ltblue)
-
+                stdscr.addstr("{:.0f}% - Unless Grid Fails  ".format(ESSsocLimitUser),ltblue)
+                stdscr.addstr("[ and ] To Change Value \n",fgreen) 
+                #stdscr.addstr(str(ESSsocLimitUser_P)+"\n",pink)
+                #stdscr.addstr(str(ESSsocLimitUser_M)+"\n",pink)
+                
                # Requires Newer GX Firmware such as 2.82~4 or >
                 try:
                     ESSsocLimitDynamic = client.read_input_registers(2903, unit=VEsystemID)
@@ -666,17 +632,27 @@ def main(stdscr):
             # ### End Cerbo GX Analog Temperature Inputs   ##
             # ###############################################
 
-            stdscr.addstr(" M to Turn Multiplus LED's on/off\n",gray2)
-            stdscr.addstr(" E to Turn ESS display on/off\n",gray2)
-            stdscr.addstr(" A to Turn Analog inputs (Temperature) on/off\n",gray2)
-            stdscr.addstr(" Q or Ctrl-C to Quit",gray2)
-            stdscr.refresh()
-            stdscr.erase()
-            if Multiplus_Leds == "Y" or Multiplus_Leds == "y" and RefreshRate == 1:
-                time.sleep(1.5)
-            else:
-                time.sleep(RefreshRate)
-
+            stdscr.addstr(" M Multiplus LED's on/off\n",gray2)
+            stdscr.addstr(" E ESS display on/off\n",gray2)
+            stdscr.addstr(" A Analog inputs Temperature on/off\n",gray2)
+            stdscr.addstr(" Q Quit or Ctrl-C",gray2)
+            
+            
+            c = stdscr.getch()
+            
+            if c == ord('['):
+                client.write_registers(address=2901, values=ESSsocLimitUser_W - 100, unit=100)
+            elif c == ord(']'):
+                client.write_registers(address=2901, values=ESSsocLimitUser_W + 100, unit=100)
+            elif c == ord('q'):
+                clean_exit()
+            
+            
+            curses.flushinp()
+            time.sleep(RefreshRate)
+        
+        except curses.error:
+            pass
 
         except AttributeError:
             continue
