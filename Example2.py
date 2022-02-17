@@ -31,13 +31,8 @@ from time import strftime
 from time import gmtime
 import signal
 
-listener = None
-cExit = 'n'
 
-Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-ESS_Info = 'y' # Y or N (case insensitive) to display ESS system information
-Multiplus_Leds = 'y' # Y or N (case insensitive) to display Multiplus LED'S
-RefreshRate = 1.5      # Refresh Rate in seconds. Auto increased to 2 (from 1 second) if LED's enabled For MQTT requests
+RefreshRate = 1      # Refresh Rate in seconds. Auto increased to 1.5 (from 1 second) if LED's enabled For MQTT requests
 
 # GX Device I.P Address
 ip = '192.168.20.156'
@@ -136,7 +131,12 @@ def clean_exit():
 
 
 def main(stdscr):
+        
     stdscr.nodelay(True)
+    
+    Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+    ESS_Info = 'y' # Y or N (case insensitive) to display ESS system information
+    Multiplus_Leds = 'y' # Y or N (case insensitive) to display Multiplus LED'S
 
     while True:
         
@@ -640,16 +640,36 @@ def main(stdscr):
             
             c = stdscr.getch()
             
+            # Detect Key Press
             if c == ord('['):
                 client.write_registers(address=2901, values=ESSsocLimitUser_W - 100, unit=100)
             elif c == ord(']'):
                 client.write_registers(address=2901, values=ESSsocLimitUser_W + 100, unit=100)
             elif c == ord('q'):
                 clean_exit()
+            elif c == ord('e'):
+                if ESS_Info == 'y':
+                    ESS_Info = 'n'
+                else:
+                    ESS_Info = 'y'
+            elif c == ord('m'): 
+                if Multiplus_Leds == 'y':
+                    Multiplus_Leds = 'n'
+                else:
+                    Multiplus_Leds = 'y'
+            elif c == ord('a'): 
+                if Analog_Inputs == 'y':
+                    Analog_Inputs = 'n'
+                else:
+                    Analog_Inputs = 'y'
+            
             
             
             curses.flushinp()
-            time.sleep(RefreshRate)
+            if Multiplus_Leds == 'y' and RefreshRate == 1:
+                time.sleep(1.5)
+            else:
+                time.sleep(RefreshRate)
         
         except curses.error:
             pass
