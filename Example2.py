@@ -91,10 +91,11 @@ if curses.can_change_color():
     curses.init_pair(107, 33, -1)  # Lt Blue
     curses.init_pair(108, 21, -1)  # Blue
     curses.init_pair(109, 239, -1) # Gray
-    curses.init_pair(113, 233, -1) # Gray2
     curses.init_pair(110, 197, -1) # Lt Pink
     curses.init_pair(111, 201, -1) # Pink
     curses.init_pair(112, 137, -1) # Lt Salmon
+    curses.init_pair(113, 233, -1) # Gray2
+    curses.init_pair(114, 178, -1) # gold_3b
     #=======================================================================
     #=======================================================================
     fgreen = curses.color_pair(100)
@@ -111,7 +112,7 @@ if curses.can_change_color():
     pink = curses.color_pair(111)
     ltsalmon = curses.color_pair(112)
     gray2 = curses.color_pair(113)
-
+    gold = curses.color_pair(114)
 
 
 
@@ -131,9 +132,8 @@ def clean_exit():
 
 
 def main(stdscr):
-        
-    stdscr.nodelay(True)
     
+    stdscr.nodelay(True)
     Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
     ESS_Info = 'y' # Y or N (case insensitive) to display ESS system information
     Multiplus_Leds = 'y' # Y or N (case insensitive) to display Multiplus LED'S
@@ -380,8 +380,9 @@ def main(stdscr):
             decoder = BinaryPayloadDecoder.fromRegisters(GridSetPoint.registers, byteorder=Endian.Big)
             GridSetPoint = decoder.decode_16bit_int()
             stdscr.addstr(" Grid Set Point Watts.... ",green)
-            stdscr.addstr("{:.0f} \n".format(GridSetPoint),green)
-
+            stdscr.addstr("{:.0f} ".format(GridSetPoint),green)
+            stdscr.addstr(f"{'': <20} (↑) or (↓) Arrows To Change Value\n",fgreen)
+            
             GridWatts = client.read_input_registers(820, unit=VEsystemID)
             decoder = BinaryPayloadDecoder.fromRegisters(GridWatts.registers, byteorder=Endian.Big)
             GridWatts = decoder.decode_16bit_int()
@@ -447,7 +448,19 @@ def main(stdscr):
                 stdscr.addstr(" Grid Condition.......... OK 🆗\n",green)
             elif GridCondition == 1:
                 stdscr.addstr(" Grid Condition ......... Grid LOST ❌\n",green | curses.A_BLINK)
-
+            
+            MPswitch = client.read_input_registers(33, unit=MultiPlusID)
+            decoder = BinaryPayloadDecoder.fromRegisters(MPswitch.registers, byteorder=Endian.Big)
+            MPswitch = decoder.decode_16bit_uint()
+            if MPswitch == 1:
+                MPswitch = "Charger Only"
+            elif MPswitch == 2:
+                MPswitch = "Inverter Only"
+            elif MPswitch == 3:
+                MPswitch = "ON"
+            elif MPswitch == 4:
+                MPswitch = "OFF"
+            
             spacer()
 
             VEbusStatus = client.read_input_registers(31, unit=MultiPlusID)
@@ -468,9 +481,8 @@ def main(stdscr):
                 ESSsocLimitUser = ESSsocLimitUser / 10
                 stdscr.addstr(" ESS SOC Limit (User).... ",ltblue)
                 stdscr.addstr("{:.0f}% - Unless Grid Fails  ".format(ESSsocLimitUser),ltblue)
-                stdscr.addstr("[ and ] To Change Value \n",fgreen) 
-                #stdscr.addstr(str(ESSsocLimitUser_P)+"\n",pink)
-                #stdscr.addstr(str(ESSsocLimitUser_M)+"\n",pink)
+                stdscr.addstr("(←) or (→) Arrows To Change Value \n",fgreen) 
+                
                 
                # Requires Newer GX Firmware such as 2.82~4 or >
                 try:
@@ -513,7 +525,10 @@ def main(stdscr):
                     stdscr.addstr(" ESS Battery Life State.. Self consumption, SoC is below minimum SoC\n",ltblue)
                 elif ESSbatteryLifeState == 12:
                     stdscr.addstr(" ESS Battery Life State.. Recharge, SOC dropped 5% or more below minimum SoC\n",ltblue)
-
+                spacer()
+                stdscr.addstr(" Page-UP Toggle's ESS Optimized (With Battery Life) & Keep Batteries Charged Mode\n",gold)
+                
+                
             if Multiplus_Leds == "Y" or Multiplus_Leds == "y":
 
                 spacer()
@@ -583,6 +598,7 @@ def main(stdscr):
                 elif temperature == 2:
                     stdscr.addstr("Temperature  ",ltsalmon)
                     stdscr.addstr("🔴\n",ltsalmon | curses.A_BLINK)
+                stdscr.addstr(f"{'': <20}Multiplus Switch Position  {MPswitch}\n",ltsalmon)
                 spacer()
             else:
                 spacer()
@@ -641,10 +657,10 @@ def main(stdscr):
             c = stdscr.getch()
             
             # Detect Key Press
-            if c == ord('['):
-                client.write_registers(address=2901, values=ESSsocLimitUser_W - 100, unit=100)
-            elif c == ord(']'):
-                client.write_registers(address=2901, values=ESSsocLimitUser_W + 100, unit=100)
+            if c == curses.KEY_LEFT:
+                client.write_registers(address=2901, values=ESSsocLimitUser_W - 100, unit=VEsystemID)
+            elif c == curses.KEY_RIGHT:
+                client.write_registers(address=2901, values=ESSsocLimitUser_W + 100, unit=VEsystemID)
             elif c == ord('q'):
                 clean_exit()
             elif c == ord('e'):
@@ -662,8 +678,18 @@ def main(stdscr):
                     Analog_Inputs = 'n'
                 else:
                     Analog_Inputs = 'y'
+            elif c == curses.KEY_UP:
+                client.write_registers(address=2700, values=GridSetPoint + 10, unit=VEsystemID)
+            elif c == curses.KEY_DOWN:
+                client.write_registers(address=2700, values=GridSetPoint - 10, unit=VEsystemID)
             
-            
+            elif c == curses.KEY_PPAGE: # Page UP
+                if ESSbatteryLifeState != 9:
+                    # 9: 'Keep batteries charged' mode enabled
+                    client.write_registers(address=2900, values=9, unit=VEsystemID)
+                else:
+                    #1:  Change the ESS mode to "Optimized (with BatteryLife)"
+                    client.write_registers(address=2900, values=1, unit=VEsystemID)
             
             curses.flushinp()
             if Multiplus_Leds == 'y' and RefreshRate == 1:
