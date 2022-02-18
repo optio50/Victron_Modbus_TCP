@@ -29,7 +29,7 @@ import os
 import time
 from time import strftime
 from time import gmtime
-import signal
+#import signal
 
 
 RefreshRate = 1      # Refresh Rate in seconds. Auto increased to 1.5 (from 1 second) if LED's enabled For MQTT requests
@@ -37,8 +37,10 @@ RefreshRate = 1      # Refresh Rate in seconds. Auto increased to 1.5 (from 1 se
 # GX Device I.P Address
 ip = '192.168.20.156'
 
+# MQTT Request's
 # VRM Portal ID from GX device. Not needed if Multiplus LEDS are not enabled
-# Menu -->> settings -->> "VRM Online Portal -->> VRM Portal ID"
+# This ID is needed even with no internet access as its the name of your venus device.
+# Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
 VRMid = "d41243d31a90"
 
 # Instance #'s from Cerbo GX and cross referenced to the unit ID in the Victron TCP-MODbus register xls file Tab #2.
@@ -96,6 +98,7 @@ if curses.can_change_color():
     curses.init_pair(112, 137, -1) # Lt Salmon
     curses.init_pair(113, 233, -1) # Gray2
     curses.init_pair(114, 178, -1) # gold_3b
+    curses.init_pair(115, 236, -1) # gray_19
     #=======================================================================
     #=======================================================================
     fgreen = curses.color_pair(100)
@@ -113,12 +116,17 @@ if curses.can_change_color():
     ltsalmon = curses.color_pair(112)
     gray2 = curses.color_pair(113)
     gold = curses.color_pair(114)
+    gray19 = curses.color_pair(115)
 
 
 
 
 def spacer():
     stdscr.addstr("="*80 + "\n",gray)
+    
+    
+def spacer2():
+    stdscr.addstr("—"*80 + "\n",gray)
 
 
 def clean_exit():
@@ -134,9 +142,9 @@ def clean_exit():
 def main(stdscr):
     
     stdscr.nodelay(True)
-    Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-    ESS_Info = 'y' # Y or N (case insensitive) to display ESS system information
-    Multiplus_Leds = 'y' # Y or N (case insensitive) to display Multiplus LED'S
+    Analog_Inputs = 'Y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+    ESS_Info = 'Y' # Y or N (case insensitive) to display ESS system information
+    Multiplus_Leds = 'Y' # Y or N (case insensitive) to display Multiplus LED'S
 
     while True:
         
@@ -144,7 +152,7 @@ def main(stdscr):
         stdscr.clear()
         
 
-        if Multiplus_Leds == "Y" or Multiplus_Leds == "y":
+        if Multiplus_Leds.lower() == "y":
 
             msg = subscribe.simple("N/"+VRMid+"/vebus/276/Leds/Mains", hostname=ip)
             data = json.loads(msg.payload)
@@ -295,7 +303,7 @@ def main(stdscr):
             elif SolarVolts > 90:
                 SVpBar = Pbar100
             stdscr.addstr(" PV Volts................ ",orange)
-            stdscr.addstr("{:.2f}".format(SolarVolts) + SVpBar + "\n",orange)
+            stdscr.addstr("{:.2f}   ".format(SolarVolts) + SVpBar + "\n",orange)
 
             # Broken register 777 in GX firmware 2.81
             try:
@@ -473,14 +481,14 @@ def main(stdscr):
             elif VEbusStatus == 5:
                 stdscr.addstr(" System State............ Float Charging\n",ltblue)
 
-            if ESS_Info == "Y" or ESS_Info == "y":
+            if ESS_Info.lower() == "y":
                 ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
                 decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
                 ESSsocLimitUser = decoder.decode_16bit_uint()
                 ESSsocLimitUser_W = ESSsocLimitUser # Global variable to be used in the on press function
                 ESSsocLimitUser = ESSsocLimitUser / 10
                 stdscr.addstr(" ESS SOC Limit (User).... ",ltblue)
-                stdscr.addstr("{:.0f}% - Unless Grid Fails  ".format(ESSsocLimitUser),ltblue)
+                stdscr.addstr("{:.0f}% - Unless Grid Fails ".format(ESSsocLimitUser),ltblue)
                 stdscr.addstr("(←) or (→) Arrows To Change Value \n",fgreen) 
                 
                 
@@ -525,11 +533,10 @@ def main(stdscr):
                     stdscr.addstr(" ESS Battery Life State.. Self consumption, SoC is below minimum SoC\n",ltblue)
                 elif ESSbatteryLifeState == 12:
                     stdscr.addstr(" ESS Battery Life State.. Recharge, SOC dropped 5% or more below minimum SoC\n",ltblue)
-                spacer()
+                spacer2()
                 stdscr.addstr(" Page-UP Toggle's ESS Optimized (With Battery Life) & Keep Batteries Charged Mode\n",gold)
                 
-                
-            if Multiplus_Leds == "Y" or Multiplus_Leds == "y":
+            if Multiplus_Leds.lower() == "y":
 
                 spacer()
 
@@ -598,14 +605,14 @@ def main(stdscr):
                 elif temperature == 2:
                     stdscr.addstr("Temperature  ",ltsalmon)
                     stdscr.addstr("🔴\n",ltsalmon | curses.A_BLINK)
-                stdscr.addstr(f"{'': <20}Multiplus Switch Position  {MPswitch}\n",ltsalmon)
+                stdscr.addstr(f"{'': <20}Multiplus Switch is in the {MPswitch} Position\n",gray19)
                 spacer()
             else:
                 spacer()
             ###############################################
             ### Begin Cerbo GX Analog Temperature Inputs ##
             ###############################################
-            if Analog_Inputs == "Y" or Analog_Inputs == "y":
+            if Analog_Inputs.lower() == "y":
                 BattBoxTemp = client.read_input_registers(3304, unit= 24) # Input 1
                 decoder = BinaryPayloadDecoder.fromRegisters(BattBoxTemp.registers, byteorder=Endian.Big)
                 BattBoxTemp = decoder.decode_16bit_int()
@@ -613,7 +620,6 @@ def main(stdscr):
                 if BattBoxTemp > 49:
                     stdscr.addstr(" Battery Box Temp........ ",pink)
                     stdscr.addstr("{:.1f} °F  🥵 Whew...its a tad warm in here\n".format(BattBoxTemp),pink)
-
 
                 else:
                     stdscr.addstr(" Battery Box Temp........ ",pink)
@@ -651,8 +657,7 @@ def main(stdscr):
             stdscr.addstr(" M Multiplus LED's on/off\n",gray2)
             stdscr.addstr(" E ESS display on/off\n",gray2)
             stdscr.addstr(" A Analog inputs Temperature on/off\n",gray2)
-            stdscr.addstr(" Q Quit or Ctrl-C",gray2)
-            
+            stdscr.addstr(" Q Quit or Ctrl-C\n✞",gray2)
             
             c = stdscr.getch()
             
@@ -664,17 +669,17 @@ def main(stdscr):
             elif c == ord('q'):
                 clean_exit()
             elif c == ord('e'):
-                if ESS_Info == 'y':
+                if ESS_Info.lower() == 'y':
                     ESS_Info = 'n'
                 else:
                     ESS_Info = 'y'
             elif c == ord('m'): 
-                if Multiplus_Leds == 'y':
+                if Multiplus_Leds.lower() == 'y':
                     Multiplus_Leds = 'n'
                 else:
                     Multiplus_Leds = 'y'
             elif c == ord('a'): 
-                if Analog_Inputs == 'y':
+                if Analog_Inputs.lower() == 'y':
                     Analog_Inputs = 'n'
                 else:
                     Analog_Inputs = 'y'
@@ -683,7 +688,7 @@ def main(stdscr):
             elif c == curses.KEY_DOWN:
                 client.write_registers(address=2700, values=GridSetPoint - 10, unit=VEsystemID)
             
-            elif c == curses.KEY_PPAGE: # Page UP
+            elif c == curses.KEY_PPAGE: # Page UP Toggles between two states
                 if ESSbatteryLifeState != 9:
                     # 9: 'Keep batteries charged' mode enabled
                     client.write_registers(address=2900, values=9, unit=VEsystemID)
@@ -692,6 +697,7 @@ def main(stdscr):
                     client.write_registers(address=2900, values=1, unit=VEsystemID)
             
             curses.flushinp()
+            
             if Multiplus_Leds == 'y' and RefreshRate == 1:
                 time.sleep(1.5)
             else:
