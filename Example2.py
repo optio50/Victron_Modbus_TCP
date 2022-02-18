@@ -217,7 +217,7 @@ def main(stdscr):
             decoder = BinaryPayloadDecoder.fromRegisters(BatterySOC.registers, byteorder=Endian.Big)
             BatterySOC = decoder.decode_16bit_uint()
             BatterySOC = BatterySOC / 10
-            #BatterySOC = 9
+            #BatterySOC = 25
 
             if BatterySOC <= 10:
                 BpBar = Pbar0
@@ -469,9 +469,10 @@ def main(stdscr):
             GridCondition = decoder.decode_16bit_uint()
             if GridCondition == 0:
                 stdscr.addnstr(" Grid Condition.......... OK 🆗\n",100, green)
-            elif GridCondition == 1:
-                stdscr.addnstr(" Grid Condition ......... Grid LOST ❌\n",100, green | curses.A_BLINK)
-            
+            elif GridCondition == 2:
+                stdscr.addnstr(" Grid Condition ......... ",100, green)
+                stdscr.addnstr("Grid LOST ❌\n",100, green | curses.A_BLINK)
+                
             MPswitch = client.read_input_registers(33, unit=MultiPlusID)
             decoder = BinaryPayloadDecoder.fromRegisters(MPswitch.registers, byteorder=Endian.Big)
             MPswitch = decoder.decode_16bit_uint()
@@ -489,13 +490,33 @@ def main(stdscr):
             VEbusStatus = client.read_input_registers(31, unit=MultiPlusID)
             decoder = BinaryPayloadDecoder.fromRegisters(VEbusStatus.registers, byteorder=Endian.Big)
             VEbusStatus = decoder.decode_16bit_uint()
-            if VEbusStatus == 3:
+            if VEbusStatus == 0:
+                stdscr.addnstr(" System State............ OFF\n",100, ltblue)
+            elif VEbusStatus == 1:
+                stdscr.addnstr(" System State............ Low Power\n",100, ltblue)
+            elif VEbusStatus == 2:
+                stdscr.addnstr(" System State............ Fault\n",100, red)
+            elif VEbusStatus == 3:
                 stdscr.addnstr(" System State............ Bulk Charging\n",100, ltblue)
             elif VEbusStatus == 4:
                 stdscr.addnstr(" System State............ Absorption Charging\n",100, ltblue)
             elif VEbusStatus == 5:
                 stdscr.addnstr(" System State............ Float Charging\n",100, ltblue)
-
+            elif VEbusStatus == 6:
+                stdscr.addnstr(" System State............ Storage\n",100, ltblue)
+            elif VEbusStatus == 7:
+                stdscr.addnstr(" System State............ Equalize\n",100, ltblue)
+            elif VEbusStatus == 8:
+                stdscr.addnstr(" System State............ Passthru\n",100, ltblue)
+            elif VEbusStatus == 9:
+                stdscr.addnstr(" System State............ Inverting\n",100, ltblue)
+            elif VEbusStatus == 10:
+                stdscr.addnstr(" System State............ Power Assist\n",100, ltblue)
+            elif VEbusStatus == 11:
+                stdscr.addnstr(" System State............ Power Suply\n",100, ltblue)
+            elif VEbusStatus == 252:
+                stdscr.addnstr(" System State............ Bulk Protection\n",100, gold)
+            
             if ESS_Info.lower() == "y":
                 ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
                 decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
@@ -558,7 +579,7 @@ def main(stdscr):
                 stdscr.addnstr(f"{'': <24}Victron Multiplus II{'': <20}\n",100, blue)
 
                 if mains == 0:
-                    stdscr.addnstr(f"{'': <10}Mains       ⚫      ",100, ltsalmon)
+                    stdscr.addnstr(f"{'': <10}Mains       ⚫{'': <20}",100, ltsalmon)
                 elif mains == 1:
                     stdscr.addnstr(f"{'': <10}Mains       🟢{'': <20}",100, ltsalmon)
                 elif mains == 2:
