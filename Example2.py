@@ -37,7 +37,7 @@ import subprocess
 import time
 from time import strftime
 from time import gmtime
-#import signal
+import random
 
 
 RefreshRate = 1      # Refresh Rate in seconds. Auto increased to 1.5 (from 1 second) if LED's enabled For MQTT requests
@@ -335,7 +335,7 @@ def main(stdscr):
             decoder = BinaryPayloadDecoder.fromRegisters(SolarWatts.registers, byteorder=Endian.Big)
             SolarWatts = decoder.decode_16bit_uint()
             SolarWatts = SolarWatts / 10
-            #SolarWatts = 52
+            #SolarWatts = random.randrange(0, 400, 50) # Test Progressbar
             if SolarVolts < 15:
                 stdscr.addnstr(" PV Watts ............... ",100, orange)
                 stdscr.addnstr("{:.0f} 🌛\n".format(SolarWatts),100, orange)
@@ -358,9 +358,12 @@ def main(stdscr):
             elif SolarWatts >= 350:
                 stdscr.addnstr(" PV Watts ............... ",100, orange)
                 stdscr.addnstr(f"{SolarWatts:.0f}{'': <5} ║🌞   🌞   🌞   🌞   🌞║\n",100, orange)
-            else:
+            elif SolarWatts >= 10 and SolarWatts < 50:
                 stdscr.addnstr(" PV Watts ............... ",100, orange)
                 stdscr.addnstr(f"{SolarWatts:.0f}{'': <5}  ║⛅░░░░░░░░░░░░░░░░░░░░║\n",100, orange)
+            else:
+                stdscr.addnstr(" PV Watts ............... ",100, orange)
+                stdscr.addnstr(f"{SolarWatts:.0f}{'': <5}   ║⛅░░░░░░░░░░░░░░░░░░░░║\n",100, orange)
 
             MaxSolarWatts = client.read_input_registers(785, unit=SolarChargerID)
             decoder = BinaryPayloadDecoder.fromRegisters(MaxSolarWatts.registers, byteorder=Endian.Big)
