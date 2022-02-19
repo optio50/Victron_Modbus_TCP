@@ -40,7 +40,7 @@ Example.py
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/Modbus_2022-02-13_19-40-40.png?raw=true) 
   
 Example2.py      
-![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/Modbus_2022-02-18_13-50-13.png?raw=true)
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/Peek 2022-02-19 14-30.apng?raw=true)
   
     
     
