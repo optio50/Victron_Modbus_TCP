@@ -6,12 +6,12 @@ from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.payload import BinaryPayloadDecoder
 from datetime import datetime
 import sys
-#import os
+import os
 import time
 #import signal
 
-Analog_Inputs = 'N'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-ESS_Info = 'N' # Y or N (case insensitive) to display ESS system information
+Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+ESS_Info = 'y' # Y or N (case insensitive) to display ESS system information
 ip = "192.168.20.156" # ip address of GX device or if on venus local try localhost
 
 # Value Refresh Rate in seconds
@@ -99,7 +99,7 @@ class colors:
         light_yellow = '\033[48;5;227m'
 
 #os.system('clear')
-print("\033[H\033[J")
+print("\033[H\033[J") # Clear screen
 print('\033[?25l', end="") # Hide Blinking Cursor
 
 
@@ -111,6 +111,8 @@ def spacer():
 
 
 while True:
+
+    offset = os.get_terminal_size()
 
     try:
         
@@ -369,6 +371,8 @@ while True:
         ############################################### 
         
         time.sleep(RefreshRate)
+        if offset != os.get_terminal_size():
+            os.system('clear')
         print("\033[%d;%dH" % (0, 0)) # Move cursor to 0 0 instead of clearing screen
         #print("\033[H\033[J") # Clear screen
         #os.system('clear')
