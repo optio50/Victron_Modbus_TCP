@@ -10,18 +10,12 @@ import sys
 import time
 #import signal
 
-Analog_Inputs = 'n'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-ESS_Info = 'n' # Y or N (case insensitive) to display ESS system information
-
-Defaults.Timeout = 25
-Defaults.Retries = 5
-
-new_line = '\n'
-tab = '\t'
-tab3 = '\t\t\t'
+Analog_Inputs = 'N'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+ESS_Info = 'N' # Y or N (case insensitive) to display ESS system information
+ip = "192.168.20.156" # ip address of GX device or if on venus local try localhost
 
 # Value Refresh Rate in seconds
-RefreshRate = 2
+RefreshRate = 1
 
 # Instance #'s from Cerbo GX and cross referenced to the unit ID in the Victron TCP-MODbus register xls file Tab #2.
 # https://github.com/victronenergy/dbus_modbustcp/blob/master/CCGX-Modbus-TCP-register-list.xlsx
@@ -31,9 +25,15 @@ BmvID = 223
 VEsystemID = 100
 
 
+new_line = '\n'
+tab = '\t'
+tab3 = '\t\t\t'
+
+Defaults.Timeout = 25
+Defaults.Retries = 5
 
 # Local network ip address of Cerbo GX. Default port 502
-client = ModbusClient('192.168.20.156', port='502')
+client = ModbusClient(ip, port='502')
 
 # Module for standard text colors, foreground and background
 """Colors class: reset all colors with colors.reset
@@ -281,7 +281,7 @@ while True:
         if VEbusStatus == 5:
             print(colors.fg.light_blue,f" System State............ Float Charging", sep="")
         
-        if ESS_Info == "Y" or Analog_Inputs == "y":
+        if ESS_Info.lower() == 'y':
             ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
             decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
             ESSsocLimitUser = decoder.decode_16bit_uint()
@@ -333,7 +333,7 @@ while True:
         ### Begin Cerbo GX Analog Temperature Inputs ##
         ###############################################
         
-        if Analog_Inputs == "Y" or Analog_Inputs == "y":
+        if Analog_Inputs.lower() == "y":
             spacer() 
             BattBoxTemp = client.read_input_registers(3304, unit= 24) # Input 1
             decoder = BinaryPayloadDecoder.fromRegisters(BattBoxTemp.registers, byteorder=Endian.Big)
@@ -363,13 +363,14 @@ while True:
             else:
                 print(colors.fg.blue,f" Outside Temp............ {ExteriorTemp:.2f} Deg F", colors.reset, sep="")
         
-               
+        print(colors.fg.gray,"\n\tCtrl+C  To Quit",colors.reset)       
         ###############################################
         ### End Cerbo GX Analog Temperature Inputs   ##
         ############################################### 
         
         time.sleep(RefreshRate)
-        print("\033[H\033[J") # Clear screen
+        print("\033[%d;%dH" % (0, 0)) # Move cursor to 0 0 instead of clearing screen
+        #print("\033[H\033[J") # Clear screen
         #os.system('clear')
         
     except KeyboardInterrupt:
