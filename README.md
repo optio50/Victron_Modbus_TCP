@@ -2,10 +2,10 @@
 Victron Modbus TCP Example
 
 Be advised.  
-Running this file and pressing the arrow key's will change values on the GX device.
+Running this file and pressing the arrow key's will change values on the GX device.  
 (↑) or (↓) Arrows To change grid set point.  
 (←) or (→) Arrows To Change ESS SOC limit.  
-Pressing the Page-Up button toggles the ESS mode. "Keep batteries charged and Optimized (with battery life)"
+Pressing the Page-Up button toggles the ESS mode. "Keep batteries charged and Optimized (with battery life)"  
 
 An example of the Victron TCP Modbus.  
 If you intend to use this example for yourself it will require tweaking a few things. 
