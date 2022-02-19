@@ -29,6 +29,7 @@ import argparse
 import struct
 from pymodbus.client.sync import ModbusTcpClient
 ################
+import textwrap
 from datetime import datetime
 from datetime import timedelta
 import sys
@@ -66,7 +67,7 @@ Defaults.Timeout = 25
 Defaults.Retries = 5
 
 stdscr = curses.initscr()
-curses.resize_term(55, 90)
+curses.resize_term(52, 90)
 stdscr.nodelay(True)
 
 # Pathetic Progressbar :-)
@@ -86,45 +87,45 @@ Pbar100 =" ║▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
 #
 # Find More Color Numbers and Names Here.
 # https://github.com/optio50/PythonColors/blob/main/color-test.py
-if curses.can_change_color():
-    curses.curs_set(False)
-    curses.start_color()
-    curses.use_default_colors()
-    curses.init_color(0, 0, 0, 0)
-    curses.init_pair(100, 82, -1)  # Fluorescent Green
-    curses.init_pair(101, 93, -1)  # Purple
-    curses.init_pair(102, 2, -1)   # Green
-    curses.init_pair(103, 226, -1) # Yellow
-    curses.init_pair(104, 160, -1) # Red
-    curses.init_pair(105, 37, -1)  # Cyan
-    curses.init_pair(106, 202, -1) # Orange
-    curses.init_pair(107, 33, -1)  # Lt Blue
-    curses.init_pair(108, 21, -1)  # Blue
-    curses.init_pair(109, 239, -1) # Gray
-    curses.init_pair(110, 197, -1) # Lt Pink
-    curses.init_pair(111, 201, -1) # Pink
-    curses.init_pair(112, 137, -1) # Lt Salmon
-    curses.init_pair(113, 233, -1) # Gray2
-    curses.init_pair(114, 178, -1) # gold_3b
-    curses.init_pair(115, 236, -1) # gray_19
-    #=======================================================================
-    #=======================================================================
-    fgreen = curses.color_pair(100)
-    purple = curses.color_pair(101)
-    green = curses.color_pair(102)
-    yellow = curses.color_pair(103)
-    red = curses.color_pair(104)
-    cyan = curses.color_pair(105)
-    orange = curses.color_pair(106)
-    ltblue = curses.color_pair(107)
-    blue = curses.color_pair(108)
-    gray = curses.color_pair(109)
-    ltpink = curses.color_pair(110)
-    pink = curses.color_pair(111)
-    ltsalmon = curses.color_pair(112)
-    gray2 = curses.color_pair(113)
-    gold = curses.color_pair(114)
-    gray19 = curses.color_pair(115)
+#curses.can_change_color():
+curses.curs_set(False)
+curses.start_color()
+curses.use_default_colors()
+curses.init_color(0, 0, 0, 0)
+curses.init_pair(100, 82, -1)  # Fluorescent Green
+curses.init_pair(101, 93, -1)  # Purple
+curses.init_pair(102, 2, -1)   # Green
+curses.init_pair(103, 226, -1) # Yellow
+curses.init_pair(104, 160, -1) # Red
+curses.init_pair(105, 37, -1)  # Cyan
+curses.init_pair(106, 202, -1) # Orange
+curses.init_pair(107, 33, -1)  # Lt Blue
+curses.init_pair(108, 21, -1)  # Blue1
+curses.init_pair(109, 239, -1) # Gray
+curses.init_pair(110, 197, -1) # Lt Pink
+curses.init_pair(111, 201, -1) # Pink
+curses.init_pair(112, 137, -1) # Lt Salmon
+curses.init_pair(113, 233, -1) # Gray2
+curses.init_pair(114, 178, -1) # gold_3b
+curses.init_pair(115, 236, -1) # gray_19
+#=======================================================================
+#=======================================================================
+fgreen = curses.color_pair(100)
+purple = curses.color_pair(101)
+green = curses.color_pair(102)
+yellow = curses.color_pair(103)
+red = curses.color_pair(104)
+cyan = curses.color_pair(105)
+orange = curses.color_pair(106)
+ltblue = curses.color_pair(107)
+blue1 = curses.color_pair(108)
+gray = curses.color_pair(109)
+ltpink = curses.color_pair(110)
+pink = curses.color_pair(111)
+ltsalmon = curses.color_pair(112)
+gray2 = curses.color_pair(113)
+gold = curses.color_pair(114)
+gray19 = curses.color_pair(115)
 
 
 
@@ -316,8 +317,13 @@ def main(stdscr):
                 SVpBar = Pbar80
             elif SolarVolts > 90:
                 SVpBar = Pbar100
-            stdscr.addnstr(" PV Volts................ ",100, orange)
-            stdscr.addnstr("{:.2f}   ".format(SolarVolts) + SVpBar + "\n",100, orange)
+            
+            if SolarVolts < 10:
+                stdscr.addnstr(" PV Volts................ ",100, orange)
+                stdscr.addnstr("{:.2f}    ".format(SolarVolts) + SVpBar + "\n",100, orange)
+            else:
+                stdscr.addnstr(" PV Volts................ ",100, orange)
+                stdscr.addnstr("{:.2f}   ".format(SolarVolts) + SVpBar + "\n",100, orange)
 
             # Broken register 777 in GX firmware 2.81
             try:
@@ -489,7 +495,8 @@ def main(stdscr):
                 MPswitch = "OFF"
             
             spacer()
-
+            
+            # VEbus Status
             VEbusStatus = client.read_input_registers(31, unit=MultiPlusID)
             decoder = BinaryPayloadDecoder.fromRegisters(VEbusStatus.registers, byteorder=Endian.Big)
             VEbusStatus = decoder.decode_16bit_uint()
@@ -519,6 +526,74 @@ def main(stdscr):
                 stdscr.addnstr(" System State............ Power Suply\n",100, ltblue)
             elif VEbusStatus == 252:
                 stdscr.addnstr(" System State............ Bulk Protection\n",100, gold)
+            
+            
+            # VEbus Error
+            VEbusError = client.read_input_registers(32, unit=MultiPlusID)
+            decoder = BinaryPayloadDecoder.fromRegisters(VEbusError.registers, byteorder=Endian.Big)
+            VEbusError = decoder.decode_16bit_uint()
+            #VEbusError = 26 # Test VEbusError's
+            if VEbusError == 0:
+                stdscr.addnstr(" VE.Bus Error............ ",90, ltblue)
+                stdscr.addnstr("No Error\n",90, blue1 | curses.A_BOLD)
+            elif VEbusError == 1:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr(textwrap.fill("Error 1: Device is switched off because one of the other \
+phases in the system has switched off",width=54,subsequent_indent=' ') + "\n", -1, red)
+            elif VEbusError == 2:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr("Error 2: New and old types MK2 are mixed in the system \n",90, red)
+            elif VEbusError == 3:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr(textwrap.fill("Error 3: Not all- or more than- the expected devices \
+were found in the system", width=54,subsequent_indent=' ') + "\n", -1, red)
+            elif VEbusError == 4:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr("Error 4: No other device whatsoever detected\n",90, red)
+            elif VEbusError == 5:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr("Error 5: Overvoltage on AC-out\n", 90, red)
+            elif VEbusError == 6:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr("Error 6: in DDC Program\n", 90, red)
+            elif VEbusError == 7:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr(textwrap.fill("VE.Bus BMS connected- which requires an Assistant- \
+but no assistant found",width=54,subsequent_indent=' ') + "\n", -1, red)
+            elif VEbusError == 10:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr("Error 10: System time synchronisation problem occurred\n",90, red)
+            elif VEbusError == 14:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr("Error 14: Device cannot transmit data\n",90, red)
+            elif VEbusError == 16:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr("Error 16: Dongle missing\n", 90, red)
+            elif VEbusError == 17:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr(textwrap.fill("Error 17: One of the devices assumed master \
+status because the original master failed", width=54,subsequent_indent=' ') + "\n", -1, red)
+            elif VEbusError == 18:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr(textwrap.fill("Error 18: AC Overvoltage on the output \
+of a slave has occurred while already switched off", width=54,subsequent_indent=' ') + "\n", -1, red)
+            elif VEbusError == 22:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr("Error 22: This device cannot function as slave\n",-1, red)
+            elif VEbusError == 24:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr("Error 24: Switch-over system protection initiated\n", -1, red)
+            elif VEbusError == 25:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr(textwrap.fill("Error 25: Firmware incompatibility. \
+The firmware of one of the connected device is not sufficiently up to date \
+",width=55,subsequent_indent=' ') + "\n", -1, red)
+            elif VEbusError == 26:
+                stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
+                stdscr.addnstr("Error 26: Internal error\n",90, red)
+
+            
+            
             
             if ESS_Info.lower() == "y":
                 ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
@@ -559,7 +634,7 @@ def main(stdscr):
                 elif ESSbatteryLifeState == 5:
                     stdscr.addnstr(" ESS Battery Life State.. SoC below BatteryLife dynamic SoC limit\n",100, ltblue)
                 elif ESSbatteryLifeState == 6:
-                    stdscr.addnstr(" ESS Battery Life State.. SoC has been below SoC limit for more than 24 hours.\n\t\t\t  Slow Charging battery\n",100, ltblue)
+                    stdscr.addnstr(" ESS Battery Life State.. SoC has been below SoC limit for more than 24 hours.\n\t\t\t  Slow Charging battery\n",112, ltblue)
                 elif ESSbatteryLifeState == 7:
                     stdscr.addnstr(" ESS Battery Life State.. Multi is in sustain mode\n",100, ltblue)
                 elif ESSbatteryLifeState == 8:
@@ -579,7 +654,7 @@ def main(stdscr):
 
                 spacer()
 
-                stdscr.addnstr(f"{'': <24}Victron Multiplus II{'': <20}\n",100, blue)
+                stdscr.addnstr(f"{'': <24}Victron Multiplus II{'': <20}\n",100, blue1)
 
                 if mains == 0:
                     stdscr.addnstr(f"{'': <10}Mains       ⚫{'': <20}",100, ltsalmon)
@@ -738,10 +813,10 @@ def main(stdscr):
                     client.write_registers(address=2900, values=1, unit=VEsystemID)
                     
             elif c == curses.KEY_RESIZE:
-                stdscr.clear()
+                #stdscr.clear()
                 curses.resize_term(55, 90)
                 stdscr.refresh()
-                curses.initscr()
+                #curses.initscr()
                 
             
             curses.flushinp()
@@ -760,7 +835,7 @@ def main(stdscr):
         except KeyboardInterrupt:
             clean_exit(0)
 try:
-    subprocess.call(['resize', '-s', '50', '90'])
+    subprocess.call(['resize', '-s', '52', '90'])
 except FileNotFoundError:
     pass
 
