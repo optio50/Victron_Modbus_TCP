@@ -40,5 +40,8 @@ To install
 git clone https://github.com/optio50/Victron_Modbus_TCP  
 cd Victron_Modbus_TCP  
 chmod +x Example.py  
-make sure you have the correct dependencies installed (pymodbus)  
+pip3 install paho-mqtt  
+pip3 install pymodbus  
 ./Example.py  
+or  
+./Example2.py
