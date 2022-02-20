@@ -38,8 +38,8 @@ import subprocess
 import time
 from time import strftime
 from time import gmtime
-import random
 
+tr = textwrap.TextWrapper(width=55, subsequent_indent=" ")
 
 RefreshRate = 1      # Refresh Rate in seconds. Auto increased to 1.5 (from 1 second) if LED's enabled For MQTT requests
 
@@ -161,7 +161,7 @@ def main(stdscr):
     Analog_Inputs = 'Y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
     ESS_Info = 'Y' # Y or N (case insensitive) to display ESS system information
     Multiplus_Leds = 'Y' # Y or N (case insensitive) to display Multiplus LED'S
-
+    errorindex = 0
     while True:
                 
         stdscr.clear()
@@ -335,7 +335,8 @@ def main(stdscr):
                 stdscr.addnstr("{:.2f}\n".format(SolarAmps),100, orange)
 
             except AttributeError:
-                stdscr.addnstr(" PV Amps................. No Value, Firmware bug.  Venus OS > v2.82~4 or <= 2.73 Required",100, orange)
+                stdscr.addnstr(" PV Amps................. No Value, Firmware bug. "
+                "Venus OS > v2.82~4 or <= 2.73 Required",100, orange)
 
             SolarWatts = client.read_input_registers(789, unit=SolarChargerID)
             decoder = BinaryPayloadDecoder.fromRegisters(SolarWatts.registers, byteorder=Endian.Big)
@@ -421,7 +422,7 @@ def main(stdscr):
             stdscr.addnstr(" Grid Watts.............. ",100, green)
             if GridWatts < 0:
                 stdscr.addnstr("{:.0f} ".format(GridWatts),100, green)
-                stdscr.addnstr("Feeding Into Grid \n",red)
+                stdscr.addnstr("Feeding Into Grid \n", 90,red)
             else:
                 stdscr.addnstr("{:.0f} \n".format(GridWatts),100, green)
 
@@ -527,26 +528,28 @@ def main(stdscr):
             elif VEbusStatus == 252:
                 stdscr.addnstr(" System State............ Bulk Protection\n",100, gold)
             
-            
+                        
             # VEbus Error
             VEbusError = client.read_input_registers(32, unit=MultiPlusID)
             decoder = BinaryPayloadDecoder.fromRegisters(VEbusError.registers, byteorder=Endian.Big)
             VEbusError = decoder.decode_16bit_uint()
-            #VEbusError = 26 # Test VEbusError's
+            #error_nos = [0,1,2,3,4,5,6,7,10,14,16,17,18,22,24,25,26]
+            
+            #VEbusError = error_nos[errorindex] # Test VEbusError's
             if VEbusError == 0:
                 stdscr.addnstr(" VE.Bus Error............ ",90, ltblue)
                 stdscr.addnstr("No Error\n",90, blue1 | curses.A_BOLD)
             elif VEbusError == 1:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
-                stdscr.addnstr(textwrap.fill("Error 1: Device is switched off because one of the other \
-phases in the system has switched off",width=54,subsequent_indent=' ') + "\n", -1, red)
+                stdscr.addnstr(tr.fill("Error 1: Device is switched off because one of the other "
+                "phases in the system has switched off") + "\n", -1, red)
             elif VEbusError == 2:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
                 stdscr.addnstr("Error 2: New and old types MK2 are mixed in the system \n",90, red)
             elif VEbusError == 3:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
-                stdscr.addnstr(textwrap.fill("Error 3: Not all- or more than- the expected devices \
-were found in the system", width=54,subsequent_indent=' ') + "\n", -1, red)
+                stdscr.addnstr(tr.fill("Error 3: Not all- or more than- the expected devices "
+                "were found in the system") + "\n", -1, red)
             elif VEbusError == 4:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
                 stdscr.addnstr("Error 4: No other device whatsoever detected\n",90, red)
@@ -558,8 +561,8 @@ were found in the system", width=54,subsequent_indent=' ') + "\n", -1, red)
                 stdscr.addnstr("Error 6: in DDC Program\n", 90, red)
             elif VEbusError == 7:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
-                stdscr.addnstr(textwrap.fill("VE.Bus BMS connected- which requires an Assistant- \
-but no assistant found",width=54,subsequent_indent=' ') + "\n", -1, red)
+                stdscr.addnstr(tr.fill("VE.Bus BMS connected- which requires an Assistant- "
+                "but no assistant found") + "\n", -1, red)
             elif VEbusError == 10:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
                 stdscr.addnstr("Error 10: System time synchronisation problem occurred\n",90, red)
@@ -571,12 +574,12 @@ but no assistant found",width=54,subsequent_indent=' ') + "\n", -1, red)
                 stdscr.addnstr("Error 16: Dongle missing\n", 90, red)
             elif VEbusError == 17:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
-                stdscr.addnstr(textwrap.fill("Error 17: One of the devices assumed master \
-status because the original master failed", width=54,subsequent_indent=' ') + "\n", -1, red)
+                stdscr.addnstr(tr.fill("Error 17: One of the devices assumed master "
+                "status because the original master failed") + "\n", -1, red)
             elif VEbusError == 18:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
-                stdscr.addnstr(textwrap.fill("Error 18: AC Overvoltage on the output \
-of a slave has occurred while already switched off", width=54,subsequent_indent=' ') + "\n", -1, red)
+                stdscr.addnstr(tr.fill("Error 18: AC Overvoltage on the output "
+                "of a slave has occurred while already switched off") + "\n", -1, red)
             elif VEbusError == 22:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
                 stdscr.addnstr("Error 22: This device cannot function as slave\n",-1, red)
@@ -585,14 +588,15 @@ of a slave has occurred while already switched off", width=54,subsequent_indent=
                 stdscr.addnstr("Error 24: Switch-over system protection initiated\n", -1, red)
             elif VEbusError == 25:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
-                stdscr.addnstr(textwrap.fill("Error 25: Firmware incompatibility. \
-The firmware of one of the connected device is not sufficiently up to date \
-",width=55,subsequent_indent=' ') + "\n", -1, red)
+                stdscr.addnstr(tr.fill("Error 25: Firmware incompatibility. "
+                "The firmware of one of the connected device is not sufficiently up to date") + "\n", -1, red)
             elif VEbusError == 26:
                 stdscr.addnstr(" VE.Bus Error............ ", 90, ltblue)
                 stdscr.addnstr("Error 26: Internal error\n",90, red)
 
-            
+            # errorindex += 1
+            # if errorindex == len(error_nos):
+                # errorindex = 0
             
             
             if ESS_Info.lower() == "y":
@@ -778,9 +782,9 @@ The firmware of one of the connected device is not sufficiently up to date \
             c = stdscr.getch()
             
             # Detect Key Press
-            if c == curses.KEY_LEFT:
+            if c == curses.KEY_LEFT and ESS_Info.lower() == 'y':
                 client.write_registers(address=2901, values=ESSsocLimitUser_W - 100, unit=VEsystemID)
-            elif c == curses.KEY_RIGHT:
+            elif c == curses.KEY_RIGHT and ESS_Info.lower() == 'y':
                 client.write_registers(address=2901, values=ESSsocLimitUser_W + 100, unit=VEsystemID)
             elif c == ord('q'):
                 clean_exit()
@@ -804,7 +808,7 @@ The firmware of one of the connected device is not sufficiently up to date \
             elif c == curses.KEY_DOWN:
                 client.write_registers(address=2700, values=GridSetPoint - 10, unit=VEsystemID)
             
-            elif c == curses.KEY_PPAGE: # Page UP Toggles between two states
+            elif c == curses.KEY_PPAGE and ESS_Info.lower() == 'y': # Page UP Toggles between two states
                 if ESSbatteryLifeState != 9:
                     # 9: 'Keep batteries charged' mode enabled
                     client.write_registers(address=2900, values=9, unit=VEsystemID)
@@ -833,7 +837,7 @@ The firmware of one of the connected device is not sufficiently up to date \
             continue
 
         except KeyboardInterrupt:
-            clean_exit(0)
+            clean_exit()
 try:
     subprocess.call(['resize', '-s', '52', '90'])
 except FileNotFoundError:
