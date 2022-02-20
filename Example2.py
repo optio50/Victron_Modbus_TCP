@@ -623,31 +623,51 @@ def main(stdscr):
             
             
             if ESS_Info.lower() == "y":
-                ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
-                decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
-                ESSsocLimitUser = decoder.decode_16bit_uint()
-                ESSsocLimitUser_W = ESSsocLimitUser # Global variable to be used in the on press function
-                ESSsocLimitUser = ESSsocLimitUser / 10
-                stdscr.addnstr(" ESS SOC Limit (User).... ",100, ltblue)
-                stdscr.addnstr("{:.0f}% - Unless Grid Fails ".format(ESSsocLimitUser),100, ltblue)
-                stdscr.addnstr("(←) or (→) Arrows To Change Value \n",100, fgreen) 
+                ESSbatteryLifeState = client.read_input_registers(2900, unit=VEsystemID)
+                decoder = BinaryPayloadDecoder.fromRegisters(ESSbatteryLifeState.registers, byteorder=Endian.Big)
+                ESSbatteryLifeState = decoder.decode_16bit_uint()
+                
+                if ESSbatteryLifeState >= 1 and ESSbatteryLifeState <= 8 or ESSbatteryLifeState == 10:
+                    ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
+                    decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
+                    ESSsocLimitUser = decoder.decode_16bit_uint()
+                    ESSsocLimitUser_W = ESSsocLimitUser # Global variable to be used in the on press function
+                    ESSsocLimitUser = ESSsocLimitUser / 10
+                    stdscr.addnstr(" ESS SOC Limit (User).... ",100, ltblue)
+                    stdscr.addnstr("{:.0f}% - Unless Grid Fails ".format(ESSsocLimitUser),100, ltblue)
+                    stdscr.addnstr("(←) or (→) Arrows To Change Value \n",100, fgreen) 
                 
                 
-               # Requires Newer GX Firmware such as 2.82~4 or >
-                try:
+                
+                if ESSbatteryLifeState >= 1 and ESSbatteryLifeState <= 8:
+                    # Requires Newer GX Firmware such as 2.82~4 or >
+                    try:
+                        ESSsocLimitDynamic = client.read_input_registers(2903, unit=VEsystemID)
+                        decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitDynamic.registers, byteorder=Endian.Big)
+                        ESSsocLimitDynamic = decoder.decode_16bit_uint()
+                        ESSsocLimitDynamic = ESSsocLimitDynamic / 10
+                        stdscr.addnstr(" ESS SOC Limit (Dynamic). ",100, ltblue)
+                        stdscr.addnstr("{:.0f}% Optimized (With Battery Life)\n".format(ESSsocLimitDynamic),100, ltblue)
+                    except AttributeError:
+                        stdscr.addnstr(" ESS SOC Limit (Dynamic). No Value, Firmware requires. Venus OS > v2.82~4\n",100, ltblue)
+
+                elif ESSbatteryLifeState == 9:
                     ESSsocLimitDynamic = client.read_input_registers(2903, unit=VEsystemID)
                     decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitDynamic.registers, byteorder=Endian.Big)
                     ESSsocLimitDynamic = decoder.decode_16bit_uint()
                     ESSsocLimitDynamic = ESSsocLimitDynamic / 10
-                    stdscr.addnstr(" ESS SOC Limit (Dynamic). ",100, ltblue)
-                    stdscr.addnstr("{:.0f}%\n".format(ESSsocLimitDynamic),100, ltblue)
-
-                except AttributeError:
-                    stdscr.addnstr(" ESS SOC Limit (Dynamic). No Value, Firmware requires. Venus OS > v2.82~4",100, ltblue)
-
-                ESSbatteryLifeState = client.read_input_registers(2900, unit=VEsystemID)
-                decoder = BinaryPayloadDecoder.fromRegisters(ESSbatteryLifeState.registers, byteorder=Endian.Big)
-                ESSbatteryLifeState = decoder.decode_16bit_uint()
+                    stdscr.addnstr(" ESS SOC ................ ",100, ltblue)
+                    stdscr.addnstr("Keep Batteries Charged Mode Enabled\n".format(ESSsocLimitDynamic),100, ltblue)
+                    
+                elif ESSbatteryLifeState == 10:
+                    ESSsocLimitDynamic = client.read_input_registers(2903, unit=VEsystemID)
+                    decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitDynamic.registers, byteorder=Endian.Big)
+                    ESSsocLimitDynamic = decoder.decode_16bit_uint()
+                    ESSsocLimitDynamic = ESSsocLimitDynamic / 10
+                    stdscr.addnstr(" ESS SOC ................ ",100, ltblue)
+                    stdscr.addnstr("Optimized (Without Battery Life)\n".format(ESSsocLimitDynamic),100, ltblue)
+                    
+                
                 if ESSbatteryLifeState == 0:
                     stdscr.addnstr(" ESS Battery Life State.. Battery Life Disabled\n",100, ltblue)
                 elif ESSbatteryLifeState == 1:
@@ -666,8 +686,8 @@ def main(stdscr):
                     stdscr.addnstr(" ESS Battery Life State.. Multi is in sustain mode\n",100, ltblue)
                 elif ESSbatteryLifeState == 8:
                     stdscr.addnstr(" ESS Battery Life State.. Recharge, SOC dropped 5% or more below MinSOC\n",100, ltblue)
-                elif ESSbatteryLifeState == 9:
-                    stdscr.addnstr(" ESS Battery Life State.. Keep batteries charged mode enabled\n",100, ltblue)
+                #elif ESSbatteryLifeState == 9:
+                #    stdscr.addnstr(" ESS Battery Life State.. Keep batteries charged mode enabled\n",100, ltblue)
                 elif ESSbatteryLifeState == 10:
                     stdscr.addnstr(" ESS Battery Life State.. Self consumption, SoC at or above minimum SoC\n",100, ltblue)
                 elif ESSbatteryLifeState == 11:
@@ -675,7 +695,7 @@ def main(stdscr):
                 elif ESSbatteryLifeState == 12:
                     stdscr.addnstr(" ESS Battery Life State.. Recharge, SOC dropped 5% or more below minimum SoC\n",100, ltblue)
                 spacer2()
-                stdscr.addnstr(" Page-UP Toggle's ESS Optimized (With Battery Life) & Keep Batteries Charged Mode\n",100, gold)
+                stdscr.addnstr(" Page-UP Toggle's the 3 ESS Battery Modes (Keep Charged, BL Enabled, BL Disabled)\n",100, gold)
                 
             if Multiplus_Leds.lower() == "y":
 
@@ -831,13 +851,25 @@ def main(stdscr):
             elif c == curses.KEY_DOWN:
                 client.write_registers(address=2700, values=GridSetPoint - 10, unit=VEsystemID)
             
-            elif c == curses.KEY_PPAGE and ESS_Info.lower() == 'y': # Page UP Toggles between two states
-                if ESSbatteryLifeState != 9:
+            elif c == curses.KEY_PPAGE and ESS_Info.lower() == 'y': # Page UP Toggles between three states
+                if ESSbatteryLifeState != 9 and ESSbatteryLifeState != 10:
                     # 9: 'Keep batteries charged' mode enabled
                     client.write_registers(address=2900, values=9, unit=VEsystemID)
-                else:
-                    #1:  Change the ESS mode to "Optimized (with BatteryLife)"
+                
+                elif ESSbatteryLifeState == 9:
+                    #10:  Change the ESS mode to "Optimized (without BatteryLife)"
+                    client.write_registers(address=2900, values=10, unit=VEsystemID)
+                
+                else:#1:  Change the ESS mode to "Optimized (with BatteryLife)"
                     client.write_registers(address=2900, values=1, unit=VEsystemID)
+                
+                
+                    
+                    
+                
+                    
+                    
+                    
                     
             elif c == curses.KEY_RESIZE:
                 #stdscr.clear()
