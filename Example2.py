@@ -38,6 +38,7 @@ import subprocess
 import time
 from time import strftime
 from time import gmtime
+import random
 
 tr = textwrap.TextWrapper(width=55, subsequent_indent=" ")
 
@@ -72,7 +73,7 @@ Defaults.Timeout = 25
 Defaults.Retries = 5
 
 stdscr = curses.initscr()
-curses.resize_term(52, 90)
+curses.resize_term(55, 90)
 stdscr.nodelay(True)
 
 # Pathetic Progressbar :-)
@@ -110,7 +111,7 @@ curses.init_pair(109, 239, -1) # Gray
 curses.init_pair(110, 197, -1) # Lt Pink
 curses.init_pair(111, 201, -1) # Pink
 curses.init_pair(112, 137, -1) # Lt Salmon
-curses.init_pair(113, 233, -1) # Gray2
+curses.init_pair(113, 234, -1) # Gray_7
 curses.init_pair(114, 178, -1) # gold_3b
 curses.init_pair(115, 236, -1) # gray_19
 #=======================================================================
@@ -128,7 +129,7 @@ gray = curses.color_pair(109)
 ltpink = curses.color_pair(110)
 pink = curses.color_pair(111)
 ltsalmon = curses.color_pair(112)
-gray2 = curses.color_pair(113)
+gray7 = curses.color_pair(113)
 gold = curses.color_pair(114)
 gray19 = curses.color_pair(115)
 
@@ -369,16 +370,16 @@ def main(stdscr):
                 stdscr.addnstr(f"{SolarWatts:.0f}{'': <5}  ║🌞░░░░░░░░░░░░░░░░░░░░║\n",100, orange)
             elif SolarWatts >= 100 and SolarWatts < 200:
                 stdscr.addnstr(" PV Watts ............... ",100, orange)
-                stdscr.addnstr(f"{SolarWatts:.0f}{'': <5} ║🌞   🌞░░░░░░░░░░░░░░░║\n",100, orange)
+                stdscr.addnstr(f"{SolarWatts:.0f}{'': <5} ║🌞>>>🌞░░░░░░░░░░░░░░░║\n",100, orange)
             elif SolarWatts >= 200 and SolarWatts < 300:
                 stdscr.addnstr(" PV Watts ............... ",100, orange)
-                stdscr.addnstr(f"{SolarWatts:.0f}{'': <5} ║🌞   🌞   🌞░░░░░░░░░░║\n",100, orange)
+                stdscr.addnstr(f"{SolarWatts:.0f}{'': <5} ║🌞>>>🌞>>>🌞░░░░░░░░░░║\n",100, orange)
             elif SolarWatts >= 300 and SolarWatts < 350:
                 stdscr.addnstr(" PV Watts ............... ",100, orange)
-                stdscr.addnstr(f"{SolarWatts:.0f}{'': <5} ║🌞   🌞   🌞   🌞░░░░░║\n",100, orange)
+                stdscr.addnstr(f"{SolarWatts:.0f}{'': <5} ║🌞>>>🌞>>>🌞>>>🌞░░░░░║\n",100, orange)
             elif SolarWatts >= 350:
                 stdscr.addnstr(" PV Watts ............... ",100, orange)
-                stdscr.addnstr(f"{SolarWatts:.0f}{'': <5} ║🌞   🌞   🌞   🌞   🌞║\n",100, orange)
+                stdscr.addnstr(f"{SolarWatts:.0f}{'': <5} ║🌞>>>🌞>>>🌞>>>🌞>>>🌞║\n",100, orange)
             elif SolarWatts >= 10 and SolarWatts < 50:
                 stdscr.addnstr(" PV Watts ............... ",100, orange)
                 stdscr.addnstr(f"{SolarWatts:.0f}{'': <5}  ║⛅░░░░░░░░░░░░░░░░░░░░║\n",100, orange)
@@ -428,16 +429,18 @@ def main(stdscr):
             FeedIn = decoder.decode_16bit_int()
             stdscr.addnstr(f" Feed Excess PV To Grid?. ",100, green)
             if FeedIn == 1:
-                stdscr.addnstr(f"YES\n",90, green)
+                stdscr.addnstr(f"YES",90, green)
+                stdscr.addnstr(f"{'': <20} [  or  ] Brackets To Change Value\n",100, gray7)
             else:
-                stdscr.addnstr(f"NO\n",90, red)
+                stdscr.addnstr(f"NO ",90, red)
+                stdscr.addnstr(f"{'': <20} [  or  ] Brackets To Change Value\n",100, gray7)
             
             GridSetPoint = client.read_input_registers(2700, unit=VEsystemID)
             decoder = BinaryPayloadDecoder.fromRegisters(GridSetPoint.registers, byteorder=Endian.Big)
             GridSetPoint = decoder.decode_16bit_int()
             stdscr.addnstr(" Grid Set Point Watts.... ",100, green)
             stdscr.addnstr("{:.0f} ".format(GridSetPoint),100, green)
-            stdscr.addnstr(f"{'': <20} (↑) or (↓) Arrows To Change Value\n",100, fgreen)
+            stdscr.addnstr(f"{'': <20} (↑) or (↓) Arrows To Change Value\n",100, gray7)
             
             GridWatts = client.read_input_registers(820, unit=VEsystemID)
             decoder = BinaryPayloadDecoder.fromRegisters(GridWatts.registers, byteorder=Endian.Big)
@@ -635,7 +638,7 @@ def main(stdscr):
                     ESSsocLimitUser = ESSsocLimitUser / 10
                     stdscr.addnstr(" ESS SOC Limit (User).... ",100, ltblue)
                     stdscr.addnstr("{:.0f}% - Unless Grid Fails ".format(ESSsocLimitUser),100, ltblue)
-                    stdscr.addnstr("(←) or (→) Arrows To Change Value \n",100, fgreen) 
+                    stdscr.addnstr("(←) or (→) Arrows To Change Value \n",100, gray7) 
                 
                 
                 
@@ -817,17 +820,19 @@ def main(stdscr):
             # ### End Cerbo GX Analog Temperature Inputs   ##
             # ###############################################
 
-            stdscr.addnstr(" M Multiplus LED's on/off\n",100, gray2)
-            stdscr.addnstr(" E ESS display on/off\n",100, gray2)
-            stdscr.addnstr(" A Analog inputs Temperature on/off\n",100, gray2)
-            stdscr.addnstr(" Q Quit or Ctrl-C\n✞",100, gray2)
+            stdscr.addnstr(" M Multiplus LED's on/off\n",100, gray7)
+            stdscr.addnstr(" E ESS display on/off\n",100, gray7)
+            stdscr.addnstr(" A Analog inputs Temperature on/off\n",100, gray7)
+            stdscr.addnstr(" Q Quit or Ctrl-C\n✞",100, gray7)
             
             c = stdscr.getch()
             
             # Detect Key Press
             if c == curses.KEY_LEFT and ESS_Info.lower() == 'y':
+                # Decrease ESS SoC by 10W
                 client.write_registers(address=2901, values=ESSsocLimitUser_W - 100, unit=VEsystemID)
             elif c == curses.KEY_RIGHT and ESS_Info.lower() == 'y':
+                # Increase ESS SoC by 10W
                 client.write_registers(address=2901, values=ESSsocLimitUser_W + 100, unit=VEsystemID)
             elif c == ord('q'):
                 clean_exit()
@@ -846,10 +851,15 @@ def main(stdscr):
                     Analog_Inputs = 'n'
                 else:
                     Analog_Inputs = 'y'
-            elif c == curses.KEY_UP:
+            elif c == curses.KEY_UP: # Increase AC Grid set point by 10W
                 client.write_registers(address=2700, values=GridSetPoint + 10, unit=VEsystemID)
-            elif c == curses.KEY_DOWN:
+            elif c == curses.KEY_DOWN: # Decrease AC Grid set point by 10W
                 client.write_registers(address=2700, values=GridSetPoint - 10, unit=VEsystemID)
+            
+            elif c == ord('['): # Turn grid feed-in on
+                client.write_registers(address=2707, values=1, unit=VEsystemID)
+            elif c == ord(']'): # Turn grid feed-in off
+                client.write_registers(address=2707, values=0, unit=VEsystemID)
             
             elif c == curses.KEY_PPAGE and ESS_Info.lower() == 'y': # Page UP Toggles between three states
                 if ESSbatteryLifeState != 9 and ESSbatteryLifeState != 10:
@@ -862,15 +872,7 @@ def main(stdscr):
                 
                 else:#1:  Change the ESS mode to "Optimized (with BatteryLife)"
                     client.write_registers(address=2900, values=1, unit=VEsystemID)
-                
-                
-                    
-                    
-                
-                    
-                    
-                    
-                    
+                      
             elif c == curses.KEY_RESIZE:
                 #stdscr.clear()
                 curses.resize_term(55, 90)
@@ -894,7 +896,7 @@ def main(stdscr):
         except KeyboardInterrupt:
             clean_exit()
 try:
-    subprocess.call(['resize', '-s', '52', '90'])
+    subprocess.call(['resize', '-s', '53', '90'])
 except FileNotFoundError:
     pass
 
