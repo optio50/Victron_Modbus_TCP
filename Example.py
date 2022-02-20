@@ -8,10 +8,10 @@ from datetime import datetime
 import sys
 import os
 import time
-#import signal
+import textwrap
 
-Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-ESS_Info = 'y' # Y or N (case insensitive) to display ESS system information
+Analog_Inputs = 'n'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+ESS_Info = 'n' # Y or N (case insensitive) to display ESS system information
 ip = "192.168.20.156" # ip address of GX device or if on venus local try localhost
 
 # Value Refresh Rate in seconds
@@ -23,11 +23,6 @@ SolarChargerID = 226
 MultiPlusID = 227
 BmvID = 223
 VEsystemID = 100
-
-
-new_line = '\n'
-tab = '\t'
-tab3 = '\t\t\t'
 
 Defaults.Timeout = 25
 Defaults.Retries = 5
@@ -109,10 +104,10 @@ def spacer():
 
 
 
-
+#errorindex = 0
 while True:
-
-    offset = os.get_terminal_size()
+    
+    screensize = os.get_terminal_size()
 
     try:
         
@@ -141,12 +136,12 @@ while True:
         BatteryWatts = client.read_input_registers(842, unit=VEsystemID)
         decoder = BinaryPayloadDecoder.fromRegisters(BatteryWatts.registers, byteorder=Endian.Big)
         BatteryWatts = decoder.decode_16bit_int()
-        print(colors.fg.cyan,f" Battery Watts........... {BatteryWatts:.2f}", sep="")
+        print(colors.fg.cyan,f" Battery Watts........... {BatteryWatts:.0f}", sep="")
         
         BatteryAmps = client.read_input_registers(841, unit=VEsystemID)
         decoder = BinaryPayloadDecoder.fromRegisters(BatteryAmps.registers, byteorder=Endian.Big)
         BatteryAmps = decoder.decode_16bit_int()
-        print(colors.fg.cyan,f" Battery Amps............ {BatteryAmps / 10:.2f}", sep="")
+        print(colors.fg.cyan,f" Battery Amps............ {BatteryAmps / 10:.1f}", sep="")
         
         BatteryVolts = client.read_input_registers(259, unit=BmvID)
         decoder = BinaryPayloadDecoder.fromRegisters(BatteryVolts.registers, byteorder=Endian.Big)
@@ -283,6 +278,72 @@ while True:
         if VEbusStatus == 5:
             print(colors.fg.light_blue,f" System State............ Float Charging", sep="")
         
+        tr = textwrap.TextWrapper(width=56, subsequent_indent=" ")
+            
+        # VEbus Error
+        VEbusError = client.read_input_registers(32, unit=MultiPlusID)
+        decoder = BinaryPayloadDecoder.fromRegisters(VEbusError.registers, byteorder=Endian.Big)
+        VEbusError = decoder.decode_16bit_uint()
+        
+        # error_nos = [0,1,2,3,4,5,6,7,10,14,16,17,18,22,24,25,26]
+        # VEbusError = error_nos[errorindex] # Test VEbusError's
+        # VEbusError = 18
+            
+        if VEbusError == 0:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.green, tr.fill(f"No Error"), colors.fg.light_blue, sep="")
+        elif VEbusError == 1:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 1: Device is "
+            "switched off because one of the other phases in the system has switched off"), sep="")
+        elif VEbusError == 2:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 2: New and old "
+            "types MK2 are mixed in the system"), colors.fg.light_blue, sep="")
+        elif VEbusError == 3:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 3: Not all- or "
+             "more than- the expected devices were found in the system"), colors.fg.light_blue, sep="")
+        elif VEbusError == 4:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 4: No other " 
+            "device whatsoever detected"), colors.fg.light_blue, sep="")
+        elif VEbusError == 5:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 5: Overvoltage "
+            "on AC-out"), colors.fg.light_blue, sep="")
+        elif VEbusError == 6:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 6: in DDC "
+            "Program"), colors.fg.light_blue, sep="")
+        elif VEbusError == 7:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"VE.Bus BMS connected- "
+            "which requires an Assistant- but no assistant found"), colors.fg.light_blue, sep="")
+        elif VEbusError == 10:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 10: System time "
+            " synchronisation problem occurred"), colors.fg.light_blue, sep="")
+        elif VEbusError == 14:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 14: Device cannot "
+            "transmit data"), colors.fg.light_blue, sep="")
+        elif VEbusError == 16:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 16: Dongle missing "
+            ), colors.fg.light_blue, sep="")
+        elif VEbusError == 17:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 17: One of the "
+            "devices assumed master status because the original master failed"), colors.fg.light_blue, sep="")
+        elif VEbusError == 18:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 18: AC Overvoltage "
+            "on the output of a slave has occurred while already switched off"), colors.fg.light_blue, sep="")
+        elif VEbusError == 22:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 22: This device "
+            "cannot function as slave"), colors.fg.light_blue, sep="")
+        elif VEbusError == 24:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 24: Switch-over "
+            "system protection initiated"), colors.fg.light_blue, sep="")
+        elif VEbusError == 25:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 25: Firmware "
+            "incompatibility. The firmware of one of the connected devices is not sufficiently up to date"), colors.fg.light_blue, sep="")
+        elif VEbusError == 26:
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 26: Internal "
+            "error"), colors.fg.light_blue, sep="")
+    
+        # errorindex += 1
+        # if errorindex == len(error_nos):
+            # errorindex = 0
+        
         if ESS_Info.lower() == 'y':
             ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
             decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
@@ -315,7 +376,7 @@ while True:
             if ESSbatteryLifeState == 5:
                 print(f" ESS Battery Life State.. SoC below BatteryLife dynamic SoC limit", sep="")
             if ESSbatteryLifeState == 6:
-                print(f" ESS Battery Life State.. SoC has been below SoC limit for more than 24 hours.{new_line}{tab3} Slow Charging battery", sep="")
+                print(f" ESS Battery Life State.. SoC below SoC limit for more than 24 hours. Slow Charging battery", sep="")
             if ESSbatteryLifeState == 7:
                 print(f" ESS Battery Life State.. Multi is in sustain mode", sep="")
             if ESSbatteryLifeState == 8:
@@ -329,14 +390,15 @@ while True:
             if ESSbatteryLifeState == 12:
                 print(f" ESS Battery Life State.. Recharge, SOC dropped 5% or more below minimum SoC", colors.reset, sep="")
                 
-        #spacer()
+            
+        spacer()
         
         ###############################################
         ### Begin Cerbo GX Analog Temperature Inputs ##
         ###############################################
         
         if Analog_Inputs.lower() == "y":
-            spacer() 
+            
             BattBoxTemp = client.read_input_registers(3304, unit= 24) # Input 1
             decoder = BinaryPayloadDecoder.fromRegisters(BattBoxTemp.registers, byteorder=Endian.Big)
             BattBoxTemp = decoder.decode_16bit_int()
@@ -371,10 +433,11 @@ while True:
         ############################################### 
         
         time.sleep(RefreshRate)
-        if offset != os.get_terminal_size():
+        if screensize != os.get_terminal_size():
             os.system('clear')
         print("\033[%d;%dH" % (0, 0)) # Move cursor to 0 0 instead of clearing screen
-        #print("\033[H\033[J") # Clear screen
+        if VEbusError != 0:
+            print("\033[H\033[J") # Clear screen
         #os.system('clear')
         
     except KeyboardInterrupt:
