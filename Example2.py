@@ -48,9 +48,14 @@ ip = '192.168.20.156'
 
 # MQTT Request's
 # VRM Portal ID from GX device. Not needed if Multiplus LEDS are not enabled
-# This ID is needed even with no internet access as its the name of your venus device.
+# AFAIK this ID is needed even with no internet access as its the name of your venus device.
 # Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
 VRMid = "d41243d31a90"
+
+Analog_Inputs = 'n'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+ESS_Info = 'n' # Y or N (case insensitive) to display ESS system information
+Multiplus_Leds = 'n' # Y or N (case insensitive) to display Multiplus LED'S
+
 
 # Instance #'s from Cerbo GX and cross referenced to the unit ID in the Victron TCP-MODbus register xls file Tab #2.
 # https://github.com/victronenergy/dbus_modbustcp/blob/master/CCGX-Modbus-TCP-register-list.xlsx
@@ -155,18 +160,16 @@ def clean_exit():
 
 
 def main(stdscr):
-    
+    global Multiplus_Leds
+    global ESS_Info
+    global Analog_Inputs
     stdscr.nodelay(True)
     
-    Analog_Inputs = 'Y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-    ESS_Info = 'Y' # Y or N (case insensitive) to display ESS system information
-    Multiplus_Leds = 'Y' # Y or N (case insensitive) to display Multiplus LED'S
     errorindex = 0
     while True:
                 
         stdscr.clear()
         
-
         if Multiplus_Leds.lower() == "y":
 
             msg = subscribe.simple("N/"+VRMid+"/vebus/276/Leds/Mains", hostname=ip)
@@ -252,8 +255,12 @@ def main(stdscr):
                 color = green
             if BatterySOC >= 10:
                 stdscr.addnstr(" Battery SOC............. ",50, cyan)
-                stdscr.addnstr("{:.1f}% ".format(BatterySOC),100, color | curses.A_BOLD)
-                stdscr.addnstr("🔋" + BpBar + "\n",100, color)
+                if BatterySOC == 100:
+                    stdscr.addnstr("{:.0f}% ".format(BatterySOC),100, color | curses.A_BOLD)
+                    stdscr.addnstr("🔋 " + BpBar + "\n",100, color)
+                else:
+                    stdscr.addnstr("{:.1f}% ".format(BatterySOC),100, color | curses.A_BOLD)
+                    stdscr.addnstr("🔋" + BpBar + "\n",100, color)
             else:
                 stdscr.addnstr(" Battery SOC............. ",50, cyan)
                 stdscr.addnstr("{:.1f}% ".format(BatterySOC),100, color | curses.A_BLINK)
@@ -291,6 +298,13 @@ def main(stdscr):
             stdscr.addnstr(" Battery Time to Go...... ",50, cyan)
             stdscr.addnstr(str(BatteryTTG) + "\n",50, cyan)
 
+            ChargeCycles = client.read_input_registers(284, unit=BmvID)
+            decoder = BinaryPayloadDecoder.fromRegisters(ChargeCycles.registers, byteorder=Endian.Big)
+            ChargeCycles = decoder.decode_16bit_uint()
+            ChargeCycles = ChargeCycles
+            stdscr.addnstr(" Battery Charge Cycles... ",50, cyan)
+            stdscr.addnstr(str(ChargeCycles) + "\n",50, cyan)
+            
             spacer()
 
             SolarVolts = client.read_input_registers(776, unit=SolarChargerID)
@@ -409,6 +423,15 @@ def main(stdscr):
 
             spacer()
 
+            FeedIn = client.read_input_registers(2707, unit=VEsystemID)
+            decoder = BinaryPayloadDecoder.fromRegisters(FeedIn.registers, byteorder=Endian.Big)
+            FeedIn = decoder.decode_16bit_int()
+            stdscr.addnstr(f" Feed Excess PV To Grid?. ",100, green)
+            if FeedIn == 1:
+                stdscr.addnstr(f"YES\n",90, green)
+            else:
+                stdscr.addnstr(f"NO\n",90, red)
+            
             GridSetPoint = client.read_input_registers(2700, unit=VEsystemID)
             decoder = BinaryPayloadDecoder.fromRegisters(GridSetPoint.registers, byteorder=Endian.Big)
             GridSetPoint = decoder.decode_16bit_int()
