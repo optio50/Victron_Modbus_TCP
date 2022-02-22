@@ -895,8 +895,8 @@ def main(stdscr):
                     stdscr.addnstr(" Cabin Temp.............. {:.1f} °F\n".format(CabinTemp),100, pink)
                     
                 if ExteriorTemp < 33:
-                    stdscr.addnstr(" Outside Temp............ {:.1f} °F ",100, pink)
-                    stdscr.addnstr(" 🥶 Burr...A Wee Bit Chilly Outside\n".format(ExteriorTemp),100, blue1)
+                    stdscr.addnstr(" Outside Temp............ {:.1f} °F ".format(ExteriorTemp),100, pink)
+                    stdscr.addnstr(" 🥶 Burr...A Wee Bit Chilly Outside\n",100, blue1)
                 else:
                     stdscr.addnstr(" Outside Temp............ {:.1f} °F \n".format(ExteriorTemp),100, pink)
                     
