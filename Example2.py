@@ -363,28 +363,38 @@ def main(stdscr):
                 ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
                 decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
                 ESSsocLimitUser = decoder.decode_16bit_uint()
-                ESSsocLimitUser_W = ESSsocLimitUser # Global variable to be used in the on press function
+                ESSsocLimitUser_W = ESSsocLimitUser # Variable to be used in the on press function
                 ESSsocLimitUser = ESSsocLimitUser / 10
 # ===========================================================================================
 
 # Conditional Modbus Request
 # Analog Temperature Inputs
             if Analog_Inputs.lower() == "y":
-                BattBoxTemp = client.read_input_registers(3304, unit= 24) # Input 1
-                decoder = BinaryPayloadDecoder.fromRegisters(BattBoxTemp.registers, byteorder=Endian.Big)
-                BattBoxTemp = decoder.decode_16bit_int()
-                BattBoxTemp = BattBoxTemp / 100 * 1.8 + 32
-
-                CabinTemp = client.read_input_registers(3304, unit= 25) # Input 2
-                decoder = BinaryPayloadDecoder.fromRegisters(CabinTemp.registers, byteorder=Endian.Big)
-                CabinTemp = decoder.decode_16bit_int()
-                CabinTemp = CabinTemp / 100 * 1.8 + 32
-
-                ExteriorTemp = client.read_input_registers(3304, unit= 26) # Input 3
-                decoder = BinaryPayloadDecoder.fromRegisters(ExteriorTemp.registers, byteorder=Endian.Big)
-                ExteriorTemp = decoder.decode_16bit_int()
-                ExteriorTemp = ExteriorTemp / 100 * 1.8 + 32
-
+                try:
+                    TempSensor1 = client.read_input_registers(3304, unit= 24) # Input 1
+                    decoder = BinaryPayloadDecoder.fromRegisters(TempSensor1.registers, byteorder=Endian.Big)
+                    TempSensor1 = decoder.decode_16bit_int()
+                    TempSensor1 = TempSensor1 / 100 * 1.8 + 32
+                except AttributeError:
+                    TempSensor1 = 777
+                
+                try:
+                    TempSensor2 = client.read_input_registers(3304, unit= 25) # Input 2
+                    decoder = BinaryPayloadDecoder.fromRegisters(TempSensor2.registers, byteorder=Endian.Big)
+                    TempSensor2 = decoder.decode_16bit_int()
+                    TempSensor2 = TempSensor2 / 100 * 1.8 + 32
+                except AttributeError:
+                    TempSensor2 = 777
+                
+                try:
+                    TempSensor3 = client.read_input_registers(3304, unit= 26) # Input 3
+                    decoder = BinaryPayloadDecoder.fromRegisters(TempSensor3.registers, byteorder=Endian.Big)
+                    TempSensor3 = decoder.decode_16bit_int()
+                    TempSensor3 = TempSensor3 / 100 * 1.8 + 32
+                except AttributeError:
+                    TempSensor3 = 777
+                
+                
 # ^^^ End Modbus Request's
 # ===========================================================================================
 # Start populating the screen
@@ -619,7 +629,7 @@ def main(stdscr):
                 stdscr.addnstr(" Grid Condition.......... OK 🆗\n",100, green)
             elif GridCondition == 2:
                 stdscr.addnstr(" Grid Condition ......... ",100, green)
-                stdscr.addnstr("Grid LOST ❌\n",100, green | curses.A_BLINK)
+                stdscr.addnstr("Grid LOST ❌\n",100, red | curses.A_BLINK)
 
             spacer()
 
@@ -649,7 +659,7 @@ def main(stdscr):
             elif VEbusStatus == 10:
                 stdscr.addnstr(" System State............ Power Assist\n",100, ltblue)
             elif VEbusStatus == 11:
-                stdscr.addnstr(" System State............ Power Suply\n",100, ltblue)
+                stdscr.addnstr(" System State............ Power Supply\n",100, ltblue)
             elif VEbusStatus == 252:
                 stdscr.addnstr(" System State............ Bulk Protection\n",100, ltblue)
 
@@ -879,26 +889,38 @@ def main(stdscr):
 
 # ===========================================================================================
 # Cerbo GX Analog Temperature Inputs
+# Change the word's "Battery Box" "Cabin" "Outside" for each of the 3 sensor's you have
+            Sens1 = "Battery Box"
+            Sens2 = "Cabin"
+            Sens3 = "Outside"
 
             if Analog_Inputs.lower() == "y":
 
-                if BattBoxTemp > 49:
-                    stdscr.addnstr(" Battery Box Temp........ {:.1f} °F ".format(BattBoxTemp),100, pink)
+                if TempSensor1 == 777:
+                    stdscr.addnstr(" Temp Sensor............. Not installed or unit ID wrong\n",100, pink)
+                elif TempSensor1 > 49 and TempSensor1 < 200 :
+                    stdscr.addnstr(f" {Sens1} Temp........ {TempSensor1:.1f} °F ",100, pink)
                     stdscr.addnstr(" 🥵 Whew...its a tad warm in here\n",100, red)
                 else:
-                    stdscr.addnstr(" Battery Box Temp........ {:.1f} °F \n".format(BattBoxTemp),100, pink)
+                    stdscr.addnstr(f" {Sens1} Temp........ {TempSensor1:.1f} °F \n",100, pink)
                     
-                if CabinTemp < 45:
-                    stdscr.addnstr(" Cabin Temp.............. {:.1f} °F ".format(CabinTemp),100, pink)
+                if TempSensor2 == 777:
+                    stdscr.addnstr(" Temp Sensor............. Not installed or unit ID wrong\n",100, pink)
+                
+                elif TempSensor2 < 45:
+                    stdscr.addnstr(f" {Sens2} Temp.............. {TempSensor2:.1f} °F ",100, pink)
                     stdscr.addnstr(" 🥶 Whoa...Crank up the heat in this place!\n",100, blue1)
                 else:
-                    stdscr.addnstr(" Cabin Temp.............. {:.1f} °F\n".format(CabinTemp),100, pink)
-                    
-                if ExteriorTemp < 33:
-                    stdscr.addnstr(" Outside Temp............ {:.1f} °F ".format(ExteriorTemp),100, pink)
+                    stdscr.addnstr(f" {Sens2} Temp.............. {TempSensor2:.1f} °F \n",100, pink)
+
+                if TempSensor3 == 777:
+                    stdscr.addnstr(" Temp Sensor............. Not installed or unit ID wrong\n",100, pink)
+                
+                elif TempSensor3 < 33:
+                    stdscr.addnstr(f" {Sens3} Temp............ {TempSensor3:.1f} °F ",100, pink)
                     stdscr.addnstr(" 🥶 Burr...A Wee Bit Chilly Outside\n",100, blue1)
                 else:
-                    stdscr.addnstr(" Outside Temp............ {:.1f} °F \n".format(ExteriorTemp),100, pink)
+                    stdscr.addnstr(f" {Sens3} Temp............ {TempSensor3:.1f} °F \n",100, pink)
                     
                 spacer()
 
@@ -911,18 +933,18 @@ def main(stdscr):
             stdscr.addnstr(f"{'': <19}B -- Battery Life Enabled\n",100, gray7)
             stdscr.addnstr(" A -- Analog inputs Temperature on/off",100, gray7)
             stdscr.addnstr(f"{'': <5}D -- Battery Life Disabled\n",100, gray7)
-            stdscr.addnstr(" Q -- Quit or Ctrl-C\n✞",100, gray7)
+            stdscr.addnstr(" Q -- Quit \n✞",100, gray7)
 
             c = stdscr.getch()
 
 
             if ESS_Info.lower() == 'y':
                 if c == curses.KEY_LEFT and ESSbatteryLifeState != 9:
-                    # Decrease ESS SoC by 10W
+                    # Decrease ESS SoC by 5W
                     client.write_registers(address=2901, values=ESSsocLimitUser_W - 50, unit=VEsystemID)
                     continue
                 elif c == curses.KEY_RIGHT and ESSbatteryLifeState != 9:
-                    # Increase ESS SoC by 10W
+                    # Increase ESS SoC by 5W
                     client.write_registers(address=2901, values=ESSsocLimitUser_W + 50, unit=VEsystemID)
                     continue
 
