@@ -436,6 +436,7 @@ while True:
         if screensize != os.get_terminal_size():
             os.system('clear')
         print("\033[%d;%dH" % (0, 0)) # Move cursor to 0 0 instead of clearing screen
+        print("\033[H\033[J") # Clear screen
         if VEbusError != 0:
             print("\033[H\033[J") # Clear screen
         #os.system('clear')
