@@ -128,15 +128,8 @@ while True:
     screensize = os.get_terminal_size()
 
     try:
-        
-        # Datetime object containing current date and time
-        now = datetime.now()
-
-        # Fri 21 Jan 2022 09:06:57 PM
-        dt_string = now.strftime("%a %d %b %Y %r")
-        
-        print(colors.fg.purple,f"\n Time & Date............. {dt_string}", sep="")
-        
+    
+    
         BatterySOC    = modbus_register(266,BmvID) / 10
         BatteryWatts  = modbus_register(842, unit=VEsystemID)
         BatteryAmps   = modbus_register(841, unit=VEsystemID) / 10
@@ -182,6 +175,15 @@ while True:
                 TempSensor3 = modbus_register(3304,26) / 100 * 1.8 + 32
             except AttributeError:
                 TempSensor3 = 777
+        
+        # Datetime object containing current date and time
+        now = datetime.now()
+
+        # Fri 21 Jan 2022 09:06:57 PM
+        dt_string = now.strftime("%a %d %b %Y %r")
+        
+        print(colors.fg.purple,f"\n Time & Date............. {dt_string}", sep="")
+        
         
                 
         # Battery value color
@@ -251,12 +253,39 @@ while True:
                 
         
         
-        if VEbusStatus == 3:
-            print(colors.fg.light_blue,f" System State............ Bulk Charging",sep="")
-        if VEbusStatus == 4:
-            print(colors.fg.light_blue,f" System State............ Absorption Charging", sep="")
-        if VEbusStatus == 5:
-            print(colors.fg.light_blue,f" System State............ Float Charging", sep="")
+        # ===========================================================================================
+#   VE.Bus Status
+        print(colors.fg.light_blue, end="")
+        if VEbusStatus == 0:
+            print(f" System State............ OFF",sep="")
+        elif VEbusStatus == 1:
+            print(f" System State............ Low Power",sep="")
+        elif VEbusStatus == 2:
+            print(f" System State............ ",colors.fg.red,"Fault",sep="")
+        elif VEbusStatus == 3:
+            print(f" System State............ Bulk Charging",sep="")
+        elif VEbusStatus == 4:
+            print(f" System State............ Absorption Charging",sep="")
+        elif VEbusStatus == 5:
+            print(f" System State............ Float Charging",sep="")
+        elif VEbusStatus == 6:
+            print(f" System State............ Storage",sep="")
+        elif VEbusStatus == 7:
+            print(f" System State............ Equalize",sep="")
+        elif VEbusStatus == 8:
+            print(f" System State............ Passthru",sep="")
+        elif VEbusStatus == 9:
+            print(f" System State............ Inverting",sep="")
+        elif VEbusStatus == 10:
+            print(f" System State............ Power Assist",sep="")
+        elif VEbusStatus == 256:
+            print(f" System State............ Discharging",sep="")
+        elif VEbusStatus == 257:
+            print(f" System State............ Sustain",sep="")
+        else:
+            print(f" System State............ Unknown State",sep="")
+        print(colors.reset, end="")
+# ===========================================================================================
         
         tr = textwrap.TextWrapper(width=56, subsequent_indent=" ")
             
@@ -339,7 +368,7 @@ while True:
             if ESSbatteryLifeState == 4:
                 print(f" ESS Battery Life State.. Self consumption, SoC at 100%", sep="")
             if ESSbatteryLifeState == 5:
-                print(f" ESS Battery Life State.. SoC below BatteryLife dynamic SoC limit", sep="")
+                print(f" ESS Battery Life State.. Discharge disabled. SoC below BatteryLife Dynamic SoC", sep="")
             if ESSbatteryLifeState == 6:
                 print(f" ESS Battery Life State.. SoC below SoC limit for more than 24 hours. Slow Charging battery", sep="")
             if ESSbatteryLifeState == 7:
@@ -351,7 +380,7 @@ while True:
             if ESSbatteryLifeState == 10:
                 print(f" ESS Battery Life State.. Self consumption, SoC at or above minimum SoC", sep="")
             if ESSbatteryLifeState == 11:
-                print(f" ESS Battery Life State.. Self consumption, SoC is below minimum SoC", sep="")
+                print(f" ESS Battery Life State.. Discharge Disabled (Low SoC), SoC is below minimum SoC", sep="")
             if ESSbatteryLifeState == 12:
                 print(f" ESS Battery Life State.. Recharge, SOC dropped 5% or more below minimum SoC", colors.reset, sep="")
                 
