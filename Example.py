@@ -55,55 +55,55 @@ colors.reverse, underline, colors.reverse, reverse, colors.reverse, strike throu
 colors.reverse, and invisible work with the main class i.e. colors.bold """
 
 class colors:
-    reset = '\033[0m'
-    bold = '\033[01m'
-    disable = '\033[02m'
-    underline = '\033[04m'
-    reverse = '\033[07m'
+    reset         = '\033[0m'
+    bold          = '\033[01m'
+    disable       = '\033[02m'
+    underline     = '\033[04m'
+    reverse       = '\033[07m'
     strikethrough = '\033[09m'
-    invisible = '\033[08m'
-    blink = '\033[05m'
+    invisible     = '\033[08m'
+    blink         = '\033[05m'
 
     class fg:
-        red = '\033[38;5;1m'
-        light_red = '\033[38;5;9m'
-        cyan = '\033[38;5;6m'
-        light_cyan = '\033[38;5;14m'
-        gray = '\033[38;5;240m'
-        light_gray = '\033[38;5;246m'
-        white = '\033[38;5;15m'
-        black = '\033[38;5;16m'
-        orange = '\033[38;5;202m'
+        red          = '\033[38;5;1m'
+        light_red    = '\033[38;5;9m'
+        cyan         = '\033[38;5;6m'
+        light_cyan   = '\033[38;5;14m'
+        gray         = '\033[38;5;240m'
+        light_gray   = '\033[38;5;246m'
+        white        = '\033[38;5;15m'
+        black        = '\033[38;5;16m'
+        orange       = '\033[38;5;202m'
         light_orange = '\033[38;5;172m'
-        blue = '\033[38;5;21m'
-        light_blue = '\033[38;5;39m'
-        green = '\033[38;5;28m'
-        light_green = '\033[38;5;34m'
-        purple = '\033[38;5;93m'
+        blue         = '\033[38;5;21m'
+        light_blue   = '\033[38;5;39m'
+        green        = '\033[38;5;28m'
+        light_green  = '\033[38;5;34m'
+        purple       = '\033[38;5;93m'
         light_purple = '\033[38;5;99m'
-        yellow = '\033[38;5;220m'
+        yellow       = '\033[38;5;220m'
         light_yellow = '\033[38;5;227m'
-        pink = '\033[38;5;201m'
-        light_pink = '\033[38;5;206m'
+        pink         = '\033[38;5;201m'
+        light_pink   = '\033[38;5;206m'
 
     class bg:
-        red = '\033[48;5;1m'
-        light_red = '\033[48;5;9m'
-        cyan = '\033[48;5;6m'
-        light_cyan = '\033[48;5;14m'
-        gray = '\033[48;5;240m'
-        light_gray = '\033[48;5;246m'
-        white = '\033[48;5;15m'
-        black = '\033[48;5;16m'
-        orange = '\033[48;5;202m'
+        red          = '\033[48;5;1m'
+        light_red    = '\033[48;5;9m'
+        cyan         = '\033[48;5;6m'
+        light_cyan   = '\033[48;5;14m'
+        gray         = '\033[48;5;240m'
+        light_gray   = '\033[48;5;246m'
+        white        = '\033[48;5;15m'
+        black        = '\033[48;5;16m'
+        orange       = '\033[48;5;202m'
         light_orange = '\033[48;5;172m'
-        blue = '\033[48;5;21m'
-        light_blue = '\033[48;5;39m'
-        green = '\033[48;5;28m'
-        light_green = '\033[48;5;34m'
-        purple = '\033[48;5;93m'
+        blue         = '\033[48;5;21m'
+        light_blue   = '\033[48;5;39m'
+        green        = '\033[48;5;28m'
+        light_green  = '\033[48;5;34m'
+        purple       = '\033[48;5;93m'
         light_purple = '\033[48;5;99m'
-        yellow = '\033[48;5;220m'
+        yellow       = '\033[48;5;220m'
         light_yellow = '\033[48;5;227m'
 
 #os.system('clear')
@@ -124,7 +124,8 @@ def modbus_register(address, unit):
 
 #errorindex = 0
 while True:
-    print("\033[0;0f")
+    print("\033[H\033[J") # Clear screen
+    #print("\033[0;0f")
     screensize = os.get_terminal_size()
 
     try:
@@ -292,67 +293,67 @@ while True:
         # VEbus Error
         
         
-        # error_nos = [0,1,2,3,4,5,6,7,10,14,16,17,18,22,24,25,26]
-        # VEbusError = error_nos[errorindex] # Test VEbusError's
-        # VEbusError = 18
+        #error_nos = [0,1,2,3,4,5,6,7,10,14,16,17,18,22,24,25,26]
+        #VEbusError = error_nos[errorindex] # Test VEbusError's
+        #VEbusError = 1
             
         if VEbusError == 0:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.green, tr.fill(f"No Error"), colors.fg.light_blue, sep="")
+            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.green, tr.fill(f"No Error"), sep="")
         elif VEbusError == 1:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 1: Device is "
             "switched off because one of the other phases in the system has switched off"), sep="")
         elif VEbusError == 2:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 2: New and old "
-            "types MK2 are mixed in the system"), colors.fg.light_blue, sep="")
+            "types MK2 are mixed in the system"), sep="")
         elif VEbusError == 3:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 3: Not all- or "
-             "more than- the expected devices were found in the system"), colors.fg.light_blue, sep="")
+             "more than- the expected devices were found in the system"), sep="")
         elif VEbusError == 4:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 4: No other " 
-            "device whatsoever detected"), colors.fg.light_blue, sep="")
+            "device whatsoever detected"), sep="")
         elif VEbusError == 5:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 5: Overvoltage "
-            "on AC-out"), colors.fg.light_blue, sep="")
+            "on AC-out"), sep="")
         elif VEbusError == 6:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 6: in DDC "
-            "Program"), colors.fg.light_blue, sep="")
+            "Program"), sep="")
         elif VEbusError == 7:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"VE.Bus BMS connected- "
-            "which requires an Assistant- but no assistant found"), colors.fg.light_blue, sep="")
+            "which requires an Assistant- but no assistant found"), sep="")
         elif VEbusError == 10:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 10: System time "
-            " synchronisation problem occurred"), colors.fg.light_blue, sep="")
+            " synchronisation problem occurred"), sep="")
         elif VEbusError == 14:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 14: Device cannot "
-            "transmit data"), colors.fg.light_blue, sep="")
+            "transmit data"), sep="")
         elif VEbusError == 16:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 16: Dongle missing "
-            ), colors.fg.light_blue, sep="")
+            ), sep="")
         elif VEbusError == 17:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 17: One of the "
-            "devices assumed master status because the original master failed"), colors.fg.light_blue, sep="")
+            "devices assumed master status because the original master failed"), sep="")
         elif VEbusError == 18:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 18: AC Overvoltage "
-            "on the output of a slave has occurred while already switched off"), colors.fg.light_blue, sep="")
+            "on the output of a slave has occurred while already switched off"), sep="")
         elif VEbusError == 22:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 22: This device "
-            "cannot function as slave"), colors.fg.light_blue, sep="")
+            "cannot function as slave"),sep="")
         elif VEbusError == 24:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 24: Switch-over "
-            "system protection initiated"), colors.fg.light_blue, sep="")
+            "system protection initiated"), sep="")
         elif VEbusError == 25:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 25: Firmware "
-            "incompatibility. The firmware of one of the connected devices is not sufficiently up to date"), colors.fg.light_blue, sep="")
+            "incompatibility. The firmware of one of the connected devices is not sufficiently up to date"), sep="")
         elif VEbusError == 26:
             print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 26: Internal "
-            "error"), colors.fg.light_blue, sep="")
+            "error"),sep="")
     
         # errorindex += 1
         # if errorindex == len(error_nos):
             # errorindex = 0
         
         if ESS_Info.lower() == 'y':
-            
+            print(colors.fg.light_blue, end="")
             print(f" ESS SOC Limit (User).... {ESSsocLimitUser:.2f}% Unless Grid Fails", sep="")
           
             print(f" ESS SOC Limit (Dynamic). {ESSsocLimitDynamic:.2f}%", sep="")
@@ -433,7 +434,7 @@ while True:
         
         
         
-        print("\033[%d;%dH" % (0, 0)) # Move cursor to 0 0 instead of clearing screen
+        #print("\033[%d;%dH" % (0, 0)) # Move cursor to 0 0 instead of clearing screen
         #print("\033[0;0f")
         #print("\033[H\033[J") # Clear screen
         #print("\033[%d;%dH" % (0, 0)) # Move cursor to 0 0 instead of clearing screen
