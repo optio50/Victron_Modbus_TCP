@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# This script depends on the following Victron equipment. BMV, Multiplus, Solar Charger, Venus GX device.
+# Modbus must be enabled in the Venus GX device
+# You shouldnt have to change anything but some variables to make this work with your system
+# provided you actually have the requsite victron equipment.
+
 from pymodbus.constants import Defaults
 from pymodbus.constants import Endian
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
@@ -9,23 +14,31 @@ import sys
 import os
 import time
 import textwrap
+import subprocess
 
 Analog_Inputs = 'n'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-ESS_Info = 'n' # Y or N (case insensitive) to display ESS system information
-ip = "192.168.20.156" # ip address of GX device or if on venus local try localhost
+ESS_Info      = 'y' # Y or N (case insensitive) to display ESS system information
+ip            = "192.168.20.156" # ip address of GX device or if on venus local try localhost
 
 # Value Refresh Rate in seconds
 RefreshRate = 1
 
-# Instance #'s from Cerbo GX and cross referenced to the unit ID in the Victron TCP-MODbus register xls file Tab #2.
-# https://github.com/victronenergy/dbus_modbustcp/blob/master/CCGX-Modbus-TCP-register-list.xlsx
-SolarChargerID = 226
-MultiPlusID = 227
-BmvID = 223
-VEsystemID = 100
+# Unit ID #'s from Cerbo GX.
+# Do not confuse UnitID with Instance ID.
+# You can also get the UnitID from the GX device. Menu --> Settings --> Services --> ModBusTCP --> Available Services
+# Or
+# https://github.com/victronenergy/dbus_modbustcp/blob/master/CCGX-Modbus-TCP-register-list.xlsx Tab #2
+#===================================
+SolarChargerID    = 226
+MultiPlusID       = 227
+BmvID             = 223
+VEsystemID        = 100
+#===================================
 
 Defaults.Timeout = 25
 Defaults.Retries = 5
+
+tab2 = "\t\t"
 
 # Local network ip address of Cerbo GX. Default port 502
 client = ModbusClient(ip, port='502')
@@ -101,12 +114,17 @@ print('\033[?25l', end="") # Hide Blinking Cursor
 def spacer():
     print(colors.fg.gray, "="*80 , sep="")
 
+def modbus_register(address, unit):
+    msg     = client.read_input_registers(address, unit=unit)
+    decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, byteorder=Endian.Big)
+    msg     = decoder.decode_16bit_int()
+    return msg
 
 
 
 #errorindex = 0
 while True:
-    
+    print("\033[0;0f")
     screensize = os.get_terminal_size()
 
     try:
@@ -119,12 +137,53 @@ while True:
         
         print(colors.fg.purple,f"\n Time & Date............. {dt_string}", sep="")
         
-        BatterySOC = client.read_input_registers(266, unit=BmvID)
-        decoder = BinaryPayloadDecoder.fromRegisters(BatterySOC.registers, byteorder=Endian.Big)
-        BatterySOC = decoder.decode_16bit_uint()
-        BatterySOC = BatterySOC / 10
-        #BatterySOC = 30 # Test value color
+        BatterySOC    = modbus_register(266,BmvID) / 10
+        BatteryWatts  = modbus_register(842, unit=VEsystemID)
+        BatteryAmps   = modbus_register(841, unit=VEsystemID) / 10
+        BatteryVolts  = modbus_register(259, unit=BmvID) / 100
         
+        SolarVolts    = modbus_register(776, unit=SolarChargerID) / 100
+        SolarAmps     = modbus_register(777, unit=SolarChargerID) / 10
+        SolarWatts    = modbus_register(789, unit=SolarChargerID) /10
+        MaxSolarWatts = modbus_register(785, unit=SolarChargerID)
+        SolarYield    = modbus_register(784, unit=SolarChargerID) / 10
+        SolarState    = modbus_register(775, unit=SolarChargerID)
+        
+        GridSetPoint  = modbus_register(2700, unit=VEsystemID)
+        GridCondition = modbus_register(64, unit=MultiPlusID)
+        ACoutHZ       = modbus_register(21, unit=MultiPlusID) / 100
+        ACoutVolts    = modbus_register(15, unit=MultiPlusID) / 10
+        ACoutAmps     = modbus_register(18, unit=MultiPlusID) / 10
+        ACoutWatts    = modbus_register(817, unit=VEsystemID)
+        GridHZ        = modbus_register(9, unit=MultiPlusID) / 100
+        GridVolts     = modbus_register(3, unit=MultiPlusID) / 10
+        GridAmps      = modbus_register(6, unit=MultiPlusID) / 10
+        GridWatts     = modbus_register(820, unit=VEsystemID)
+        
+        ESSsocLimitUser     = modbus_register(2901, unit=VEsystemID) / 10
+        ESSsocLimitDynamic  = modbus_register(2903, unit=VEsystemID) / 10
+        ESSbatteryLifeState = modbus_register(2900, unit=VEsystemID)
+        
+        VEbusError  = modbus_register(32, unit=MultiPlusID)
+        VEbusStatus = modbus_register(31, unit=MultiPlusID)
+        
+        if Analog_Inputs.lower() == "y":
+            try:
+                TempSensor1 = modbus_register(3304,24) / 100 * 1.8 + 32
+            except AttributeError:
+                TempSensor1 = 777
+                
+            try:
+                TempSensor2 = modbus_register(3304,25) / 100 * 1.8 + 32
+            except AttributeError:
+                TempSensor2 = 777
+                
+            try:
+                TempSensor3 = modbus_register(3304,26) / 100 * 1.8 + 32
+            except AttributeError:
+                TempSensor3 = 777
+        
+                
         # Battery value color
         if BatterySOC >= 60:
             print(colors.fg.cyan,f" Battery SOC............. ",colors.bold, colors.fg.green,f"{BatterySOC:.1f}", " %", colors.reset, sep="")
@@ -132,135 +191,57 @@ while True:
             print(colors.fg.cyan,f" Battery SOC............. ",colors.bold, colors.fg.yellow,f"{BatterySOC:.1f}", " %", colors.reset, sep="")
         elif BatterySOC < 30:
             print(colors.fg.cyan,f" Battery SOC............. ",colors.bold, colors.fg.red,f"{BatterySOC:.1f}", " %", colors.reset, sep="")
-        
-        BatteryWatts = client.read_input_registers(842, unit=VEsystemID)
-        decoder = BinaryPayloadDecoder.fromRegisters(BatteryWatts.registers, byteorder=Endian.Big)
-        BatteryWatts = decoder.decode_16bit_int()
+
         print(colors.fg.cyan,f" Battery Watts........... {BatteryWatts:.0f}", sep="")
         
-        BatteryAmps = client.read_input_registers(841, unit=VEsystemID)
-        decoder = BinaryPayloadDecoder.fromRegisters(BatteryAmps.registers, byteorder=Endian.Big)
-        BatteryAmps = decoder.decode_16bit_int()
-        print(colors.fg.cyan,f" Battery Amps............ {BatteryAmps / 10:.1f}", sep="")
+        print(colors.fg.cyan,f" Battery Amps............ {BatteryAmps:.1f}", sep="")
         
-        BatteryVolts = client.read_input_registers(259, unit=BmvID)
-        decoder = BinaryPayloadDecoder.fromRegisters(BatteryVolts.registers, byteorder=Endian.Big)
-        BatteryVolts = decoder.decode_16bit_uint()
-        print(colors.fg.cyan,f" Battery Volts........... {BatteryVolts / 100:.2f}", colors.reset, sep="")
+        print(colors.fg.cyan,f" Battery Volts........... {BatteryVolts:.2f}", colors.reset, sep="")
         
         spacer()
-        
-        SolarVolts = client.read_input_registers(776, unit=SolarChargerID)
-        decoder = BinaryPayloadDecoder.fromRegisters(SolarVolts.registers, byteorder=Endian.Big)
-        SolarVolts = decoder.decode_16bit_uint()
-        SolarVolts = SolarVolts / 100
+
         print(colors.fg.orange,f" PV Volts................ {SolarVolts:.2f}", sep="")
         
-        # Broken register 777 in GX firmware 2.81
-        try:
-            SolarAmps = client.read_input_registers(777, unit=SolarChargerID)
-            decoder = BinaryPayloadDecoder.fromRegisters(SolarAmps.registers, byteorder=Endian.Big)
-            SolarAmps = decoder.decode_16bit_int()
-            print(f" PV Amps................. {SolarAmps / 10:.2f}", sep="")
-        
-        except AttributeError:
-            print(f" PV Amps................. No Value, Firmware bug.  Venus OS > v2.82~4 or <= 2.73 Required", sep="")
-        
-        SolarWatts = client.read_input_registers(789, unit=SolarChargerID)
-        decoder = BinaryPayloadDecoder.fromRegisters(SolarWatts.registers, byteorder=Endian.Big)
-        SolarWatts = decoder.decode_16bit_uint()
-        SolarWatts = SolarWatts / 10
+        print(f" PV Amps................. {SolarAmps:.2f}", sep="")
         
         print(f" PV Watts................ {SolarWatts:.0f}", sep="")
-                
-        MaxSolarWatts = client.read_input_registers(785, unit=SolarChargerID)
-        decoder = BinaryPayloadDecoder.fromRegisters(MaxSolarWatts.registers, byteorder=Endian.Big)
-        MaxSolarWatts = decoder.decode_16bit_uint()
+        
         print(f" Max PV Watts Today...... {MaxSolarWatts}", sep="")
         
-        SolarYield = client.read_input_registers(784, unit=SolarChargerID)
-        decoder = BinaryPayloadDecoder.fromRegisters(SolarYield.registers, byteorder=Endian.Big)
-        SolarYield = decoder.decode_16bit_int()
-        print(f" PV Yield Today.......... {SolarYield / 10:.3f} kWh", sep="")
+        print(f" PV Yield Today.......... {SolarYield:.3f} kWh", sep="")
         
-        SolarState = client.read_input_registers(775, unit=SolarChargerID)
-        decoder = BinaryPayloadDecoder.fromRegisters(SolarState.registers, byteorder=Endian.Big)
-        SolarState = decoder.decode_16bit_int()
         if SolarState == 0:
             print(f" PV Charger State........ OFF", sep="")
-        if SolarState == 2:
+        elif SolarState == 2:
             print(f" PV Charger State........ Fault", sep="")
-        if SolarState == 3:
+        elif SolarState == 3:
             print(f" PV Charger State........ Bulk", sep="")
-        if SolarState == 4:
+        elif SolarState == 4:
             print(f" PV Charger State........ Absorption", sep="")
-        if SolarState == 5:
+        elif SolarState == 5:
             print(f" PV Charger State........ Float", sep="")
-        if SolarState == 6:
+        elif SolarState == 6:
             print(f" PV Charger State........ Storage", sep="")
-        if SolarState == 7:
+        elif SolarState == 7:
             print(f" PV Charger State........ Equalize", colors.reset, sep="")
-        if SolarState == 11:
+        elif SolarState == 11:
             print(f" PV Charger State........ Other (Hub-1)", colors.reset, sep="")
-        if SolarState == 252:
+        elif SolarState == 252:
             print(f" PV Charger State........ EXT Control", sep="")
         
         spacer()
         
-        GridSetPoint = client.read_input_registers(2700, unit=VEsystemID)
-        decoder = BinaryPayloadDecoder.fromRegisters(GridSetPoint.registers, byteorder=Endian.Big)
-        GridSetPoint = decoder.decode_16bit_int()
         print(colors.fg.green,f" Grid Set Point Watts.... {GridSetPoint}", sep="")
         
-        GridWatts = client.read_input_registers(820, unit=VEsystemID)
-        decoder = BinaryPayloadDecoder.fromRegisters(GridWatts.registers, byteorder=Endian.Big)
-        GridWatts = decoder.decode_16bit_int()
-        print(f" Grid Watts.............. {GridWatts}", sep="")
+        print(f" Grid Watts.............. {GridWatts:.0f}"+tab2+f"AC Output Watts......... {ACoutWatts}", sep="")
         
-        GridAmps = client.read_input_registers(6, unit=MultiPlusID)
-        decoder = BinaryPayloadDecoder.fromRegisters(GridAmps.registers, byteorder=Endian.Big)
-        GridAmps = decoder.decode_16bit_int()
-        GridAmps = GridAmps / 10
-        print(f" Grid Amps............... {GridAmps:.1f}", sep="")
+        print(f" Grid Amps............... {GridAmps:.1f}"+tab2+f"AC Output Amps.......... {ACoutAmps:.1f}", sep="")
         
-        GridVolts = client.read_input_registers(3, unit=MultiPlusID)
-        decoder = BinaryPayloadDecoder.fromRegisters(GridVolts.registers, byteorder=Endian.Big)
-        GridVolts = decoder.decode_16bit_int()
-        GridVolts = GridVolts / 10
-        print(f" Grid Volts ............. {GridVolts:.1f}", sep="")
+        print(f" Grid Volts ............. {GridVolts:.1f}"+tab2+f"AC Output Volts......... {ACoutVolts:.1f}", sep="")
         
-        GridHZ = client.read_input_registers(9, unit=MultiPlusID)
-        decoder = BinaryPayloadDecoder.fromRegisters(GridHZ.registers, byteorder=Endian.Big)
-        GridHZ = decoder.decode_16bit_int()
-        GridHZ = GridHZ / 100
-        print(f" Grid Freq .............. {GridHZ:.1f}",sep="")
-                
-        ACoutWatts = client.read_input_registers(817, unit=VEsystemID)
-        decoder = BinaryPayloadDecoder.fromRegisters(ACoutWatts.registers, byteorder=Endian.Big)
-        ACoutWatts = decoder.decode_16bit_uint()
-        print(f" AC Output Watts......... {ACoutWatts}", sep="")
-        
-        ACoutAmps = client.read_input_registers(18, unit=MultiPlusID)
-        decoder = BinaryPayloadDecoder.fromRegisters(ACoutAmps.registers, byteorder=Endian.Big)
-        ACoutAmps = decoder.decode_16bit_int()
-        ACoutAmps = ACoutAmps / 10
-        print(f" AC Output Amps.......... {ACoutAmps:.1f}", sep="")
-                
-        ACoutVolts = client.read_input_registers(15, unit=MultiPlusID)
-        decoder = BinaryPayloadDecoder.fromRegisters(ACoutVolts.registers, byteorder=Endian.Big)
-        ACoutVolts = decoder.decode_16bit_int()
-        ACoutVolts = ACoutVolts / 10
-        print(f" AC Output Volts......... {ACoutVolts:.1f}", sep="")
-        
-        ACoutHZ = client.read_input_registers(21, unit=MultiPlusID)
-        decoder = BinaryPayloadDecoder.fromRegisters(ACoutHZ.registers, byteorder=Endian.Big)
-        ACoutHZ = decoder.decode_16bit_int()
-        ACoutHZ = ACoutHZ / 100
-        print(f" AC Output Freq.......... {ACoutHZ:.1f}", sep="")
-                        
-        GridCondition = client.read_input_registers(64, unit=MultiPlusID)
-        decoder = BinaryPayloadDecoder.fromRegisters(GridCondition.registers, byteorder=Endian.Big)
-        GridCondition = decoder.decode_16bit_uint()
+        print(f" Grid Freq .............. {GridHZ:.1f}"+tab2+f"AC Output Freq.......... {ACoutHZ:.1f}",sep="")
+
+
         if GridCondition == 0:
             print(colors.fg.green,f" Grid Condition.......... OK", sep="")
         if GridCondition == 1:
@@ -268,9 +249,8 @@ while True:
         
         spacer()
                 
-        VEbusStatus = client.read_input_registers(31, unit=MultiPlusID)
-        decoder = BinaryPayloadDecoder.fromRegisters(VEbusStatus.registers, byteorder=Endian.Big)
-        VEbusStatus = decoder.decode_16bit_uint()
+        
+        
         if VEbusStatus == 3:
             print(colors.fg.light_blue,f" System State............ Bulk Charging",sep="")
         if VEbusStatus == 4:
@@ -281,9 +261,7 @@ while True:
         tr = textwrap.TextWrapper(width=56, subsequent_indent=" ")
             
         # VEbus Error
-        VEbusError = client.read_input_registers(32, unit=MultiPlusID)
-        decoder = BinaryPayloadDecoder.fromRegisters(VEbusError.registers, byteorder=Endian.Big)
-        VEbusError = decoder.decode_16bit_uint()
+        
         
         # error_nos = [0,1,2,3,4,5,6,7,10,14,16,17,18,22,24,25,26]
         # VEbusError = error_nos[errorindex] # Test VEbusError's
@@ -345,24 +323,11 @@ while True:
             # errorindex = 0
         
         if ESS_Info.lower() == 'y':
-            ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
-            ESSsocLimitUser = decoder.decode_16bit_uint()
-            print(f" ESS SOC Limit (User).... {ESSsocLimitUser / 10:.2f}% Unless Grid Fails", sep="")
+            
+            print(f" ESS SOC Limit (User).... {ESSsocLimitUser:.2f}% Unless Grid Fails", sep="")
+          
+            print(f" ESS SOC Limit (Dynamic). {ESSsocLimitDynamic:.2f}%", sep="")
            
-           # Requires Newer GX Firmware such as 2.82~4 or >
-            try:
-                ESSsocLimitDynamic = client.read_input_registers(2903, unit=VEsystemID)
-                decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitDynamic.registers, byteorder=Endian.Big)
-                ESSsocLimitDynamic = decoder.decode_16bit_uint()
-                print(f" ESS SOC Limit (Dynamic). {ESSsocLimitDynamic / 10:.2f}%", sep="")
-            
-            except AttributeError:
-                print(f" ESS SOC Limit (Dynamic). No Value, Firmware requires. Venus OS > v2.82~4", sep="")
-            
-            ESSbatteryLifeState = client.read_input_registers(2900, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ESSbatteryLifeState.registers, byteorder=Endian.Big)
-            ESSbatteryLifeState = decoder.decode_16bit_uint()
             if ESSbatteryLifeState == 0:
                 print(f" ESS Battery Life State.. Battery Life Disabled", sep="")
             if ESSbatteryLifeState == 1:
@@ -396,36 +361,37 @@ while True:
         ###############################################
         ### Begin Cerbo GX Analog Temperature Inputs ##
         ###############################################
+        Sens1 = "Battery Box"
+        Sens2 = "Cabin"
+        Sens3 = "Outside"
         
         if Analog_Inputs.lower() == "y":
-            
-            BattBoxTemp = client.read_input_registers(3304, unit= 24) # Input 1
-            decoder = BinaryPayloadDecoder.fromRegisters(BattBoxTemp.registers, byteorder=Endian.Big)
-            BattBoxTemp = decoder.decode_16bit_int()
-            BattBoxTemp = BattBoxTemp / 100 * 1.8 + 32
-            if BattBoxTemp > 50:
-                print(colors.fg.blue,f" Battery Box Temp........ {BattBoxTemp:.2f} Deg F", colors.fg.red, "  Whew...its a tad warm in here",colors.reset, sep="")
+
+            if TempSensor1 == 777:
+                print(colors.fg.pink,f" Temp Sensor 1........... Not installed or unit ID wrong", sep="")
+            elif TempSensor1 > 49 and TempSensor1 < 120 :
+                print(colors.fg.pink, f" {Sens1} Temp........ {TempSensor1:.1f} °F  Whew...its a tad warm in here", sep="")
             else:
-                print(colors.fg.blue,f" Battery Box Temp........ {BattBoxTemp:.2f} Deg F", sep="")
+                print(colors.fg.pink, f" {Sens1} Temp........ {TempSensor1:.1f} °F ", sep="")
+                
+            if TempSensor2 == 777:
+                print(" Temp Sensor 2........... Not installed or unit ID wrong", sep="")
             
-            CabinTemp = client.read_input_registers(3304, unit= 25) # Input 2
-            decoder = BinaryPayloadDecoder.fromRegisters(CabinTemp.registers, byteorder=Endian.Big)
-            CabinTemp = decoder.decode_16bit_int()
-            CabinTemp = CabinTemp / 100 * 1.8 + 32
-            if CabinTemp < 45:
-                print(colors.fg.blue,f" Cabin Temp.............. {CabinTemp:.2f} Deg F  Whoa...Crank up the heat in this place!", sep="")
+            elif TempSensor2 < 45:
+                print(f" {Sens2} Temp.............. {TempSensor2:.1f} °F    Whoa...Crank up the heat in this place!", sep="")
+               
             else:
-                print(colors.fg.blue,f" Cabin Temp.............. {CabinTemp:.2f} Deg F", sep="")
+                print(f" {Sens2} Temp.............. {TempSensor2:.1f} °F", sep="")
+
+            if TempSensor3 == 777:
+                print(" Temp Sensor 3........... Not installed or unit ID wrong",colors.reset, sep="")
             
-            ExteriorTemp = client.read_input_registers(3304, unit= 26) # Input 3
-            decoder = BinaryPayloadDecoder.fromRegisters(ExteriorTemp.registers, byteorder=Endian.Big)
-            ExteriorTemp = decoder.decode_16bit_int()
-            ExteriorTemp = ExteriorTemp / 100 * 1.8 + 32
-            
-            if ExteriorTemp < 33:
-                print(colors.fg.blue,f" Outside Temp............ {ExteriorTemp:.2f} Deg F  Burr...A Wee Bit Chilly Outside", colors.reset, sep="")
+            elif TempSensor3 < 33:
+                print(f" {Sens3} Temp............ {TempSensor3:.1f} °F  Burr...A Wee Bit Chilly Outside",colors.reset, sep="")
+
             else:
-                print(colors.fg.blue,f" Outside Temp............ {ExteriorTemp:.2f} Deg F", colors.reset, sep="")
+                print(f" {Sens3} Temp............ {TempSensor3:.1f} °F",colors.reset, sep="")
+                    
         
         print(colors.fg.gray,"\n\tCtrl+C  To Quit",colors.reset)       
         ###############################################
@@ -434,9 +400,18 @@ while True:
         
         time.sleep(RefreshRate)
         if screensize != os.get_terminal_size():
-            os.system('clear')
+            print("\033[H\033[J") # Clear screen
+        
+        
+        
         print("\033[%d;%dH" % (0, 0)) # Move cursor to 0 0 instead of clearing screen
-        print("\033[H\033[J") # Clear screen
+        #print("\033[0;0f")
+        #print("\033[H\033[J") # Clear screen
+        #print("\033[%d;%dH" % (0, 0)) # Move cursor to 0 0 instead of clearing screen
+
+        #print(chr(27) + "[1;1f")
+        #print("\033[H\033[J") # Clear screen
+        
         if VEbusError != 0:
             print("\033[H\033[J") # Clear screen
         #os.system('clear')
