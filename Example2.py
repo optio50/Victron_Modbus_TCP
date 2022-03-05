@@ -120,15 +120,15 @@ curses.curs_set(False)
 curses.start_color()
 curses.use_default_colors()
 curses.init_color(0, 0, 0,  0)
-curses.init_pair(100, 82,  -1)  # Fluorescent Green
-curses.init_pair(101, 93,  -1)  # Purple
-curses.init_pair(102, 2,   -1)   # Green
+curses.init_pair(100, 82,  -1) # Fluorescent Green
+curses.init_pair(101, 93,  -1) # Purple
+curses.init_pair(102, 2,   -1) # Green
 curses.init_pair(103, 226, -1) # Yellow
 curses.init_pair(104, 160, -1) # Red
-curses.init_pair(105, 37,  -1)  # Cyan
+curses.init_pair(105, 37,  -1) # Cyan
 curses.init_pair(106, 202, -1) # Orange
-curses.init_pair(107, 33,  -1)  # Lt Blue
-curses.init_pair(108, 21,  -1)  # Blue1
+curses.init_pair(107, 33,  -1) # Lt Blue
+curses.init_pair(108, 21,  -1) # Blue1
 curses.init_pair(109, 239, -1) # Gray
 curses.init_pair(110, 197, -1) # Lt Pink
 curses.init_pair(111, 201, -1) # Pink
@@ -991,7 +991,7 @@ def main(stdscr):
                 builder.reset()
                 builder.add_16bit_int(GridSetPoint + 10)
                 payload = builder.to_registers()
-                client.write_modbus_register(2700, payload[0])
+                client.write_register(2700, payload[0])
                 continue
                 #else:
                 #   client.write_registers(address=2700, values=GridSetPoint + 10, unit=VEsystemID)
@@ -1001,7 +1001,7 @@ def main(stdscr):
                 builder.reset()
                 builder.add_16bit_int(GridSetPoint - 10)
                 payload = builder.to_registers()
-                client.write_modbus_register(2700, payload[0])
+                client.write_register(2700, payload[0])
                 continue
                 #else:    
                 #    client.write_registers(address=2700, values=GridSetPoint - 10, unit=VEsystemID)
