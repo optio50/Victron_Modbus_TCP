@@ -17,7 +17,7 @@ import textwrap
 import subprocess
 
 Analog_Inputs = 'n'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-ESS_Info      = 'y' # Y or N (case insensitive) to display ESS system information
+ESS_Info      = 'n' # Y or N (case insensitive) to display ESS system information
 ip            = "192.168.20.156" # ip address of GX device or if on venus local try localhost
 
 # Value Refresh Rate in seconds
@@ -109,7 +109,8 @@ class colors:
 #os.system('clear')
 print("\033[H\033[J") # Clear screen
 print('\033[?25l', end="") # Hide Blinking Cursor
-
+el = "\033[K\033[1K" # Eliminates screen flashing / blink during refresh
+# It clear's to end of line and clears to begining of line then reprints
 
 def spacer():
     print(colors.fg.gray, "="*80 , sep="")
@@ -124,8 +125,9 @@ def modbus_register(address, unit):
 
 #errorindex = 0
 while True:
-    print("\033[H\033[J") # Clear screen
-    #print("\033[0;0f")
+    #print("\033[H\033[J") # Clear screen
+    print("\033[0;0f")
+    
     screensize = os.get_terminal_size()
 
     try:
@@ -183,72 +185,72 @@ while True:
         # Fri 21 Jan 2022 09:06:57 PM
         dt_string = now.strftime("%a %d %b %Y %r")
         
-        print(colors.fg.purple,f"\n Time & Date............. {dt_string}", sep="")
+        print(el,colors.fg.purple,f"\n Time & Date............. {dt_string}", sep="")
         
         
                 
         # Battery value color
         if BatterySOC >= 60:
-            print(colors.fg.cyan,f" Battery SOC............. ",colors.bold, colors.fg.green,f"{BatterySOC:.1f}", " %", colors.reset, sep="")
+            print(el,colors.fg.cyan,f" Battery SOC............. ",colors.bold, colors.fg.green,f"{BatterySOC:.1f}", " %", colors.reset, sep="")
         elif BatterySOC >= 30 and BatterySOC < 60:
-            print(colors.fg.cyan,f" Battery SOC............. ",colors.bold, colors.fg.yellow,f"{BatterySOC:.1f}", " %", colors.reset, sep="")
+            print(el,colors.fg.cyan,f" Battery SOC............. ",colors.bold, colors.fg.yellow,f"{BatterySOC:.1f}", " %", colors.reset, sep="")
         elif BatterySOC < 30:
-            print(colors.fg.cyan,f" Battery SOC............. ",colors.bold, colors.fg.red,f"{BatterySOC:.1f}", " %", colors.reset, sep="")
+            print(el,colors.fg.cyan,f" Battery SOC............. ",colors.bold, colors.fg.red,f"{BatterySOC:.1f}", " %", colors.reset, sep="")
 
-        print(colors.fg.cyan,f" Battery Watts........... {BatteryWatts:.0f}", sep="")
+        print(el,colors.fg.cyan,f" Battery Watts........... {BatteryWatts:.0f}", sep="")
         
-        print(colors.fg.cyan,f" Battery Amps............ {BatteryAmps:.1f}", sep="")
+        print(el,colors.fg.cyan,f" Battery Amps............ {BatteryAmps:.1f}", sep="")
         
-        print(colors.fg.cyan,f" Battery Volts........... {BatteryVolts:.2f}", colors.reset, sep="")
+        print(el,colors.fg.cyan,f" Battery Volts........... {BatteryVolts:.2f}", colors.reset, sep="")
         
         spacer()
 
-        print(colors.fg.orange,f" PV Volts................ {SolarVolts:.2f}", sep="")
+        print(el,colors.fg.orange,f" PV Watts................ {SolarWatts:.0f}", sep="")
         
-        print(f" PV Amps................. {SolarAmps:.2f}", sep="")
+        print(el,f" PV Amps................. {SolarAmps:.2f}", sep="")
         
-        print(f" PV Watts................ {SolarWatts:.0f}", sep="")
+        print(el,f" PV Volts................ {SolarVolts:.2f}", sep="")
         
-        print(f" Max PV Watts Today...... {MaxSolarWatts}", sep="")
+        print(el,f" Max PV Watts Today...... {MaxSolarWatts}", sep="")
         
-        print(f" PV Yield Today.......... {SolarYield:.3f} kWh", sep="")
+        print(el,f" PV Yield Today.......... {SolarYield:.3f} kWh", sep="")
         
         if SolarState == 0:
-            print(f" PV Charger State........ OFF", sep="")
+            print(el,f" PV Charger State........ OFF", sep="")
         elif SolarState == 2:
-            print(f" PV Charger State........ Fault", sep="")
+            print(el,f" PV Charger State........ Fault", sep="")
         elif SolarState == 3:
-            print(f" PV Charger State........ Bulk", sep="")
+            print(el,f" PV Charger State........ Bulk", sep="")
         elif SolarState == 4:
-            print(f" PV Charger State........ Absorption", sep="")
+            print(el,f" PV Charger State........ Absorption", sep="")
         elif SolarState == 5:
-            print(f" PV Charger State........ Float", sep="")
+            print(el,f" PV Charger State........ Float", sep="")
         elif SolarState == 6:
-            print(f" PV Charger State........ Storage", sep="")
+            print(el,f" PV Charger State........ Storage", sep="")
         elif SolarState == 7:
-            print(f" PV Charger State........ Equalize", colors.reset, sep="")
+            print(el,f" PV Charger State........ Equalize", colors.reset, sep="")
         elif SolarState == 11:
-            print(f" PV Charger State........ Other (Hub-1)", colors.reset, sep="")
+            print(el,f" PV Charger State........ Other (Hub-1)", colors.reset, sep="")
         elif SolarState == 252:
-            print(f" PV Charger State........ EXT Control", sep="")
+            print(el,f" PV Charger State........ EXT Control", sep="")
         
         spacer()
+        #print("\033[K", end="")
+        print(el,colors.fg.green,f" Grid Set Point Watts.... {GridSetPoint}", sep="")
         
-        print(colors.fg.green,f" Grid Set Point Watts.... {GridSetPoint}", sep="")
+        print(el,f" Grid Watts.............. {GridWatts:.0f}"+tab2+f"AC Output Watts......... {ACoutWatts}", sep="")
         
-        print(f" Grid Watts.............. {GridWatts:.0f}"+tab2+f"AC Output Watts......... {ACoutWatts}", sep="")
+        print(el,f" Grid Amps............... {GridAmps:.1f}"+tab2+f"AC Output Amps.......... {ACoutAmps:.1f}", sep="")
         
-        print(f" Grid Amps............... {GridAmps:.1f}"+tab2+f"AC Output Amps.......... {ACoutAmps:.1f}", sep="")
+        print(el,f" Grid Volts ............. {GridVolts:.1f}"+tab2+f"AC Output Volts......... {ACoutVolts:.1f}", sep="")
         
-        print(f" Grid Volts ............. {GridVolts:.1f}"+tab2+f"AC Output Volts......... {ACoutVolts:.1f}", sep="")
-        
-        print(f" Grid Freq .............. {GridHZ:.1f}"+tab2+f"AC Output Freq.......... {ACoutHZ:.1f}",sep="")
+        print(el,f" Grid Freq .............. {GridHZ:.1f}"+tab2+f"AC Output Freq.......... {ACoutHZ:.1f}",sep="")
 
 
         if GridCondition == 0:
-            print(colors.fg.green,f" Grid Condition.......... OK", sep="")
+            print(el,colors.fg.green,f" Grid Condition.......... OK", sep="")
         if GridCondition == 1:
-            print(colors.fg.light_red,f" Grid Condition ......... Grid LOST", colors.reset, sep="")
+            print(el,colors.fg.light_red,f" Grid Condition ......... Grid LOST", colors.reset, sep="")
         
         spacer()
                 
@@ -256,36 +258,36 @@ while True:
         
         # ===========================================================================================
 #   VE.Bus Status
-        print(colors.fg.light_blue, end="")
+        print(el,colors.fg.light_blue, end="", sep="")
         if VEbusStatus == 0:
-            print(f" System State............ OFF",sep="")
+            print(el,f" System State............ OFF",sep="")
         elif VEbusStatus == 1:
-            print(f" System State............ Low Power",sep="")
+            print(el,f" System State............ Low Power",sep="")
         elif VEbusStatus == 2:
-            print(f" System State............ ",colors.fg.red,"Fault",sep="")
+            print(el,f" System State............ ",colors.fg.red,"Fault",sep="")
         elif VEbusStatus == 3:
-            print(f" System State............ Bulk Charging",sep="")
+            print(el,f" System State............ Bulk Charging",sep="")
         elif VEbusStatus == 4:
-            print(f" System State............ Absorption Charging",sep="")
+            print(el,f" System State............ Absorption Charging",sep="")
         elif VEbusStatus == 5:
-            print(f" System State............ Float Charging",sep="")
+            print(el,f" System State............ Float Charging",sep="")
         elif VEbusStatus == 6:
-            print(f" System State............ Storage",sep="")
+            print(el,f" System State............ Storage",sep="")
         elif VEbusStatus == 7:
-            print(f" System State............ Equalize",sep="")
+            print(el,f" System State............ Equalize",sep="")
         elif VEbusStatus == 8:
-            print(f" System State............ Passthru",sep="")
+            print(el,f" System State............ Passthru",sep="")
         elif VEbusStatus == 9:
-            print(f" System State............ Inverting",sep="")
+            print(el,f" System State............ Inverting",sep="")
         elif VEbusStatus == 10:
-            print(f" System State............ Power Assist",sep="")
+            print(el,f" System State............ Power Assist",sep="")
         elif VEbusStatus == 256:
-            print(f" System State............ Discharging",sep="")
+            print(el,f" System State............ Discharging",sep="")
         elif VEbusStatus == 257:
-            print(f" System State............ Sustain",sep="")
+            print(el,f" System State............ Sustain",sep="")
         else:
-            print(f" System State............ Unknown State",sep="")
-        print(colors.reset, end="")
+            print(el,f" System State............ Unknown State",sep="")
+        print(el,colors.reset, end="")
 # ===========================================================================================
         
         tr = textwrap.TextWrapper(width=56, subsequent_indent=" ")
@@ -296,56 +298,56 @@ while True:
         #error_nos = [0,1,2,3,4,5,6,7,10,14,16,17,18,22,24,25,26]
         #VEbusError = error_nos[errorindex] # Test VEbusError's
         #VEbusError = 1
-            
+
         if VEbusError == 0:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.green, tr.fill(f"No Error"), sep="")
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.green, f"No Error", sep="")
         elif VEbusError == 1:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 1: Device is "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 1: Device is "
             "switched off because one of the other phases in the system has switched off"), sep="")
         elif VEbusError == 2:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 2: New and old "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 2: New and old "
             "types MK2 are mixed in the system"), sep="")
         elif VEbusError == 3:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 3: Not all- or "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 3: Not all- or "
              "more than- the expected devices were found in the system"), sep="")
         elif VEbusError == 4:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 4: No other " 
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 4: No other " 
             "device whatsoever detected"), sep="")
         elif VEbusError == 5:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 5: Overvoltage "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 5: Overvoltage "
             "on AC-out"), sep="")
         elif VEbusError == 6:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 6: in DDC "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 6: in DDC "
             "Program"), sep="")
         elif VEbusError == 7:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"VE.Bus BMS connected- "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"VE.Bus BMS connected- "
             "which requires an Assistant- but no assistant found"), sep="")
         elif VEbusError == 10:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 10: System time "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 10: System time "
             " synchronisation problem occurred"), sep="")
         elif VEbusError == 14:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 14: Device cannot "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 14: Device cannot "
             "transmit data"), sep="")
         elif VEbusError == 16:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 16: Dongle missing "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 16: Dongle missing "
             ), sep="")
         elif VEbusError == 17:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 17: One of the "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 17: One of the "
             "devices assumed master status because the original master failed"), sep="")
         elif VEbusError == 18:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 18: AC Overvoltage "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 18: AC Overvoltage "
             "on the output of a slave has occurred while already switched off"), sep="")
         elif VEbusError == 22:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 22: This device "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 22: This device "
             "cannot function as slave"),sep="")
         elif VEbusError == 24:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 24: Switch-over "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 24: Switch-over "
             "system protection initiated"), sep="")
         elif VEbusError == 25:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 25: Firmware "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 25: Firmware "
             "incompatibility. The firmware of one of the connected devices is not sufficiently up to date"), sep="")
         elif VEbusError == 26:
-            print(colors.fg.light_blue,f" VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 26: Internal "
+            print(el,colors.fg.light_blue,f"VE.Bus Error............ ",colors.fg.red, tr.fill(f"Error 26: Internal "
             "error"),sep="")
     
         # errorindex += 1
@@ -353,37 +355,37 @@ while True:
             # errorindex = 0
         
         if ESS_Info.lower() == 'y':
-            print(colors.fg.light_blue, end="")
-            print(f" ESS SOC Limit (User).... {ESSsocLimitUser:.2f}% Unless Grid Fails", sep="")
+            print(el,colors.fg.light_blue, sep="", end="")
+            print(el,f" ESS SOC Limit (User).... {ESSsocLimitUser:.2f}% Unless Grid Fails", sep="")
           
-            print(f" ESS SOC Limit (Dynamic). {ESSsocLimitDynamic:.2f}%", sep="")
+            print(el,f" ESS SOC Limit (Dynamic). {ESSsocLimitDynamic:.2f}%", sep="")
            
             if ESSbatteryLifeState == 0:
-                print(f" ESS Battery Life State.. Battery Life Disabled", sep="")
+                print(el,f" ESS Battery Life State.. Battery Life Disabled", sep="")
             if ESSbatteryLifeState == 1:
-                print(f" ESS Battery Life State.. Restarting", sep="")
+                print(el,f" ESS Battery Life State.. Restarting", sep="")
             if ESSbatteryLifeState == 2:
-                print(f" ESS Battery Life State.. Self-consumption", sep="")
+                print(el,f" ESS Battery Life State.. Self-consumption", sep="")
             if ESSbatteryLifeState == 3:
-                print(f" ESS Battery Life State.. Self consumption, SoC exceeds 85%", sep="")
+                print(el,f" ESS Battery Life State.. Self consumption, SoC exceeds 85%", sep="")
             if ESSbatteryLifeState == 4:
-                print(f" ESS Battery Life State.. Self consumption, SoC at 100%", sep="")
+                print(el,f" ESS Battery Life State.. Self consumption, SoC at 100%", sep="")
             if ESSbatteryLifeState == 5:
-                print(f" ESS Battery Life State.. Discharge disabled. SoC below BatteryLife Dynamic SoC", sep="")
+                print(el,f" ESS Battery Life State.. Discharge disabled. SoC below BatteryLife Dynamic SoC", sep="")
             if ESSbatteryLifeState == 6:
-                print(f" ESS Battery Life State.. SoC below SoC limit for more than 24 hours. Slow Charging battery", sep="")
+                print(el,f" ESS Battery Life State.. SoC below SoC limit for more than 24 hours. Slow Charging battery", sep="")
             if ESSbatteryLifeState == 7:
-                print(f" ESS Battery Life State.. Multi is in sustain mode", sep="")
+                print(el,f" ESS Battery Life State.. Multi is in sustain mode", sep="")
             if ESSbatteryLifeState == 8:
-                print(f" ESS Battery Life State.. Recharge, SOC dropped 5% or more below MinSOC", sep="")
+                print(el,f" ESS Battery Life State.. Recharge, SOC dropped 5% or more below MinSOC", sep="")
             if ESSbatteryLifeState == 9:
-                print(f" ESS Battery Life State.. Keep batteries charged mode enabled", sep="")
+                print(el,f" ESS Battery Life State.. Keep batteries charged mode enabled", sep="")
             if ESSbatteryLifeState == 10:
-                print(f" ESS Battery Life State.. Self consumption, SoC at or above minimum SoC", sep="")
+                print(el,f" ESS Battery Life State.. Self consumption, SoC at or above minimum SoC", sep="")
             if ESSbatteryLifeState == 11:
-                print(f" ESS Battery Life State.. Discharge Disabled (Low SoC), SoC is below minimum SoC", sep="")
+                print(el,f" ESS Battery Life State.. Discharge Disabled (Low SoC), SoC is below minimum SoC", sep="")
             if ESSbatteryLifeState == 12:
-                print(f" ESS Battery Life State.. Recharge, SOC dropped 5% or more below minimum SoC", colors.reset, sep="")
+                print(el,f" ESS Battery Life State.. Recharge, SOC dropped 5% or more below minimum SoC", colors.reset, sep="")
                 
             
         spacer()
@@ -398,32 +400,32 @@ while True:
         if Analog_Inputs.lower() == "y":
 
             if TempSensor1 == 777:
-                print(colors.fg.pink,f" Temp Sensor 1........... Not installed or unit ID wrong", sep="")
+                print(el,colors.fg.pink,f" Temp Sensor 1........... Not installed or unit ID wrong", sep="")
             elif TempSensor1 > 49 and TempSensor1 < 120 :
-                print(colors.fg.pink, f" {Sens1} Temp........ {TempSensor1:.1f} °F  Whew...its a tad warm in here", sep="")
+                print(el,colors.fg.pink, f" {Sens1} Temp........ {TempSensor1:.1f} °F  Whew...its a tad warm in here", sep="")
             else:
-                print(colors.fg.pink, f" {Sens1} Temp........ {TempSensor1:.1f} °F ", sep="")
+                print(el,colors.fg.pink, f" {Sens1} Temp........ {TempSensor1:.1f} °F ", sep="")
                 
             if TempSensor2 == 777:
-                print(" Temp Sensor 2........... Not installed or unit ID wrong", sep="")
+                print(el," Temp Sensor 2........... Not installed or unit ID wrong", sep="")
             
             elif TempSensor2 < 45:
-                print(f" {Sens2} Temp.............. {TempSensor2:.1f} °F    Whoa...Crank up the heat in this place!", sep="")
+                print(el,f" {Sens2} Temp.............. {TempSensor2:.1f} °F    Whoa...Crank up the heat in this place!", sep="")
                
             else:
-                print(f" {Sens2} Temp.............. {TempSensor2:.1f} °F", sep="")
+                print(el,f" {Sens2} Temp.............. {TempSensor2:.1f} °F", sep="")
 
             if TempSensor3 == 777:
-                print(" Temp Sensor 3........... Not installed or unit ID wrong",colors.reset, sep="")
+                print(el," Temp Sensor 3........... Not installed or unit ID wrong",colors.reset, sep="")
             
             elif TempSensor3 < 33:
-                print(f" {Sens3} Temp............ {TempSensor3:.1f} °F  Burr...A Wee Bit Chilly Outside",colors.reset, sep="")
+                print(el,f" {Sens3} Temp............ {TempSensor3:.1f} °F  Burr...A Wee Bit Chilly Outside",colors.reset, sep="")
 
             else:
-                print(f" {Sens3} Temp............ {TempSensor3:.1f} °F",colors.reset, sep="")
+                print(el,f" {Sens3} Temp............ {TempSensor3:.1f} °F",colors.reset, sep="")
                     
         
-        print(colors.fg.gray,"\n\tCtrl+C  To Quit",colors.reset)       
+        print(el,colors.fg.gray,"\n\tCtrl+C  To Quit",colors.reset)       
         ###############################################
         ### End Cerbo GX Analog Temperature Inputs   ##
         ############################################### 
