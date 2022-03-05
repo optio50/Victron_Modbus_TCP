@@ -9,7 +9,7 @@
 
 
 # The changeable variables:
-# ip, VRMid, SolarChargerID, MQTT_SolarChargerID, MultiPlusID, MQTT_MultiPlusID, BmvID, MQTT_BmvID, VEsystemID
+# ip, VRMid, SolarCharger_1_ID, MQTT_SolarCharger_1_ID, MultiPlusID, MQTT_MultiPlusID, BmvID, MQTT_BmvID, VEsystemID
 # MQTT_VEsystemID, Multiplus_Leds, ESS_Info, Analog_Inputs
 
 
@@ -59,9 +59,9 @@ ip = '192.168.20.156'
 # Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
 VRMid = "d41243d31a90"
 
-Analog_Inputs = 'n'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-ESS_Info = 'n'          # Y or N (case insensitive) to display ESS system information
-Multiplus_Leds = 'n'    # Y or N (case insensitive) to display Multiplus LED'S
+Analog_Inputs  = 'Y'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+ESS_Info       = 'Y'          # Y or N (case insensitive) to display ESS system information
+Multiplus_Leds = 'Y'    # Y or N (case insensitive) to display Multiplus LED'S
 
 
 # Unit ID #'s from Cerbo GX.
@@ -70,18 +70,20 @@ Multiplus_Leds = 'n'    # Y or N (case insensitive) to display Multiplus LED'S
 # https://github.com/victronenergy/dbus_modbustcp/blob/master/CCGX-Modbus-TCP-register-list.xlsx Tab #2
 #===================================
 # ModBus Unit ID
-SolarChargerID = 226
-MultiPlusID = 227
-BmvID = 223
-VEsystemID = 100
+SolarCharger_1_ID = 226
+#SolarCharger_2_ID =
+MultiPlusID       = 227
+BmvID             = 223
+VEsystemID        = 100
 #===================================
 # MQTT Instance ID
 # This is the Instance ID not to be confused with the above Unit ID.
 # Device List in VRM or crossed referenced in the CCGX-Modbus-TCP-register-list.xlsx Tab #2
-MQTT_SolarChargerID = 279
-MQTT_MultiPlusID = 276
-MQTT_BmvID = 277
-MQTT_VEsystemID = 100
+MQTT_SolarCharger_1_ID = 279
+#MQTT_SolarCharger_2_ID =
+MQTT_MultiPlusID       = 276
+MQTT_BmvID             = 277
+MQTT_VEsystemID        = 0
 #===================================
 
 
@@ -117,16 +119,16 @@ Pbar100 ="▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
 curses.curs_set(False)
 curses.start_color()
 curses.use_default_colors()
-curses.init_color(0, 0, 0, 0)
-curses.init_pair(100, 82, -1)  # Fluorescent Green
-curses.init_pair(101, 93, -1)  # Purple
-curses.init_pair(102, 2, -1)   # Green
+curses.init_color(0, 0, 0,  0)
+curses.init_pair(100, 82,  -1)  # Fluorescent Green
+curses.init_pair(101, 93,  -1)  # Purple
+curses.init_pair(102, 2,   -1)   # Green
 curses.init_pair(103, 226, -1) # Yellow
 curses.init_pair(104, 160, -1) # Red
-curses.init_pair(105, 37, -1)  # Cyan
+curses.init_pair(105, 37,  -1)  # Cyan
 curses.init_pair(106, 202, -1) # Orange
-curses.init_pair(107, 33, -1)  # Lt Blue
-curses.init_pair(108, 21, -1)  # Blue1
+curses.init_pair(107, 33,  -1)  # Lt Blue
+curses.init_pair(108, 21,  -1)  # Blue1
 curses.init_pair(109, 239, -1) # Gray
 curses.init_pair(110, 197, -1) # Lt Pink
 curses.init_pair(111, 201, -1) # Pink
@@ -136,37 +138,45 @@ curses.init_pair(114, 178, -1) # gold_3b
 curses.init_pair(115, 236, -1) # gray_19
 #=======================================================================
 #=======================================================================
-fgreen = curses.color_pair(100)
-purple = curses.color_pair(101)
-green = curses.color_pair(102)
-yellow = curses.color_pair(103)
-red = curses.color_pair(104)
-cyan = curses.color_pair(105)
-orange = curses.color_pair(106)
-ltblue = curses.color_pair(107)
-blue1 = curses.color_pair(108)
-gray = curses.color_pair(109)
-ltpink = curses.color_pair(110)
-pink = curses.color_pair(111)
+fgreen   = curses.color_pair(100)
+purple   = curses.color_pair(101)
+green    = curses.color_pair(102)
+yellow   = curses.color_pair(103)
+red      = curses.color_pair(104)
+cyan     = curses.color_pair(105)
+orange   = curses.color_pair(106)
+ltblue   = curses.color_pair(107)
+blue1    = curses.color_pair(108)
+gray     = curses.color_pair(109)
+ltpink   = curses.color_pair(110)
+pink     = curses.color_pair(111)
 ltsalmon = curses.color_pair(112)
-gray7 = curses.color_pair(113)
-gold = curses.color_pair(114)
-gray19 = curses.color_pair(115)
+gray7    = curses.color_pair(113)
+gold     = curses.color_pair(114)
+gray19   = curses.color_pair(115)
 
 
+def modbus_register(address, unit):
+        msg     = client.read_input_registers(address, unit=unit)
+        decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, byteorder=Endian.Big)
+        msg     = decoder.decode_16bit_int()
+        return msg
 
 
+def mqtt_request(mqtt_path):
+    topic = subscribe.simple(mqtt_path, hostname=ip)
+    data  = json.loads(topic.payload)
+    topic = data['value']
+    return topic
 
 
 def spacer():
     stdscr.addnstr("═"*80 + "\n",100, gray)
-    stdscr.clrtoeol()
+
 
 
 def spacer2():
     stdscr.addnstr("—"*80 + "\n",100, gray)
-    stdscr.clrtoeol()
-    stdscr.clearok(1)
 
 
 def clean_exit():
@@ -185,7 +195,8 @@ def main(stdscr):
     global Analog_Inputs
     stdscr.nodelay(True)
 
-    errorindex = 0
+
+    #errorindex = 0
     while True:
         screensize = os.get_terminal_size()
         stdscr.clear()
@@ -193,231 +204,101 @@ def main(stdscr):
         try:
 # ===========================================================================================
 #   Conditional MQTT Request's because Multiplus II status LED's are not available with ModbusTCP
-
+            
             if Multiplus_Leds.lower() == "y":
 
-                msg = subscribe.simple("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Mains", hostname=ip)
-                data = json.loads(msg.payload)
-                mains = data['value']
-
-                msg = subscribe.simple("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Inverter", hostname=ip)
-                data = json.loads(msg.payload)
-                inverter = data['value']
-
-                msg = subscribe.simple("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Bulk", hostname=ip)
-                data = json.loads(msg.payload)
-                bulk = data['value']
-
-                msg = subscribe.simple("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Overload", hostname=ip)
-                data = json.loads(msg.payload)
-                overload = data['value']
-
-                msg = subscribe.simple("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Absorption", hostname=ip)
-                data = json.loads(msg.payload)
-                absorp = data['value']
-
-                msg = subscribe.simple("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/LowBattery", hostname=ip)
-                data = json.loads(msg.payload)
-                lowbatt = data['value']
-
-                msg = subscribe.simple("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Float", hostname=ip)
-                data = json.loads(msg.payload)
-                floatchg = data['value']
-
-                msg = subscribe.simple("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Temperature", hostname=ip)
-                data = json.loads(msg.payload)
-                temperature = data['value']
+                Mains       = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Mains")
+                Inverter    = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Inverter")
+                Bulk        = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Bulk")
+                Overload    = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Overload")
+                Absorp      = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Absorption")
+                Lowbatt     = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/LowBattery")
+                Floatchg    = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Float")
+                Temperature = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Leds/Temperature")
+                MultiName   = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/ProductName")
 
                 # Switch Position on the Multiplus II
-                MPswitch = client.read_input_registers(33, unit=MultiPlusID)
-                decoder = BinaryPayloadDecoder.fromRegisters(MPswitch.registers, byteorder=Endian.Big)
-                MPswitch = decoder.decode_16bit_uint()
+                MPswitch    = modbus_register(33,MultiPlusID)
 
 # ===========================================================================================
-#   Unconditional ModbusTCP Request's
+#   Unconditional Request's
 
 #   Battery
-            # MQTT LastDischarge, LastFullcharge
-            msg = subscribe.simple("N/"+VRMid+"/battery/"+str(MQTT_BmvID)+"/History/LastDischarge", hostname=ip)
-            data = json.loads(msg.payload)
-            LastDischarge = data['value']
-
-            msg = subscribe.simple("N/"+VRMid+"/battery/"+str(MQTT_BmvID)+"/History/TimeSinceLastFullCharge", hostname=ip)
-            data = json.loads(msg.payload)
-            LastFullcharge = data['value']
-
-            msg = subscribe.simple("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Dc/0/MaxChargeCurrent", hostname=ip)
-            data = json.loads(msg.payload)
-            MaxChargeCurrent = data['value']
-            
-            BatterySOC = client.read_input_registers(266, unit=BmvID)
-            decoder = BinaryPayloadDecoder.fromRegisters(BatterySOC.registers, byteorder=Endian.Big)
-            BatterySOC = decoder.decode_16bit_uint()
-            BatterySOC = BatterySOC / 10
-
-            BatteryWatts = client.read_input_registers(842, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(BatteryWatts.registers, byteorder=Endian.Big)
-            BatteryWatts = decoder.decode_16bit_int()
-
-            BatteryAmps = client.read_input_registers(841, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(BatteryAmps.registers, byteorder=Endian.Big)
-            BatteryAmps = decoder.decode_16bit_int()
-            BatteryAmps  = BatteryAmps / 10
-
-            BatteryVolts = client.read_input_registers(259, unit=BmvID)
-            decoder = BinaryPayloadDecoder.fromRegisters(BatteryVolts.registers, byteorder=Endian.Big)
-            BatteryVolts = decoder.decode_16bit_uint()
-            BatteryVolts = BatteryVolts / 100
-
-            BatteryTTG = client.read_input_registers(846, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(BatteryTTG.registers, byteorder=Endian.Big)
-            BatteryTTG = decoder.decode_16bit_uint()
-            BatteryTTG = BatteryTTG / .01
-
-            ChargeCycles = client.read_input_registers(284, unit=BmvID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ChargeCycles.registers, byteorder=Endian.Big)
-            ChargeCycles = decoder.decode_16bit_uint()
-
-            ChargePower = client.read_input_registers(855, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ChargePower.registers, byteorder=Endian.Big)
-            ChargePower = decoder.decode_16bit_uint()
-            
-            ConsumedAH = client.read_input_registers(845, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ConsumedAH.registers, byteorder=Endian.Big)
-            ConsumedAH = decoder.decode_16bit_uint()
-            ConsumedAH = ConsumedAH / -10
+            # MQTT LastDischarge, LastFullcharge, MaxChargeCurrent
+            LastDischarge    = mqtt_request("N/"+VRMid+"/battery/"+str(MQTT_BmvID)+"/History/LastDischarge")
+            LastFullcharge   = mqtt_request("N/"+VRMid+"/battery/"+str(MQTT_BmvID)+"/History/TimeSinceLastFullCharge")
+            MaxChargeCurrent = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlusID)+"/Dc/0/MaxChargeCurrent")
+           
+            # ModbusTCP
+            BatterySOC    = modbus_register(266,BmvID) / 10
+            BatteryWatts  = modbus_register(842,VEsystemID)
+            BatteryAmps   = modbus_register(261,BmvID) / 10
+            BatteryVolts  = modbus_register(259,BmvID) / 100
+            BatteryTTG    = modbus_register(846,VEsystemID) / .01
+            ChargeCycles  = modbus_register(284,BmvID)
+            ChargePower   = modbus_register(855,VEsystemID)
+            ConsumedAH    = modbus_register(265,BmvID) / -10
+            DCsystemPower = modbus_register(860,VEsystemID)
 
 # ===========================================================================================
 
 #   Solar Charge Controller
             
             # MQTT, Couldnt find the equivalent ModBus register
-            msg = subscribe.simple("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarChargerID)+"/Settings/ChargeCurrentLimit", hostname=ip)
-            data = json.loads(msg.payload)
-            SolarChargeLimit = data['value']
+            SolarChargeLimit  = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/Settings/ChargeCurrentLimit")
             
-            SolarWatts = client.read_input_registers(789, unit=SolarChargerID)
-            decoder = BinaryPayloadDecoder.fromRegisters(SolarWatts.registers, byteorder=Endian.Big)
-            SolarWatts = decoder.decode_16bit_uint()
-            SolarWatts = SolarWatts / 10
-
-            # Broken register 777 in GX firmware 2.81
-            try:
-                SolarAmps = client.read_input_registers(777, unit=SolarChargerID)
-                decoder = BinaryPayloadDecoder.fromRegisters(SolarAmps.registers, byteorder=Endian.Big)
-                SolarAmps = decoder.decode_16bit_int()
-                SolarAmps = SolarAmps / 10
-
-            except AttributeError:
-                SolarAmps = 'No Value, Firmware bug.'
-
-            SolarVolts = client.read_input_registers(776, unit=SolarChargerID)
-            decoder = BinaryPayloadDecoder.fromRegisters(SolarVolts.registers, byteorder=Endian.Big)
-            SolarVolts = decoder.decode_16bit_uint()
-            SolarVolts = SolarVolts / 100
-
-            MaxSolarWatts = client.read_input_registers(785, unit=SolarChargerID)
-            decoder = BinaryPayloadDecoder.fromRegisters(MaxSolarWatts.registers, byteorder=Endian.Big)
-            MaxSolarWatts = decoder.decode_16bit_uint()
-
-            MaxSolarWattsYest = client.read_input_registers(787, unit=SolarChargerID)
-            decoder = BinaryPayloadDecoder.fromRegisters(MaxSolarWattsYest.registers, byteorder=Endian.Big)
-            MaxSolarWattsYest = decoder.decode_16bit_uint()
-
-            SolarYield = client.read_input_registers(784, unit=SolarChargerID)
-            decoder = BinaryPayloadDecoder.fromRegisters(SolarYield.registers, byteorder=Endian.Big)
-            SolarYield = decoder.decode_16bit_uint()
-            SolarYield = SolarYield / 10
+            # Solar Charger # 1
+            SolarWatts1       = modbus_register(789,SolarCharger_1_ID) / 10
+            # Solar Charger # 2
+            SolarWatts2       = "Not Installed"#modbus_register(789,SolarCharger_2_ID) / 10
             
-            SolarYieldYest = client.read_input_registers(786, unit=SolarChargerID)
-            decoder = BinaryPayloadDecoder.fromRegisters(SolarYieldYest.registers, byteorder=Endian.Big)
-            SolarYieldYest = decoder.decode_16bit_uint()
-            SolarYieldYest = SolarYield / 10
-            
-            TotalSolarYield = client.read_input_registers(790, unit=SolarChargerID)
-            decoder = BinaryPayloadDecoder.fromRegisters(TotalSolarYield.registers, byteorder=Endian.Big)
-            TotalSolarYield = decoder.decode_16bit_uint()
-            TotalSolarYield = TotalSolarYield / 10
-
-            SolarState = client.read_input_registers(775, unit=SolarChargerID)
-            decoder = BinaryPayloadDecoder.fromRegisters(SolarState.registers, byteorder=Endian.Big)
-            SolarState = decoder.decode_16bit_uint()
-            
-            SolarError = client.read_input_registers(788, unit=SolarChargerID)
-            decoder = BinaryPayloadDecoder.fromRegisters(SolarError.registers, byteorder=Endian.Big)
-            SolarError = decoder.decode_16bit_uint()
+            # Total of all solar chargers
+            SolarWatts        = modbus_register(850,VEsystemID)
+            # Total of all solar chargers
+            SolarAmps         = modbus_register(851,VEsystemID) / 10
+            SolarVolts        = modbus_register(776,SolarCharger_1_ID) / 100
+            MaxSolarWatts     = modbus_register(785,SolarCharger_1_ID)
+            MaxSolarWattsYest = modbus_register(787,SolarCharger_1_ID)
+            SolarYield        = modbus_register(784,SolarCharger_1_ID) / 10
+            SolarYieldYest    = modbus_register(786,SolarCharger_1_ID) / 10
+            TotalSolarYield   = modbus_register(790,SolarCharger_1_ID) / 10
+            SolarState        = modbus_register(775,SolarCharger_1_ID)
+            SolarError        = modbus_register(788,SolarCharger_1_ID)
             #SolarError = 20 # Test
             #error_nos = [0,1,2,3,4,5,6,7,8,9,17,18,19,20,22,23,33,34]
             #SolarError = error_nos[errorindex] # Display Test PV Error's
 # ===========================================================================================
 
 #   Grid Input & A/C out
-            FeedIn = client.read_input_registers(2707, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(FeedIn.registers, byteorder=Endian.Big)
-            FeedIn = decoder.decode_16bit_int()
-
-            GridSetPoint = client.read_input_registers(2700, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(GridSetPoint.registers, byteorder=Endian.Big)
-            GridSetPoint = decoder.decode_16bit_int()
-
-            GridWatts = client.read_input_registers(820, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(GridWatts.registers, byteorder=Endian.Big)
-            GridWatts = decoder.decode_16bit_int()
-
-            GridAmps = client.read_input_registers(6, unit=MultiPlusID)
-            decoder = BinaryPayloadDecoder.fromRegisters(GridAmps.registers, byteorder=Endian.Big)
-            GridAmps = decoder.decode_16bit_int()
-            GridAmps = GridAmps / 10
-
-            GridAmpLimit = client.read_input_registers(22, unit=MultiPlusID)
-            decoder = BinaryPayloadDecoder.fromRegisters(GridAmpLimit.registers, byteorder=Endian.Big)
-            GridAmpLimit = decoder.decode_16bit_int()
-            GridAmpLimit = GridAmpLimit / 10
             
-            GridVolts = client.read_input_registers(3, unit=MultiPlusID)
-            decoder = BinaryPayloadDecoder.fromRegisters(GridVolts.registers, byteorder=Endian.Big)
-            GridVolts = decoder.decode_16bit_int()
-            GridVolts = GridVolts / 10
+            FeedIn        = modbus_register(2707,VEsystemID)
+            GridSetPoint  = modbus_register(2700,VEsystemID)
+            GridWatts     = modbus_register(820,VEsystemID)
+            GridAmps      = modbus_register(6,MultiPlusID) / 10
+            GridVolts     = modbus_register(3,MultiPlusID) / 10
+            GridHZ        = modbus_register(9,MultiPlusID) / 100
+            ACoutWatts    = modbus_register(817,VEsystemID)
+            ACoutAmps     = modbus_register(18,MultiPlusID) / 10
+            ACoutVolts    = modbus_register(15,MultiPlusID) / 10
+            ACoutHZ       = modbus_register(21,MultiPlusID) / 100
+            GridCondition = modbus_register(64,MultiPlusID)
+            GridAmpLimit  = modbus_register(22,MultiPlusID) / 10
 
-            GridHZ = client.read_input_registers(9, unit=MultiPlusID)
-            decoder = BinaryPayloadDecoder.fromRegisters(GridHZ.registers, byteorder=Endian.Big)
-            GridHZ = decoder.decode_16bit_int()
-            GridHZ = GridHZ / 100
+            # System Type ex: ESS, Hub-*
+            try:
+                SystemType  = mqtt_request("N/"+VRMid+"/system/0/SystemType")
+            except AttributeError:
+                SystemType = 777
 
-            ACoutWatts = client.read_input_registers(817, unit=VEsystemID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ACoutWatts.registers, byteorder=Endian.Big)
-            ACoutWatts = decoder.decode_16bit_uint()
-
-            ACoutAmps = client.read_input_registers(18, unit=MultiPlusID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ACoutAmps.registers, byteorder=Endian.Big)
-            ACoutAmps = decoder.decode_16bit_int()
-            ACoutAmps = ACoutAmps / 10
-
-            ACoutVolts = client.read_input_registers(15, unit=MultiPlusID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ACoutVolts.registers, byteorder=Endian.Big)
-            ACoutVolts = decoder.decode_16bit_int()
-            ACoutVolts = ACoutVolts / 10
-
-            ACoutHZ = client.read_input_registers(21, unit=MultiPlusID)
-            decoder = BinaryPayloadDecoder.fromRegisters(ACoutHZ.registers, byteorder=Endian.Big)
-            ACoutHZ = decoder.decode_16bit_int()
-            ACoutHZ = ACoutHZ / 100
-
-            GridCondition = client.read_input_registers(64, unit=MultiPlusID)
-            decoder = BinaryPayloadDecoder.fromRegisters(GridCondition.registers, byteorder=Endian.Big)
-            GridCondition = decoder.decode_16bit_uint()
 # ===========================================================================================
 
 #   VEbus Status
-            VEbusStatus = client.read_input_registers(31, unit=MultiPlusID)
-            decoder = BinaryPayloadDecoder.fromRegisters(VEbusStatus.registers, byteorder=Endian.Big)
-            VEbusStatus = decoder.decode_16bit_uint()
+            VEbusStatus = mqtt_request("N/"+VRMid+"/system/"+str(MQTT_VEsystemID)+"/SystemState/State")
+            #VEbusStatus = modbus_register(31,MultiPlusID)
 # ===========================================================================================
 
 #   VEbus Error
-            VEbusError = client.read_input_registers(32, unit=MultiPlusID)
-            decoder = BinaryPayloadDecoder.fromRegisters(VEbusError.registers, byteorder=Endian.Big)
-            VEbusError = decoder.decode_16bit_uint()
+            VEbusError  = modbus_register(32,MultiPlusID)
             #VEbusError = 55 # Test single error mesg
             #error_nos = [0,1,2,3,4,5,6,7,10,14,16,17,18,22,24,25,26]
             #VEbusError = error_nos[errorindex] # Multiple Test VEbusError's
@@ -426,43 +307,28 @@ def main(stdscr):
 # Conditional Modbus Request
 # ESS Info
             if ESS_Info.lower() == "y":
-                ESSbatteryLifeState = client.read_input_registers(2900, unit=VEsystemID)
-                decoder = BinaryPayloadDecoder.fromRegisters(ESSbatteryLifeState.registers, byteorder=Endian.Big)
-                ESSbatteryLifeState = decoder.decode_16bit_uint()
+                ESSbatteryLifeState = modbus_register(2900,VEsystemID)
+                ESSsocLimitUser     = modbus_register(2901,VEsystemID) / 10
 
-                ESSsocLimitUser = client.read_input_registers(2901, unit=VEsystemID)
-                decoder = BinaryPayloadDecoder.fromRegisters(ESSsocLimitUser.registers, byteorder=Endian.Big)
-                ESSsocLimitUser = decoder.decode_16bit_uint()
-                ESSsocLimitUser_W = ESSsocLimitUser # Variable to be used in the on press function
-                ESSsocLimitUser = ESSsocLimitUser / 10
 # ===========================================================================================
 
 # Conditional Modbus Request
 # Analog Temperature Inputs
-# Change the unit=Value to your correct value
+# Change the ID to your correct value
 
             if Analog_Inputs.lower() == "y":
                 try:
-                    TempSensor1 = client.read_input_registers(3304, unit= 24) # Input 1
-                    decoder = BinaryPayloadDecoder.fromRegisters(TempSensor1.registers, byteorder=Endian.Big)
-                    TempSensor1 = decoder.decode_16bit_int()
-                    TempSensor1 = TempSensor1 / 100 * 1.8 + 32
+                    TempSensor1 = modbus_register(3304,24) / 100 * 1.8 + 32
                 except AttributeError:
                     TempSensor1 = 777
                 
                 try:
-                    TempSensor2 = client.read_input_registers(3304, unit= 25) # Input 2
-                    decoder = BinaryPayloadDecoder.fromRegisters(TempSensor2.registers, byteorder=Endian.Big)
-                    TempSensor2 = decoder.decode_16bit_int()
-                    TempSensor2 = TempSensor2 / 100 * 1.8 + 32
+                    TempSensor2 = modbus_register(3304,25) / 100 * 1.8 + 32
                 except AttributeError:
                     TempSensor2 = 777
                 
                 try:
-                    TempSensor3 = client.read_input_registers(3304, unit= 26) # Input 3
-                    decoder = BinaryPayloadDecoder.fromRegisters(TempSensor3.registers, byteorder=Endian.Big)
-                    TempSensor3 = decoder.decode_16bit_int()
-                    TempSensor3 = TempSensor3 / 100 * 1.8 + 32
+                    TempSensor3 = modbus_register(3304,26) / 100 * 1.8 + 32
                 except AttributeError:
                     TempSensor3 = 777
                 
@@ -525,16 +391,16 @@ def main(stdscr):
                 stdscr.addstr(2,39, BpBar +"\n", color)
 
 
-            stdscr.addnstr(f" Battery Watts........... {BatteryWatts} W",50, cyan)
-            stdscr.addnstr(3,38,f"║ Last Discharge .......... {LastDischarge:.2f} AH\n",50, cyan)
+            stdscr.addnstr(f" Battery Watts........... {BatteryWatts}\n",50, cyan)
+            
 
 
-            stdscr.addnstr(f" Battery Amps............ {BatteryAmps} A",50, cyan)
-            stdscr.addnstr(4,38,f"║ Consumed AH ............. {ConsumedAH} AH\n",50, cyan)
+            stdscr.addnstr(f" Battery Amps............ {BatteryAmps}",50, cyan)
+            stdscr.addnstr(4,38,f"║ Last Discharge .......... {LastDischarge:.1f} AH\n",50, cyan)
 
 
-            stdscr.addnstr(f" Battery Volts........... {BatteryVolts} V",50, cyan)
-            stdscr.addnstr(5,38,f"║ Max Charge Current....... {MaxChargeCurrent} A\n",50, cyan)
+            stdscr.addnstr(f" Battery Volts........... {BatteryVolts}",50, cyan)
+            stdscr.addnstr(5,38,f"║ Consumed AH ............. {ConsumedAH}\n",50, cyan)
 
             
             
@@ -546,8 +412,12 @@ def main(stdscr):
             LastFullcharge = timedelta(seconds = LastFullcharge)
             
             stdscr.addnstr(f" Battery Charge Cycles... {ChargeCycles}",50, cyan)
-            stdscr.addnstr(6,38,f"║ Last Full Charge......... {LastFullcharge} \n",50, cyan)
+            stdscr.addnstr(6,38,f"║ Max Charge Current....... {MaxChargeCurrent} A\n",50, cyan)
 
+            stdscr.addnstr(f" DC System Power......... {DCsystemPower} W",50, cyan)
+            stdscr.addnstr(7,38,f"║ Last Full Charge......... {LastFullcharge} \n",50, cyan)
+            
+            
             stdscr.addnstr(f" Battery Time to Go...... {BatteryTTG}\n",50, cyan)
             
             
@@ -558,49 +428,49 @@ def main(stdscr):
 #   Solar Charge Controller
 
             #SolarWatts = random.randrange(0, 400, 10) # Test Progressbar
-            if SolarVolts < 10:
-                stdscr.addstr(f" PV Watts ............... {SolarWatts:.0f}", orange)
-                stdscr.addstr(9,39,f"🌛\n", orange)
+            if SolarVolts < 15 and SolarState == 0:
+                stdscr.addstr(f" PV Watts Total.......... {SolarWatts:.0f}", orange)
+                stdscr.addstr(10,32,f"🌛\n", orange)
                 
             ###################################
             ###         400W array          ###
             ###################################
             elif SolarWatts >= 50 and SolarWatts < 100:
-                stdscr.addstr(f" PV Watts ............... {SolarWatts:.0f}", orange)
-                stdscr.addstr(9,39,f"🌞\n", orange)
+                stdscr.addstr(f" PV Watts Total.......... {SolarWatts:.0f}", orange)
+                stdscr.addstr(10,39,f"🌞\n", orange)
             elif SolarWatts >= 100 and SolarWatts < 200:
-                stdscr.addstr(f" PV Watts ............... {SolarWatts:.0f}", orange)
-                stdscr.addstr(9,39,f"🌞   🌞\n", orange)
+                stdscr.addstr(f" PV Watts Total.......... {SolarWatts:.0f}", orange)
+                stdscr.addstr(10,39,f"🌞   🌞\n", orange)
             elif SolarWatts >= 200 and SolarWatts < 300:
-                stdscr.addstr(f" PV Watts ............... {SolarWatts:.0f}", orange)
-                stdscr.addstr(9,39,f"🌞   🌞   🌞\n", orange)
+                stdscr.addstr(f" PV Watts Total.......... {SolarWatts:.0f}", orange)
+                stdscr.addstr(10,39,f"🌞   🌞   🌞\n", orange)
             elif SolarWatts >= 300 and SolarWatts < 350:
-                stdscr.addstr(f" PV Watts ............... {SolarWatts:.0f}", orange)
-                stdscr.addstr(9,39,f"🌞   🌞   🌞   🌞\n", orange)
+                stdscr.addstr(f" PV Watts Total.......... {SolarWatts:.0f}", orange)
+                stdscr.addstr(10,39,f"🌞   🌞   🌞   🌞\n", orange)
             elif SolarWatts >= 350:
-                stdscr.addstr(f" PV Watts ............... {SolarWatts:.0f}", orange)
-                stdscr.addstr(9,39,f"🌞   🌞   🌞   🌞   🌞\n", orange)
+                stdscr.addstr(f" PV Watts Total.......... {SolarWatts:.0f}", orange)
+                stdscr.addstr(10,39,f"🌞   🌞   🌞   🌞   🌞\n", orange)
             elif SolarWatts < 50:
-                stdscr.addstr(f" PV Watts ............... {SolarWatts:.0f}", orange)
-                stdscr.addstr(9,39,f"⛅\n", orange)
+                stdscr.addstr(f" PV Watts Total.......... {SolarWatts:.0f}", orange)
+                stdscr.addstr(10,39,f"⛅\n", orange)
             
 
 
-            stdscr.addnstr(" PV Amps................. ",100, orange)
-            if SolarAmps == 'No Value, Firmware bug.':
-                stdscr.addnstr("No Value, Firmware bug. Update GX Firmware >= 2.84\n",100, red)
-            else:
-                stdscr.addnstr("{:.1f}\n".format(SolarAmps),100, orange)
-
+            stdscr.addnstr(f" PV Watts Charger # 1.... {SolarWatts1:.0f}",100, orange)
+            #if SolarAmps == 'No Value, Firmware bug.':
+            #    stdscr.addnstr("No Value, Firmware bug. Update GX Firmware >= 2.84",100, red)
+            #else:
+            #    stdscr.addnstr(f"{SolarAmps:.1f}",100, orange)
+            stdscr.addnstr(11,38,f"║ PV Charger # 1 Limit........ {SolarChargeLimit} A\n",100, orange)
             
-            stdscr.addnstr(f" PV Volts................ {SolarVolts:.2f}",100, orange)
-            stdscr.addnstr(11,38,f"║ PV Charge Limit............. {SolarChargeLimit}  A\n",100, orange)
+            stdscr.addnstr(f" PV Watts Charger # 2.... ❌",100, orange)
+            stdscr.addnstr(12,38,f"║ PV Charger # 2 Limit........ ❌\n",100, orange)
             
             stdscr.addnstr(f" Max PV Watts Today...... {MaxSolarWatts:.0f}",100, orange)
-            stdscr.addnstr(12,38,f"║ PV Yield Today.............. {SolarYield:.3f} kWh\n",100, orange)
+            stdscr.addnstr(13,38,f"║ PV Yield Today.............. {SolarYield:.3f} kWh\n",100, orange)
 
             stdscr.addnstr(f" Max PV Watts Yesterday.. {MaxSolarWattsYest}",50, orange)
-            stdscr.addnstr(13,38,f"║ PV Yield Yesterday.......... {SolarYieldYest:.3f} kWh\n",100, orange)
+            stdscr.addnstr(14,38,f"║ PV Yield Yesterday.......... {SolarYieldYest:.3f} kWh\n",100, orange)
 
             if SolarState == 0:
                 stdscr.addnstr(" PV Charger State........ OFF \n",100, orange)
@@ -621,7 +491,7 @@ def main(stdscr):
             elif SolarState == 252:
                 stdscr.addnstr(" PV Charger State........ EXT Control\n",100, orange)
 
-            stdscr.addnstr(14,38,f"║ Total PV Yield Since Reset.. {TotalSolarYield:.3f} kWh\n",100, orange)
+            stdscr.addnstr(15,38,f"║ Total PV Yield Since Reset.. {TotalSolarYield:.3f} kWh\n",100, orange)
             
             #PVErrorList = [0,1,2,3,4,5,6,7,8,9,17,18,19,20,22,23,33,34]
             #SolarError = errorindex
@@ -694,55 +564,56 @@ def main(stdscr):
 
             stdscr.addnstr(f" Feed Excess PV To Grid?. ",100, green)
             if FeedIn == 1:
-                stdscr.addnstr("YES",90, green)
-                stdscr.addnstr(17,47,"[  or  ] Brackets To Change Value\n",100, gray7)
+                stdscr.addnstr("YES",90, red)
+                stdscr.addnstr(18,47,"[  or  ] Brackets To Change Value\n",100, gray7)
             else:
-                stdscr.addnstr("NO ",90, red)
-                stdscr.addnstr(17,47,"[  or  ] Brackets To Change Value\n",100, gray7)
+                stdscr.addnstr("NO ",90, green)
+                stdscr.addnstr(18,47,"[  or  ] Brackets To Change Value\n",100, gray7)
             
             stdscr.addnstr(" Grid Set Point Watts.... ",100, green)
             stdscr.addnstr("{:.0f} ".format(GridSetPoint),100, green)
-            stdscr.addnstr(18,47,"(↑) or (↓) Arrows To Change Value\n",100, gray7)
-            stdscr.addnstr(" Grid Watts.............. ",100, green)
-            if GridWatts < 0 and FeedIn == 1:
-                stdscr.addnstr("{:.0f} ".format(GridWatts),100, green)
-                stdscr.addnstr(19,39,"<<<< Feeding Into Grid $$$\n", 90,purple)
-            else:
-                stdscr.addnstr("{:.0f} \n".format(GridWatts),100, green)
+            stdscr.addnstr(19,47,"(↑) or (↓) Arrows To Change Value\n",100, gray7)
+            
+            if GridWatts > 0:
+                stdscr.addnstr(f" Grid Watts.............. {GridWatts}",100, green)
+                stdscr.addnstr(20,38," AC Output Watts......... ",100, green)
+                stdscr.addnstr("{:.0f}\n".format(ACoutWatts),100, green)
+            elif GridWatts < 0 and FeedIn == 1:
+                stdscr.addnstr(f" Grid Watts............. {GridWatts}",100, green)
+                stdscr.addnstr(20,14,f"Feed-In", 90,red | curses.A_BLINK)
+                stdscr.addnstr(f".... {GridWatts}",100, green)
+                stdscr.addnstr(20,38," AC Output Watts......... ",100, green)
+                stdscr.addnstr("{:.0f}\n".format(ACoutWatts),100, green)
 
             stdscr.addnstr(" Grid Amps............... ",100, green)
             stdscr.addnstr("{:.1f}".format(GridAmps),100, green)
-            stdscr.addnstr(20,38,f"║ Grid Amps Current Limit..... {GridAmpLimit} A\n",100, green)
-            #stdscr.move(22,0)
+            stdscr.addnstr(21,38," AC Output Amps.......... ",100, green)
+            stdscr.addnstr("{:.1f} \n".format(ACoutAmps),100, green)
             
-            stdscr.addnstr(" Grid Volts ............. ",100, green)
+            stdscr.addnstr(" Grid Volts.............. ",100, green)
             stdscr.addnstr("{:.1f} ".format(GridVolts),100, green)
+            stdscr.addnstr(22,38," AC Output Volts......... ",100, green)
+            stdscr.addnstr("{:.1f} \n".format(ACoutVolts),100, green)
+            
+            stdscr.addnstr(" Grid Freq .............. ",100, green)
+            stdscr.addnstr("{:.1f}".format(GridHZ),100, green)
+            stdscr.addnstr(23,38," AC Output Freq.......... ",100, green)
+            stdscr.addnstr("{:.1f} \n".format(ACoutHZ),100, green)
+            
+            stdscr.addnstr(f" Grid Current Limit...... {GridAmpLimit} A\n",100, green)
+            
+            if SystemType != 777:
+                stdscr.addnstr(24,38,f" System Type............. {SystemType}\n",100, gold)
+            else:
+                stdscr.addnstr(24,38,f" System Type............. Unknown Type\n",100, gold)
             
             if GridCondition == 0:
-                stdscr.addstr(21,38,f"║ Grid Condition.............. OK \n", green)
+                stdscr.addstr(f" Grid Condition.......... OK \n", green)
                 
             elif GridCondition == 2:
                 
-                stdscr.addstr(21,38,f"║ Grid Condition ............. ", green)
+                stdscr.addstr(f" Grid Condition ......... ", green)
                 stdscr.addstr("Grid LOST!\n", red | curses.A_BLINK)
-            
-            
-            stdscr.addnstr(" Grid Freq .............. ",100, green)
-            stdscr.addnstr("{:.1f} \n".format(GridHZ),100, green)
-
-            stdscr.addnstr(" AC Output Watts......... ",100, green)
-            stdscr.addnstr("{:.0f} \n".format(ACoutWatts),100, green)
-
-            stdscr.addnstr(" AC Output Amps.......... ",100, green)
-            stdscr.addnstr("{:.1f} \n".format(ACoutAmps),100, green)
-
-            stdscr.addnstr(" AC Output Volts......... ",100, green)
-            stdscr.addnstr("{:.1f} \n".format(ACoutVolts),100, green)
-
-
-            stdscr.addnstr(" AC Output Freq.......... ",100, green)
-            stdscr.addnstr("{:.1f} \n".format(ACoutHZ),100, green)
-
 
             spacer()
 
@@ -771,10 +642,10 @@ def main(stdscr):
                 stdscr.addnstr(" System State............ Inverting\n",100, ltblue)
             elif VEbusStatus == 10:
                 stdscr.addnstr(" System State............ Power Assist\n",100, ltblue)
-            elif VEbusStatus == 11:
-                stdscr.addnstr(" System State............ Power Supply\n",100, ltblue)
-            elif VEbusStatus == 252:
-                stdscr.addnstr(" System State............ Bulk Protection\n",100, ltblue)
+            elif VEbusStatus == 256:
+                stdscr.addnstr(" System State............ Discharging\n",100, ltblue)
+            elif VEbusStatus == 257:
+                stdscr.addnstr(" System State............ Sustain\n",100, ltblue)
             else:
                 stdscr.addnstr(" System State............ Unknown State\n",100, ltblue)
 # ===========================================================================================
@@ -892,7 +763,7 @@ def main(stdscr):
                 
                 
                 elif ESSbatteryLifeState == 9:
-                    stdscr.addnstr(" ESS Mode ............... ",100, ltblue)
+                    stdscr.addnstr(" ESS Mode................ ",100, ltblue)
                     stdscr.addnstr("Keep Batteries Charged Mode Enabled\n",100, ltblue)
 
 
@@ -943,69 +814,69 @@ def main(stdscr):
 
                 spacer()
 
-                stdscr.addnstr(f"{'': <24}Victron Multiplus II{'': <20}\n",100, blue1)
+                stdscr.addnstr(f"{'': <22}{MultiName}{'': <20}\n",100, blue1)
 
-                if mains == 0:
+                if Mains == 0:
                     stdscr.addnstr(f"{'': <10}Mains       ⚫{'': <20}",100, ltsalmon)
-                elif mains == 1:
+                elif Mains == 1:
                     stdscr.addnstr(f"{'': <10}Mains       🟢{'': <20}",100, ltsalmon)
-                elif mains == 2:
+                elif Mains == 2:
                     stdscr.addnstr(f"{'': <10}Mains       ",100, ltsalmon)
                     stdscr.addnstr(f"🟢{'': <20}",100, ltsalmon | curses.A_BLINK)
 
-                if inverter == 0:
+                if Inverter == 0:
                     stdscr.addnstr("Inverting    ⚫\n",100, ltsalmon)
-                elif inverter == 1:
+                elif Inverter == 1:
                     stdscr.addnstr("Inverting    🟢\n",100, ltsalmon)
-                elif inverter == 2:
+                elif Inverter == 2:
                     stdscr.addnstr("Inverting    ",100, ltsalmon)
                     stdscr.addnstr("🟢\n",100, ltsalmon | curses.A_BLINK)
 
-                if bulk == 0:
+                if Bulk == 0:
                     stdscr.addnstr(f"{'': <10}Bulk        ⚫{'': <20}",100, ltsalmon)
-                elif bulk == 1:
+                elif Bulk == 1:
                     stdscr.addnstr(f"{'': <10}Bulk        🟡{'': <20}",100, ltsalmon)
-                elif bulk == 2:
+                elif Bulk == 2:
                     stdscr.addnstr(f"{'': <10}Bulk        ",100, ltsalmon)
                     stdscr.addnstr(f"🟡{'': <20}",100, ltsalmon | curses.A_BLINK)
 
-                if overload == 0:
+                if Overload == 0:
                     stdscr.addnstr("OverLoad     ⚫\n",100, ltsalmon)
-                elif overload == 1:
+                elif Overload == 1:
                     stdscr.addnstr("OverLoad     🔴\n",100, ltsalmon)
-                elif overload == 2:
+                elif Overload == 2:
                     stdscr.addnstr("OverLoad     ",100, ltsalmon)
                     stdscr.addnstr("🔴\n",100, ltsalmon | curses.A_BLINK)
 
-                if absorp == 0:
+                if Absorp == 0:
                     stdscr.addnstr(f"{'': <10}Absorption  ⚫{'': <20}",100, ltsalmon)
-                elif absorp == 1:
+                elif Absorp == 1:
                     stdscr.addnstr(f"{'': <10}Absorption  🟡{'': <20}",100, ltsalmon)
-                elif absorp == 2:
+                elif Absorp == 2:
                     stdscr.addnstr(f"{'': <10}Absorption  ",100, ltsalmon)
                     stdscr.addnstr(f"🟡{'': <20}",100, ltsalmon | curses.A_BLINK)
 
-                if lowbatt == 0:
+                if Lowbatt == 0:
                     stdscr.addnstr("Low Battery  ⚫\n",100, ltsalmon)
-                elif lowbatt == 1:
+                elif Lowbatt == 1:
                     stdscr.addnstr("Low Battery  🔴\n",100, ltsalmon)
-                elif lowbatt == 2:
+                elif Lowbatt == 2:
                     stdscr.addnstr("Low Battery  ",100, ltsalmon)
                     stdscr.addnstr("🔴\n",100, ltsalmon | curses.A_BLINK)
 
-                if floatchg == 0:
+                if Floatchg == 0:
                     stdscr.addnstr(f"{'': <10}Float       ⚫{'': <20}",100, ltsalmon)
-                elif floatchg == 1:
+                elif Floatchg == 1:
                     stdscr.addnstr(f"{'': <10}Float       🔵{'': <20}",100, ltsalmon)
-                elif floatchg == 2:
+                elif Floatchg == 2:
                     stdscr.addnstr(f"{'': <10}Float       ",100, ltsalmon)
                     stdscr.addnstr(f"🔵{'': <20}",100, ltsalmon | curses.A_BLINK)
 
-                if temperature == 0:
+                if Temperature == 0:
                     stdscr.addnstr("Temperature  ⚫\n",100, ltsalmon)
-                elif temperature == 1:
+                elif Temperature == 1:
                     stdscr.addnstr("Temperature  🔴\n",100, ltsalmon)
-                elif temperature == 2:
+                elif Temperature == 2:
                     stdscr.addnstr("Temperature  ",100, ltsalmon)
                     stdscr.addnstr("🔴\n",100, ltsalmon | curses.A_BLINK)
 
@@ -1037,7 +908,7 @@ def main(stdscr):
 
                 if TempSensor1 == 777:
                     stdscr.addnstr(" Temp Sensor............. Not installed or unit ID wrong\n",100, pink)
-                elif TempSensor1 > 49 and TempSensor1 < 200 :
+                elif TempSensor1 > 49 and TempSensor1 < 120 :
                     stdscr.addnstr(f" {Sens1} Temp........ {TempSensor1:.1f} °F ",100, pink)
                     stdscr.addnstr(" 🥵 Whew...its a tad warm in here\n",100, red)
                 else:
@@ -1066,25 +937,25 @@ def main(stdscr):
 # ===========================================================================================
 # Key Press Detection
 
-            stdscr.addnstr(" M -- Multiplus LED's on/off",100, gray7)
+            stdscr.addnstr(f" M -- Multiplus LED's on/off",100, gray7)
             stdscr.addnstr(f"{'': <15}K -- Keep Batteries Charged\n",100, gray7)
-            stdscr.addnstr(" E -- ESS display on/off",100, gray7)
+            stdscr.addnstr(f" E -- ESS display on/off",100, gray7)
             stdscr.addnstr(f"{'': <19}B -- Battery Life Enabled\n",100, gray7)
-            stdscr.addnstr(" A -- Analog inputs Temperature on/off",100, gray7)
+            stdscr.addnstr(f" A -- Analog inputs Temperature on/off",100, gray7)
             stdscr.addnstr(f"{'': <5}D -- Battery Life Disabled\n",100, gray7)
-            stdscr.addnstr(" Q -- Quit \n✞",100, gray7)
+            stdscr.addnstr(f" Q -- Quit \n✞",100, gray7)
 
-            c = stdscr.getch()
+            c = stdscr.getch() # also acts as refresh
 
 
             if ESS_Info.lower() == 'y':
                 if c == curses.KEY_LEFT and ESSbatteryLifeState != 9:
                     # Decrease ESS SoC by 5W
-                    client.write_registers(address=2901, values=ESSsocLimitUser_W - 50, unit=VEsystemID)
+                    client.write_registers(address=2901, values=int(ESSsocLimitUser) * 10 - 50, unit=VEsystemID)
                     continue
                 elif c == curses.KEY_RIGHT and ESSbatteryLifeState != 9:
                     # Increase ESS SoC by 5W
-                    client.write_registers(address=2901, values=ESSsocLimitUser_W + 50, unit=VEsystemID)
+                    client.write_registers(address=2901, values=int(ESSsocLimitUser) * 10 + 50, unit=VEsystemID)
                     continue
 
             if c == ord('q'):
@@ -1120,7 +991,7 @@ def main(stdscr):
                 builder.reset()
                 builder.add_16bit_int(GridSetPoint + 10)
                 payload = builder.to_registers()
-                client.write_register(2700, payload[0])
+                client.write_modbus_register(2700, payload[0])
                 continue
                 #else:
                 #   client.write_registers(address=2700, values=GridSetPoint + 10, unit=VEsystemID)
@@ -1130,7 +1001,7 @@ def main(stdscr):
                 builder.reset()
                 builder.add_16bit_int(GridSetPoint - 10)
                 payload = builder.to_registers()
-                client.write_register(2700, payload[0])
+                client.write_modbus_register(2700, payload[0])
                 continue
                 #else:    
                 #    client.write_registers(address=2700, values=GridSetPoint - 10, unit=VEsystemID)
@@ -1163,7 +1034,6 @@ def main(stdscr):
                 curses.resize_term(55, 90)
                 stdscr.refresh()
                 continue
-                # #curses.initscr()
 
             curses.flushinp()
 # ^^^ End Key Press Detection
