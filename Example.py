@@ -16,8 +16,8 @@ import time
 import textwrap
 import subprocess
 
-Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-ESS_Info      = 'y' # Y or N (case insensitive) to display ESS system information
+Analog_Inputs = 'n'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+ESS_Info      = 'n' # Y or N (case insensitive) to display ESS system information
 ip            = "192.168.20.156" # ip address of GX device or if on venus local try localhost
 
 # Value Refresh Rate in seconds
@@ -37,8 +37,6 @@ VEsystemID        = 100
 
 Defaults.Timeout = 25
 Defaults.Retries = 5
-
-tab2 = "\t\t"
 
 # Local network ip address of Cerbo GX. Default port 502
 client = ModbusClient(ip, port='502')
@@ -238,13 +236,13 @@ while True:
         #print("\033[K", end="")
         print(clear,colors.fg.green,f" Grid Set Point Watts.... {GridSetPoint}", sep="")
         
-        print(clear,f" Grid Watts.............. {GridWatts:.0f}"+tab2+f"AC Output Watts......... {ACoutWatts}", sep="")
+        print(clear,f" Grid Watts.............. {GridWatts:.0f}\t\tAC Output Watts......... {ACoutWatts}", sep="")
         
-        print(clear,f" Grid Amps............... {GridAmps:.1f}"+tab2+f"AC Output Amps.......... {ACoutAmps:.1f}", sep="")
+        print(clear,f" Grid Amps............... {GridAmps:.1f}\t\tAC Output Amps.......... {ACoutAmps:.1f}", sep="")
         
-        print(clear,f" Grid Volts ............. {GridVolts:.1f}"+tab2+f"AC Output Volts......... {ACoutVolts:.1f}", sep="")
+        print(clear,f" Grid Volts ............. {GridVolts:.1f}\t\tAC Output Volts......... {ACoutVolts:.1f}", sep="")
         
-        print(clear,f" Grid Freq .............. {GridHZ:.1f}"+tab2+f"AC Output Freq.......... {ACoutHZ:.1f}",sep="")
+        print(clear,f" Grid Freq .............. {GridHZ:.1f}\t\tAC Output Freq.......... {ACoutHZ:.1f}",sep="")
 
 
         if GridCondition == 0:
