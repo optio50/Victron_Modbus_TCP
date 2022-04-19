@@ -62,7 +62,7 @@ or
     
     
 The Solar.py and Solar.ui are PYQT5 files and are a work in progress not reay to be used publicly yet.
-Feel fre to tweak if you want.
+Feel free to tweak if you want.
 
 The TK-VictronSolar.py file is ready if you have the correct Victron equipment. such as Multiplus, BMV, Solar charger, Venus GX device.    
 execute in the cloned directory as the icon file is in that location.
