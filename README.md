@@ -44,7 +44,11 @@ Example2.py
   
 Solar.py    
 Solar.ui    
-![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/PyQT5-Example.apng?raw=true)
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/PyQT5-Example.apng?raw=true)    
+    
+TK-VictronSolar.py    
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/VictronSolar-SingleMPPT.apng?raw=true)    
+    
     
 To install  
 git clone https://github.com/optio50/Victron_Modbus_TCP  
@@ -54,4 +58,13 @@ pip3 install paho-mqtt
 pip3 install pymodbus  
 ./Example.py  
 or  
-./Example2.py
+./Example2.py    
+    
+    
+The Solar.py and Solar.ui are PYQT5 files and are a work in progress not reay to be used publicly yet.
+Feel fre to tweak if you want.
+
+The TK-VictronSolar.py file is ready if you have the correct Victron equipment. such as Multiplus, BMV, Solar charger, Venus GX device.    
+execute in the cloned directory as the icon file is in that location.
+
+
