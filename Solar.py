@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QTextEdit, QPushButton, QProgressBar, QLCDNumber, QWidget, QVBoxLayout
+from PyQt5.QtWidgets import (QMainWindow, QApplication, QLabel, QTextEdit, QPushButton, QProgressBar,
+QLCDNumber, QWidget, QVBoxLayout, QInputDialog)
 from PyQt5.QtCore import QTime, QTimer
 from PyQt5 import uic
+from PyQt5 import QtGui
 from itertools import cycle
 import json
 import paho.mqtt.subscribe as subscribe
@@ -30,7 +32,7 @@ client = ModbusClient(ip, port='502')
 # Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
 VRMid = "d41243d31a90"
 
-Analog_Inputs  = 'n'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+Analog_Inputs  = 'Y'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
                          # Check Analog Input Address around line 315.
 
 # Unit ID #'s from Cerbo GX.
@@ -83,6 +85,35 @@ def GridFeedIn():
         else:
             client.write_register(2707, 1) # On
 
+# Multiplus Control
+
+def Multiplus_Charger():
+    client.write_registers(address=33, values=1, unit=MultiPlus_ID)
+
+
+def Multiplus_Inverter():
+    client.write_registers(address=33, values=2, unit=MultiPlus_ID)
+
+
+def Multiplus_On():
+    client.write_registers(address=33, values=3, unit=MultiPlus_ID)
+
+
+def Multiplus_Off():
+    client.write_registers(address=33, values=4, unit=MultiPlus_ID)
+
+
+def ESSbatteryLifeEnabled():
+    client.write_registers(address=2900, values=1, unit=VEsystem_ID)
+
+def ESSbatteryLifeDisabled():
+    client.write_registers(address=2900, values=10, unit=VEsystem_ID)
+
+def ESSbatteriesCharged():
+    # Mode 9 'Keep batteries charged' mode enabled
+    client.write_registers(address=2900, values=9, unit=VEsystem_ID)
+
+
 
 
 
@@ -98,7 +129,9 @@ class UI(QMainWindow):
 
         # Load the ui file
         uic.loadUi("Solar.ui", self)
-        
+        # Set Window Icon
+        self.setWindowIcon(QtGui.QIcon('Solar.png'))
+
         def SetGridWatts():
             watts   = self.Set_Grid_Watts_lineEdit.text()
             builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
@@ -107,6 +140,23 @@ class UI(QMainWindow):
             payload = builder.to_registers()
             client.write_registers(2700, payload[0])
             self.Set_Grid_Watts_lineEdit.setText("")
+
+
+        def ESSuser():
+            answer, ok = QInputDialog.getInt(self, 'Enter New ESS User Limit', 'Enter New ESS User Limit',
+                                            70, 10, 100, 5)
+            if ok:
+                client.write_registers(address=2901, values=answer * 10, unit=VEsystem_ID)
+
+
+        self.actionOptimized_Battery_Life_Enabled.triggered.connect(ESSbatteryLifeEnabled)
+        self.actionOptimized_Battery_Life_Disabled.triggered.connect(ESSbatteryLifeDisabled)
+        self.actionKeep_Batteries_Charged.triggered.connect(ESSbatteriesCharged)
+        self.actionChange_ESS_User_Limit.triggered.connect(ESSuser)
+        self.actionCharger_Only.triggered.connect(Multiplus_Charger)
+        self.actionInverter_Only.triggered.connect(Multiplus_Inverter)
+        self.actionOff.triggered.connect(Multiplus_Off)
+        self.actionOn.triggered.connect(Multiplus_On)
         
         
         # Keep this out of the timing loop
@@ -227,7 +277,7 @@ class UI(QMainWindow):
         Temperature = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/Leds/Temperature")
         
         # Switch Position on the Multiplus II
-        #MPswitch    = modbus_register(33,MultiPlus_ID)
+        MPswitch    = modbus_register(33,MultiPlus_ID)
         MultiName   = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/ProductName")
 
 #===========================================================================================
@@ -578,7 +628,7 @@ class UI(QMainWindow):
             self.ESS_SOC_Dynamic_label.setHidden(True)
             self.ESS_SOC_Dynamic_Value.setHidden(True)
             self.ESS_SOC_User_Value.setText(str(ESSsocLimitUser))
-            self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState] + " .....Optimized (BatteryLife Disabled)")
+            self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState] + " . . . . . Optimized (BatteryLife Disabled)")
         # Battery Life Enabled
         elif ESSbatteryLifeState >= 1 and ESSbatteryLifeState <= 8:
             self.ESS_SOC_Dynamic_label.setHidden(False)
@@ -587,7 +637,7 @@ class UI(QMainWindow):
             self.ESS_SOC_User_Value.setHidden(False)
             self.ESS_SOC_User_Value.setText(str(ESSsocLimitUser))
             self.ESS_SOC_Dynamic_Value.setText(str(ESSsocLimitDynamic))
-            self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState] + " .....Optimized (BatteryLife Enabled)")
+            self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState] + " . . . . . Optimized (BatteryLife Enabled)")
         # Keep Batteries Charged Mode
         elif ESSbatteryLifeState == 9:
             self.ESS_SOC_Dynamic_label.setHidden(True)
@@ -597,7 +647,16 @@ class UI(QMainWindow):
             self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState])
             
         
-        
+#====================================================================
+#   Multiplus Switch
+        if MPswitch == 1:
+            MPswitch = "Charger Only"
+        elif MPswitch == 2:
+            MPswitch = "Inverter Only"
+        elif MPswitch == 3:
+            MPswitch = "ON"
+        elif MPswitch == 4:
+            MPswitch = "OFF"
 #===========================================================================================
 # Populate Screen with Variable Values
 #===========================================================================================
@@ -668,16 +727,15 @@ class UI(QMainWindow):
         else:
             self.Solar_Charger1_Error_Value.setText(SolarErrorDict[SolarError1])
             self.Solar_Charger1_Error_Value.setStyleSheet("QLabel#Solar_Charger1_Error_Value{color: rgb(0, 0, 0);}");
-        
         if SolarError2 > 0:
-            self.Solar_Charger2_Error_Value.setText(SolarErrorDict[SolarError1])
+            self.Solar_Charger2_Error_Value.setText(SolarErrorDict[SolarError2])
             self.Solar_Charger2_Error_Value.setStyleSheet("QLabel#Solar_Charger2_Error_Value{font-weight: bold; color: red; background-color: black;}");
 
         else:
-            self.Solar_Charger2_Error_Value.setText(SolarErrorDict[SolarError1])
+            self.Solar_Charger2_Error_Value.setText(SolarErrorDict[SolarError2])
             self.Solar_Charger2_Error_Value.setStyleSheet("QLabel#Solar_Charger2_Error_Value{color: rgb(0, 0, 0);}");
         
-        self.Solar_Charger2_Error_Value.setText(SolarErrorDict[SolarError2])
+        self.Multiplus_Mode_Value.setText(str(MPswitch))
         self.statusBar.showMessage(dt_string)
 
 #===========================================================================================

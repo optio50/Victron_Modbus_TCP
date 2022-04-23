@@ -3370,6 +3370,38 @@ background-color: rgb(136, 138, 133);
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>776</y>
+      <width>216</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="formLayout_8">
+     <item row="0" column="0">
+      <widget class="QLabel" name="Multiplus_Mode_label">
+       <property name="text">
+        <string>Multiplus Mode is</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="Multiplus_Mode_Value">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
@@ -3416,6 +3448,8 @@ background-color: rgb(136, 138, 133);
    <zorder>Solar_Charger1_Error_Value</zorder>
    <zorder>Solar_Charger1_Error_label</zorder>
    <zorder>layoutWidget_2</zorder>
+   <zorder>Multiplus_Mode_label</zorder>
+   <zorder>Multiplus_Mode_Value</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -3446,7 +3480,20 @@ background-color: rgb(136, 138, 133);
     <addaction name="actionKeep_Batteries_Charged"/>
     <addaction name="actionChange_ESS_User_Limit"/>
    </widget>
+   <widget class="QMenu" name="menuMultiplus_Modes">
+    <property name="title">
+     <string>Multiplus Modes</string>
+    </property>
+    <addaction name="actionCharger_Only"/>
+    <addaction name="separator"/>
+    <addaction name="actionInverter_Only"/>
+    <addaction name="separator"/>
+    <addaction name="actionOn"/>
+    <addaction name="separator"/>
+    <addaction name="actionOff"/>
+   </widget>
    <addaction name="menuESS_Modes"/>
+   <addaction name="menuMultiplus_Modes"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="styleSheet">
@@ -3479,6 +3526,26 @@ QSizeGrip {
   <action name="actionChange_ESS_User_Limit">
    <property name="text">
     <string>Change ESS User SOC Limit</string>
+   </property>
+  </action>
+  <action name="actionCharger_Only">
+   <property name="text">
+    <string>Charger Only</string>
+   </property>
+  </action>
+  <action name="actionInverter_Only">
+   <property name="text">
+    <string>Inverter Only</string>
+   </property>
+  </action>
+  <action name="actionOn">
+   <property name="text">
+    <string>On</string>
+   </property>
+  </action>
+  <action name="actionOff">
+   <property name="text">
+    <string>Off</string>
    </property>
   </action>
  </widget>
