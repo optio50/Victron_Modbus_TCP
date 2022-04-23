@@ -30,8 +30,8 @@ client = ModbusClient(ip, port='502')
 # Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
 VRMid = "d41243d31a90"
 
-Analog_Inputs  = 'Y'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-                         # Check Analog Input Address around line 300.
+Analog_Inputs  = 'n'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+                         # Check Analog Input Address around line 315.
 
 # Unit ID #'s from Cerbo GX.
 # Do not confuse UnitID with Instance ID.
@@ -203,7 +203,6 @@ class UI(QMainWindow):
 #===========================================================================================
         # Multiplus Section
         #   Grid Input & A/C Out
-                
         FeedIn        = modbus_register(2707,VEsystem_ID)
         GridSetPoint  = modbus_register(2700,VEsystem_ID)
         GridWatts     = modbus_register(820,VEsystem_ID)
@@ -227,10 +226,28 @@ class UI(QMainWindow):
         Floatchg    = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/Leds/Float")
         Temperature = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/Leds/Temperature")
         
-        MultiName   = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/ProductName")
         # Switch Position on the Multiplus II
         #MPswitch    = modbus_register(33,MultiPlus_ID)
+        MultiName   = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/ProductName")
 
+#===========================================================================================
+
+        #   VEbus Status
+        VEbusStatus = mqtt_request("N/"+VRMid+"/system/"+str(MQTT_VEsystem_ID)+"/SystemState/State")
+        #VEbusStatus = modbus_register(31,MultiPlusID)
+    
+        #   VEbus Error
+        VEbusError  = modbus_register(32,MultiPlus_ID)
+        #VEbusError = 55 # Test single error mesg
+        #error_nos = [0,1,2,3,4,5,6,7,10,14,16,17,18,22,24,25,26]
+        #VEbusError = error_nos[errorindex] # Multiple Test VEbusError's
+
+        # ESS Info
+        ESSbatteryLifeState = modbus_register(2900,VEsystem_ID)
+        ESSsocLimitUser     = modbus_register(2901,VEsystem_ID) / 10
+        ESSsocLimitUser     = f"{ESSsocLimitUser:.0f}%"
+        ESSsocLimitDynamic  = modbus_register(2903, unit=VEsystem_ID) / 10
+        ESSsocLimitDynamic  = f"{ESSsocLimitDynamic:.0f}%"
 #===========================================================================================
 # END Variables
 #===========================================================================================
@@ -244,7 +261,30 @@ class UI(QMainWindow):
                       6:  "Storage",
                       7:  "Equalize",
                       11: "Other Hub-1",
+                      245: "Wake-Up",
                       252:"EXT Control"}
+        
+        SolarErrorDict = {0: "No Error",
+                          1: "Error 1: Battery temperature too high",
+                          2: "Error 2: Battery voltage too high",
+                          3: "Error 3: Battery temperature sensor miswired (+)",
+                          4: "Error 4: Battery temperature sensor miswired (-)",
+                          5: "Error 5: Battery temperature sensor disconnected",
+                          6: "Error 6: Battery voltage sense miswired (+)",
+                          7: "Error 7: Battery voltage sense miswired (-)",
+                          8: "Error 8: Battery voltage sense disconnected",
+                          9: "Error 9: Battery voltage wire losses too high",
+                          17:"Error 17: Charger temperature too high",
+                          18:"Error 18: Charger over-current",
+                          19:"Error 19: Charger current polarity reversed",
+                          20:"Error 20: Bulk time limit exceeded",
+                          22:"Error 22: Charger temperature sensor miswired",
+                          23:"Error 23: Charger temperature sensor disconnected",
+                          33:"Error 33: Input voltage too high",
+                          34:"Error 34: Input current too high"
+                          }
+        
+        
         if BatteryTTG == 0.0:
             BatteryTTG = "Infinite"
         else:
@@ -290,7 +330,16 @@ class UI(QMainWindow):
         elif BatterySOC < 33:
             self.Batt_SOC_progressBar.setStyleSheet("QProgressBar#Batt_SOC_progressBar{selection-background-color:"
                                                     "rgb(200, 0, 0);}"); # Red
-        
+
+        # Total Watts
+        if SolarWatts < 1:
+            self.Total_Watts_label.setHidden(True)
+        else:
+            self.Total_Watts_label.setHidden(False)
+            self.Total_Watts_label.setText(str(SolarWatts))
+            
+
+
         # Conditional Modbus Request
         # Analog Temperature Inputs
         # Change the ID to your correct value. *** modbus_register(3304,ID) *** <------Change ID
@@ -299,16 +348,121 @@ class UI(QMainWindow):
                 TempSensor1 = modbus_register(3304,24) / 100 * 1.8 + 32
             except AttributeError:
                 TempSensor1 = "Sensor 1 Disconnected or Wrong Address"
+                print("Analog Input Sensor 1 Disconnected or Wrong Address")
             
             try:
                 TempSensor2 = modbus_register(3304,25) / 100 * 1.8 + 32
             except AttributeError:
                 TempSensor2 = "Sensor 2 Disconnected or Wrong Address"
-            
+                print("Analog Input Sensor 2 Disconnected or Wrong Address")
             try:
                 TempSensor3 = modbus_register(3304,26) / 100 * 1.8 + 32
             except AttributeError:
                 TempSensor3 = "Sensor 3 Disconnected or Wrong Address"
+                print("Analog Input Sensor 3 Disconnected or Wrong Address")
+        
+        if Analog_Inputs.lower() == 'y':
+            self.Battery_Box_lineEdit.setText(str(TempSensor1))
+            self.Cabin_Int_lineEdit.setText(str(TempSensor2))
+            self.Cabin_Ext_lineEdit.setText(str(TempSensor3))
+        else:
+            self.Battery_Box_lineEdit.setHidden(True)
+            self.Cabin_Int_lineEdit.setHidden(True)
+            self.Cabin_Ext_lineEdit.setHidden(True)
+            self.Battery_Box_label.setHidden(True)
+            self.Cabin_Int_label.setHidden(True)
+            self.Cabin_Ext_label.setHidden(True)
+            
+            # ===========================================================================================
+    #   VE.Bus Status
+    
+        VEbusStatusDict =  {0:  "OFF",
+                            1:  "Low Power",
+                            2:  "Fault",
+                            3:  "Bulk Charging",
+                            4:  "Absorption Charging",
+                            5:  "Float Charging",
+                            6:  "Storage",
+                            7:  "Equalize",
+                            8:  "Passthru",
+                            9:  "Inverting",
+                            10: "Power Assist",
+                            11: "Power Supply Mode",
+                            246:"Repeated Absorption",
+                            247:"Equalize",
+                            248:"Battery Safe",
+                            249:"Test",
+                            250:"Blocked",
+                            251:"Test",
+                            252:"External control",
+                            256:"Discharging",
+                            257:"Sustain",
+                            258:"Recharging",
+                            259:"Sched charge"
+                            }
+    
+    # ===========================================================================================
+    #   VE.Bus Error            
+            # https://www.victronenergy.com/live/ve.bus:ve.bus_error_codes#vebus_error_codes1
+            #VEbusErrorList = [0,1,2,3,4,5,6,7,10,14,16,17,18,22,24,25,26]
+        VEbusErrorDict = {
+                          0: "No Error",
+                          1: "Error 1: Device is switched off because one of the other "
+                             "phases in the system has switched off",
+                          2: "Error 2: New and old types MK2 are mixed in the system",
+                          3: "Error 3: Not all- or more than- the expected devices "
+                             "were found in the system",
+                          4: "Error 4: No other device whatsoever detected",
+                          5: "Error 5: Overvoltage on AC-out",
+                          6: "Error 6: in DDC Program",
+                          7: "VE.Bus BMS connected- which requires an Assistant- "
+                             "but no assistant found",
+                          8: "Error 8: Ground Relay Test Failed",
+                          9: "VE.Bus Error 9",
+                          10:"VE.Bus Error 10: System time synchronisation problem occurred",
+                          11:"Error 11: Relay Test Fault - Installation error or possibly relay failure",
+                          12:"Error 12: - Config mismatch with 2nd mcu",
+                          13:"VE.Bus Error 13",
+                          14:"Error 14: Device cannot transmit data",
+                          15:"Error 15 - VE.Bus combination error",
+                          16:"Error 16: Dongle missing",
+                          17:"Error 17: One of the devices assumed master "
+                             "status because the original master failed",
+                          18:"Error 18: AC Overvoltage on the output "
+                             "of a slave has occurred while already switched off",
+                          19:"Error 19 - Slave does not have AC input!",
+                          20:"Error 20: - Configuration mismatch",
+                          21:"VE.Bus Error 21",
+                          22:"Error 22: This device cannot function as slave",
+                          23:"VE.Bus Error 23",
+                          24:"Error 24: Switch-over system protection initiated",
+                          25:"Error 25: Firmware incompatibility. The firmware of a connected device "
+                             "is not sufficiently up to date.",
+                          26:"Error 26: Internal error",
+                          27:"VE.Bus Error 27",
+                          28:"VE.Bus Error 28",
+                          29:"VE.Bus Error 29",
+                          30:"VE.Bus Error 30",
+                          31:"VE.Bus Error 31",
+                          32:"VE.Bus Error 32"
+                          }
+    
+    # ===========================================================================================
+    # ESS Battery Life State
+        ESSbatteryLifeStateDict = {0: "Battery Life Disabled",
+                                   1: "Restarting",
+                                   2: "Self-consumption",
+                                   3: "Self consumption, SoC exceeds 85%",
+                                   4: "Self consumption, SoC at 100%",
+                                   5: "Discharge disabled. SoC below BatteryLife Dynamic SoC",
+                                   6: "SoC has been below SoC limit for more than 24 hours. Slow Charging battery",
+                                   7: "Multi is in sustain mode",
+                                   8: "Recharge, SOC dropped 5% or more below MinSOC",
+                                   9: "Keep batteries charged mode enabled",
+                                   10:"Self consumption, SoC at or above minimum SoC",
+                                   11:"Discharge Disabled (Low SoC), SoC is below minimum SoC",
+                                   12:"Recharge, SOC dropped 5% or more below minimum"
+                                   }
 
 
 #====================================================================
@@ -400,7 +554,50 @@ class UI(QMainWindow):
         elif Temperature >= 2: # Blink
             self.Temperature_LED.setStyleSheet(f"QLabel#Temperature_LED{{color: {next(blinkred)};}}");
 
+#====================================================================
+#   VE.Bus Status
+        if VEbusStatus == 2:
+            self.System_State_Value.setText(str(VEbusStatusDict[VEbusStatus]))
+            self.System_State_Value.setStyleSheet("QLabel#System_State_Value{font-weight: bold; color: red; background-color: black;}");
 
+        else:
+            self.System_State_Value.setText(str(VEbusStatusDict[VEbusStatus]))
+            self.System_State_Value.setStyleSheet("QLabel#System_State_Value{font-weight: bold; color: rgb(0, 0, 0);}");
+#====================================================================
+#   VE.Bus Error
+        if VEbusError > 0:
+            self.VE_Bus_Error_Value.setText(str(VEbusErrorDict[VEbusError]))
+            self.VE_Bus_Error_Value.setStyleSheet("QLabel#VE_Bus_Error_Value{font-weight: bold; color: red; background-color: black;}");
+
+        else:
+            self.VE_Bus_Error_Value.setText(str(VEbusErrorDict[VEbusError]))
+            self.VE_Bus_Error_Value.setStyleSheet("QLabel#VE_Bus_Error_Value{font-weight: bold; color: rgb(0, 0, 0);}");
+
+        # Battery Life Disabled
+        if ESSbatteryLifeState >= 10:
+            self.ESS_SOC_Dynamic_label.setHidden(True)
+            self.ESS_SOC_Dynamic_Value.setHidden(True)
+            self.ESS_SOC_User_Value.setText(str(ESSsocLimitUser))
+            self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState] + " .....Optimized (BatteryLife Disabled)")
+        # Battery Life Enabled
+        elif ESSbatteryLifeState >= 1 and ESSbatteryLifeState <= 8:
+            self.ESS_SOC_Dynamic_label.setHidden(False)
+            self.ESS_SOC_Dynamic_Value.setHidden(False)
+            self.ESS_SOC_User_label.setHidden(False)
+            self.ESS_SOC_User_Value.setHidden(False)
+            self.ESS_SOC_User_Value.setText(str(ESSsocLimitUser))
+            self.ESS_SOC_Dynamic_Value.setText(str(ESSsocLimitDynamic))
+            self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState] + " .....Optimized (BatteryLife Enabled)")
+        # Keep Batteries Charged Mode
+        elif ESSbatteryLifeState == 9:
+            self.ESS_SOC_Dynamic_label.setHidden(True)
+            self.ESS_SOC_Dynamic_Value.setHidden(True)
+            self.ESS_SOC_User_label.setHidden(True)
+            self.ESS_SOC_User_Value.setHidden(True)
+            self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState])
+            
+        
+        
 #===========================================================================================
 # Populate Screen with Variable Values
 #===========================================================================================
@@ -446,13 +643,7 @@ class UI(QMainWindow):
         self.Yield_Yesterday_2_LCD.display(f"{SolarYieldYest2:.3f}")
         self.Solar_Charger_State2_lineEdit.setText(SolarStateDict[SolarState2])
         
-        # Total Watts
-        if SolarWatts <= 0:
-            self.Total_Watts_label.setHidden(True)
-        else:
-            self.Total_Watts_label.setHidden(False)
-            self.Total_Watts_label.setText(str(SolarWatts))
-            
+
         self.Total_Yield_Label.setText(str(f" Yield Today {TotalYield:.3f} kwh"))
         self.Total_Yield_Label_Yest.setText(str(f" Yield Yesterday {TotalYieldYest:.3f} kwh"))
         
@@ -470,18 +661,24 @@ class UI(QMainWindow):
         self.Grid_Current_Limit_LCD.display(GridAmpLimit)
 
         self.MultiName_label.setText(MultiName)
-        
-        if Analog_Inputs.lower() == 'y':
-            self.Battery_Box_lineEdit.setText(str(TempSensor1))
-            self.Cabin_Int_lineEdit.setText(str(TempSensor2))
-            self.Cabin_Ext_lineEdit.setText(str(TempSensor3))
+        if SolarError1 > 0:
+            self.Solar_Charger1_Error_Value.setText(SolarErrorDict[SolarError1])
+            self.Solar_Charger1_Error_Value.setStyleSheet("QLabel#Solar_Charger1_Error_Value{font-weight: bold; color: red; background-color: black;}");
+
         else:
-            self.Battery_Box_lineEdit.setHidden(True)
-            self.Cabin_Int_lineEdit.setHidden(True)
-            self.Cabin_Ext_lineEdit.setHidden(True)
-            self.Battery_Box_label.setHidden(True)
-            self.Cabin_Int_label.setHidden(True)
-            self.Cabin_Ext_label.setHidden(True)
+            self.Solar_Charger1_Error_Value.setText(SolarErrorDict[SolarError1])
+            self.Solar_Charger1_Error_Value.setStyleSheet("QLabel#Solar_Charger1_Error_Value{color: rgb(0, 0, 0);}");
+        
+        if SolarError2 > 0:
+            self.Solar_Charger2_Error_Value.setText(SolarErrorDict[SolarError1])
+            self.Solar_Charger2_Error_Value.setStyleSheet("QLabel#Solar_Charger2_Error_Value{font-weight: bold; color: red; background-color: black;}");
+
+        else:
+            self.Solar_Charger2_Error_Value.setText(SolarErrorDict[SolarError1])
+            self.Solar_Charger2_Error_Value.setStyleSheet("QLabel#Solar_Charger2_Error_Value{color: rgb(0, 0, 0);}");
+        
+        self.Solar_Charger2_Error_Value.setText(SolarErrorDict[SolarError2])
+        self.statusBar.showMessage(dt_string)
 
 #===========================================================================================
 
