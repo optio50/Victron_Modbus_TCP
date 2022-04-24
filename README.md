@@ -70,4 +70,4 @@ execute in the cloned directory as the icon file is in that location.
 The TK-VictronSolar.py file is ready if you have the correct Victron equipment. such as Multiplus, BMV, Solar charger, Venus GX device.    
 execute in the cloned directory as the icon file is in that location.
 
-
+ 
