@@ -61,8 +61,8 @@ or
 ./Example2.py    
     
     
-The Solar.py and Solar.ui are PYQT5 files and are a work in progress not reay to be used publicly yet.
-Feel free to tweak if you want.
+The PyQT5-Dual-Charger.py and PyQT5-Dual-Charger.ui are PYQT5 files that are used together.    
+Same with PyQT5-Single-Charger.py and PyQT5-Single-Charger.ui    
 
 The TK-VictronSolar.py file is ready if you have the correct Victron equipment. such as Multiplus, BMV, Solar charger, Venus GX device.    
 execute in the cloned directory as the icon file is in that location.
