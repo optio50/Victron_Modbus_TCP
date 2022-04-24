@@ -42,8 +42,8 @@ Example.py
 Example2.py      
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/Peek_2022-02-19_14-30.apng?raw=true)
   
-Solar.py    
-Solar.ui    
+PyQT5-Dual-Charger.py    
+PyQT5-Dual-Charger.ui    
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/PyQT5-Dual-Charger.apng?raw=true)    
     
 TK-VictronSolar.py    
