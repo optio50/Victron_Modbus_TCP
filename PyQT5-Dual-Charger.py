@@ -1,24 +1,39 @@
 #!/usr/bin/env python3
-from PyQt5.QtWidgets import (QMainWindow, QApplication, QLabel, QTextEdit, QPushButton, QProgressBar,
-QLCDNumber, QWidget, QVBoxLayout, QInputDialog)
-from PyQt5.QtCore import QTime, QTimer
-from PyQt5 import uic
-from PyQt5 import QtGui
-from itertools import cycle
+from PyQt5.QtWidgets import (QMainWindow, QApplication, QGridLayout, QLabel, QTextEdit, QAction,
+QPushButton, QProgressBar, QLCDNumber, QWidget, QVBoxLayout, QInputDialog)
+from PyQt5.QtCore import QTime, QTimer, QProcess
+from PyQt5 import uic, QtGui
+
+
+from itertools import cycle # Flash the LED's
 import json
+
+# MQTT
 import paho.mqtt.subscribe as subscribe
 import paho.mqtt.publish as mqttpublish
+
+# Modbus
 from pymodbus.constants import Defaults
 from pymodbus.constants import Endian
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.payload import BinaryPayloadBuilder
+
 from datetime import datetime
 from datetime import timedelta
 import time
 from time import strftime
 from time import gmtime
+
 import sys
+
+# Chart
+import pyqtgraph as pg
+from pglive.kwargs import Crosshair, Axis
+from pglive.sources.data_connector import DataConnector
+from pglive.sources.live_axis import LiveAxis
+from pglive.sources.live_plot import LiveVBarPlot, LiveLinePlot
+from pglive.sources.live_plot_widget import LivePlotWidget
 
 
 # GX Device I.P Address
@@ -26,14 +41,16 @@ ip = '192.168.20.156'
 
 client = ModbusClient(ip, port='502')
 
+
 # MQTT Request's are for Multiplus LED state's
 # VRM Portal ID from GX device. 
 # AFAIK this ID is needed even with no internet access as its the name of your venus device.
 # Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
 VRMid = "d41243d31a90"
 
-Analog_Inputs  = 'Y'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-                         # Check Analog Input Address around line 315.
+
+Analog_Inputs  = 'y'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+                         # Check Analog Input Address around line 360.
 
 # Unit ID #'s from Cerbo GX.
 # Do not confuse UnitID with Instance ID.
@@ -55,12 +72,12 @@ MQTT_SolarCharger_2_ID = 278
 MQTT_MultiPlus_ID      = 276
 MQTT_Bmv_ID            = 277
 MQTT_VEsystem_ID       = 0
+
 #===================================
 
 # Describe The Arrays
 Array1 = "4 X 100W Array" # 4 New Renogy 100W Panels
 Array2 = "250W Panel" # Used 250W panel. Typical Ouput 200W
-
 
 
 def modbus_register(address, unit):
@@ -76,14 +93,15 @@ def mqtt_request(mqtt_path):
     topic = data['value']
     return topic
 
-def GridFeedIn():
-        FeedIn = modbus_register(2707,VEsystem_ID)
 
-        if FeedIn == 1:
-            client.write_register(2707, 0) # Off
-            
-        else:
-            client.write_register(2707, 1) # On
+def GridFeedIn():
+    FeedIn = modbus_register(2707,VEsystem_ID)
+
+    if FeedIn == 1:
+        client.write_register(2707, 0) # Off
+
+    else:
+        client.write_register(2707, 1) # On
 
 # Multiplus Control
 
@@ -106,8 +124,10 @@ def Multiplus_Off():
 def ESSbatteryLifeEnabled():
     client.write_registers(address=2900, values=1, unit=VEsystem_ID)
 
+
 def ESSbatteryLifeDisabled():
     client.write_registers(address=2900, values=10, unit=VEsystem_ID)
+
 
 def ESSbatteriesCharged():
     # Mode 9 'Keep batteries charged' mode enabled
@@ -131,24 +151,238 @@ def Charger2_On():
 def Charger2_Off():
         client.write_registers(address=774, values=4, unit=SolarCharger_2_ID) # Turn Off
 
-
 #===========================================================================================
 
-
 # Cycle colors for blinking LED's (Bright / Dark)
-blinkred    = cycle(["rgb(255, 0, 0)","rgb(50, 0, 0)"])
-blinkyellow = cycle(["rgb(255, 255, 0)","rgb(50, 50, 0)"])
-blinkgreen  = cycle(["rgb(115, 210, 22)","rgb(0, 50, 0)"])
-blinkblue   = cycle(["rgb(0, 0, 255)","rgb(0, 25, 50)"])
+blinkred_Temp          = cycle(["rgb(255, 0, 0)","rgb(50, 0, 0)"])
+blinkred_LowBatt       = cycle(["rgb(255, 0, 0)","rgb(50, 0, 0)"])
+blinkred_OverLoad      = cycle(["rgb(255, 0, 0)","rgb(50, 0, 0)"])
+blinkyellow_Bulk       = cycle(["rgb(255, 255, 0)","rgb(50, 50, 0)"])
+blinkyellow_Absorption = cycle(["rgb(255, 255, 0)","rgb(50, 50, 0)"])
+blinkgreen_Mains       = cycle(["rgb(115, 210, 22)","rgb(0, 50, 0)"])
+blinkgreen_Inverter    = cycle(["rgb(115, 210, 22)","rgb(0, 50, 0)"])
+blinkblue_Float        = cycle(["rgb(0, 0, 255)","rgb(0, 25, 50)"])
+
 
 class UI(QMainWindow):
     def __init__(self):
         super(UI, self).__init__()
-
         # Load the ui file
         uic.loadUi("PyQT5-Dual-Charger.ui", self)
         # Set Window Icon
         self.setWindowIcon(QtGui.QIcon('Solar.png'))
+
+#===========================================================================================
+# Chart Solar Watts
+
+        pg.setConfigOption('leftButtonPan', False) # Only needed once.
+        watts_plot = LiveLinePlot(pen='orange', fillLevel=0, brush=(213,129,44,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.watts_connector = DataConnector(watts_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Define crosshair parameters
+        kwargs = {Crosshair.ENABLED: True,
+        Crosshair.LINE_PEN: pg.mkPen(color="red", width=1),
+        Crosshair.TEXT_KWARGS: {"color": "white"}}
+
+        # Create plot itself
+        self.Solar_graph_Widget = LivePlotWidget(title="Solar Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Solar_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # Set labels
+        self.Solar_graph_Widget.setLabel('bottom')
+        self.Solar_graph_Widget.setLabel('left', 'Watts')
+
+        # Add Line
+        self.Solar_graph_Widget.addItem(watts_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.Chart_Watts_Layout.addWidget(self.Solar_graph_Widget)
+#===========================================================================================
+# Chart Battery Watts
+        #pg.setConfigOption('leftButtonPan', False) # Only needed once.
+        bat_watts_plot = LiveLinePlot(pen='purple', fillLevel=0, brush=(88,55,88))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.bat_watts_connector = DataConnector(bat_watts_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Create plot itself
+        self.Solar_graph_Widget = LivePlotWidget(title="Battery Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Solar_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # Set labels
+        self.Solar_graph_Widget.setLabel('bottom')
+        self.Solar_graph_Widget.setLabel('left', 'Watts')
+
+        # Add Line
+        self.Solar_graph_Widget.addItem(bat_watts_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.Chart_Bat_Watts_Layout.addWidget(self.Solar_graph_Widget)
+#===========================================================================================
+# Chart Battery Amps
+        amps_plot = LiveLinePlot(pen="blue", fillLevel=0, brush=(55,44,213,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.amps_connector = DataConnector(amps_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Create plot itself
+        self.Battery_Amps_graph_Widget = LivePlotWidget(title="Battery Amps 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Battery_Amps_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # Set labels
+        self.Battery_Amps_graph_Widget.setLabel('bottom')
+        self.Battery_Amps_graph_Widget.setLabel('left', 'Amps')
+
+        # Add Line
+        self.Battery_Amps_graph_Widget.addItem(amps_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.Chart_Battery_Amps_Layout.addWidget(self.Battery_Amps_graph_Widget)
+
+#===========================================================================================
+# Chart Battery SOC
+        soc_plot = LiveLinePlot(pen="magenta")
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.soc_connector = DataConnector(soc_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Create plot itself
+        self.Battery_SOC_graph_Widget = LivePlotWidget(title="Battery SOC 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Battery_SOC_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # Set labels
+        self.Battery_SOC_graph_Widget.setLabel('bottom')
+        self.Battery_SOC_graph_Widget.setLabel('left', 'Percent')
+
+        # Add Line
+        self.Battery_SOC_graph_Widget.addItem(soc_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.Chart_Battery_SOC_Layout.addWidget(self.Battery_SOC_graph_Widget)
+
+#===========================================================================================
+# Chart Battery Volts
+        volts_plot = LiveLinePlot(pen="red", fillLevel=0, brush=(102,0,0,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.volts_connector = DataConnector(volts_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Create plot itself
+        self.Battery_Volts_graph_Widget = LivePlotWidget(title="Battery Volts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Battery_Volts_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # Set labels
+        self.Battery_Volts_graph_Widget.setLabel('bottom')
+        self.Battery_Volts_graph_Widget.setLabel('left', 'Volts')
+
+        # SetLimits
+        self.Battery_Volts_graph_Widget.setLimits(yMin=10.5, yMax=16)
+
+        # Add Line
+        self.Battery_Volts_graph_Widget.addItem(volts_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.Chart_Volts_Layout.addWidget(self.Battery_Volts_graph_Widget)
+#===========================================================================================
+# Chart Grid Watts
+        grid_plot = LiveLinePlot(pen="green", fillLevel=0, brush=(0,102,0,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.grid_connector = DataConnector(grid_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Create plot itself
+        self.Grid_Watts_graph_Widget = LivePlotWidget(title="Grid Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Grid_Watts_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # Set labels
+        self.Grid_Watts_graph_Widget.setLabel('bottom')
+        self.Grid_Watts_graph_Widget.setLabel('left', 'Watts')
+
+        # Add Line
+        self.Grid_Watts_graph_Widget.addItem(grid_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.Chart_Grid_Watts_Layout.addWidget(self.Grid_Watts_graph_Widget)
+
+#===========================================================================================
+# Chart Cabin Temperatures
+        Exterior_Temp_plot = LiveLinePlot(pen="cyan", name='Cabin Exterior')
+        Interior_Temp_plot = LiveLinePlot(pen="red", name='Cabin Interior')
+        Box_Temp_plot = LiveLinePlot(pen="yellow", name='Battery Box')
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.Exterior_Temp_connector = DataConnector(Exterior_Temp_plot, max_points=86400) # 24 hours in seconds
+        self.Interior_Temp_connector = DataConnector(Interior_Temp_plot, max_points=86400) # 24 hours in seconds
+        self.Box_Temp_connector = DataConnector(Box_Temp_plot, max_points=86400) # 24 hours in seconds
+
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Create plot itself
+        self.Temperature_graph_Widget = LivePlotWidget(title="Cabin Temperatures °F 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Temperature_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+
+        # Set labels
+        self.Temperature_graph_Widget.setLabel('bottom')
+        #self.Temperature_graph_Widget.setLabel('bottom', 'Time', units='hh:mm:ss' )
+        #self.Temperature_graph_Widget.getAxis('bottom').enableAutoSIPrefix(False)
+        self.Temperature_graph_Widget.setLabel('left', '°F')
+        
+        # Add Floating Legend
+        self.Temperature_graph_Widget.addLegend() # If plot is named auto add name to legend
+
+        # Add Line
+        self.Temperature_graph_Widget.addItem(Box_Temp_plot) #1 the addItem sequence effects the legend order
+        self.Temperature_graph_Widget.addItem(Exterior_Temp_plot) #2
+        self.Temperature_graph_Widget.addItem(Interior_Temp_plot) #3
+
+
+        # Add chart to Layout in Qt Designer
+        self.Temperature_Layout.addWidget(self.Temperature_graph_Widget)
+#===========================================================================================
 
         def SetGridWatts():
             watts   = self.Set_Grid_Watts_lineEdit.text()
@@ -178,7 +412,6 @@ class UI(QMainWindow):
                 mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_2_ID)+"/Settings/ChargeCurrentLimit",
                                                                    payload=json.dumps({"value": answer}), hostname=ip, port=1883)
 
-
         self.actionOptimized_Battery_Life_Enabled.triggered.connect(ESSbatteryLifeEnabled)
         self.actionOptimized_Battery_Life_Disabled.triggered.connect(ESSbatteryLifeDisabled)
         self.actionKeep_Batteries_Charged.triggered.connect(ESSbatteriesCharged)
@@ -187,7 +420,7 @@ class UI(QMainWindow):
         self.actionInverter_Only.triggered.connect(Multiplus_Inverter)
         self.actionOff.triggered.connect(Multiplus_Off)
         self.actionOn.triggered.connect(Multiplus_On)
-        
+
         self.actionCharger_1_Off.triggered.connect(Charger1_Off)
         self.actionCharger_1_On.triggered.connect(Charger1_On)
         self.actionCharger_2_Off.triggered.connect(Charger2_Off)
@@ -195,35 +428,44 @@ class UI(QMainWindow):
         
         self.actionSet_Current_Limit_1.triggered.connect(Charger1_Limit)
         self.actionSet_Current_Limit_2.triggered.connect(Charger2_Limit)
-        
-        
+
+        # Full Screen & Normanl
+        self.actionNormal_Screen.triggered.connect(self.showNormal)
+        self.actionFull_Screen.triggered.connect(self.showFullScreen)
+
         # Keep this out of the timing loop
         self.FeedIn_pushButton.clicked.connect(GridFeedIn)
         self.Set_Grid_Watts_pushButton.clicked.connect(SetGridWatts)
 
+
+
         # make QTimer
         self.qTimer = QTimer()
-        
+
         # set interval to 1 s
         self.qTimer.setInterval(1000) # 1000 ms = 1 s
-        
+
         # connect timeout signal to signal handler
         self.qTimer.timeout.connect(self.Update_Values)
-        
+
         # start timer
         self.qTimer.start()
-        
+
         # Show The App
         self.show()
 
 
 
 
+
+
+
     def Update_Values(self):
+
 #===========================================================================================
 # BEGIN Setting Variables
 #===========================================================================================
-        
+
         # Datetime object containing current date and time
         now = datetime.now()
 
@@ -251,7 +493,7 @@ class UI(QMainWindow):
         SolarChargeLimit1  = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/Settings/ChargeCurrentLimit")
         SolarYield1        = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/History/Daily/0/Yield")
         SolarName1         = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/Devices/0/ProductName")
-    
+
         # ModBus
         SolarWatts1        = modbus_register(789,SolarCharger_1_ID) / 10
         SolarWatts         = modbus_register(850,VEsystem_ID)        # Total of all solar chargers
@@ -273,7 +515,7 @@ class UI(QMainWindow):
         SolarChargeLimit2  = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_2_ID)+"/Settings/ChargeCurrentLimit")
         SolarYield2        = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_2_ID)+"/History/Daily/0/Yield")
         SolarName2         = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_2_ID)+"/Devices/0/ProductName")
-    
+
         # ModBus
         SolarWatts2         = modbus_register(789,SolarCharger_2_ID) / 10
         SolarAmps2          = modbus_register(772,SolarCharger_2_ID) / 10
@@ -313,7 +555,7 @@ class UI(QMainWindow):
         Lowbatt     = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/Leds/LowBattery")
         Floatchg    = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/Leds/Float")
         Temperature = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/Leds/Temperature")
-        
+
         # Switch Position on the Multiplus II
         MPswitch    = modbus_register(33,MultiPlus_ID)
         MultiName   = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/ProductName")
@@ -323,7 +565,7 @@ class UI(QMainWindow):
         #   VEbus Status
         VEbusStatus = mqtt_request("N/"+VRMid+"/system/"+str(MQTT_VEsystem_ID)+"/SystemState/State")
         #VEbusStatus = modbus_register(31,MultiPlusID)
-    
+
         #   VEbus Error
         VEbusError  = modbus_register(32,MultiPlus_ID)
         #VEbusError = 55 # Test single error mesg
@@ -337,6 +579,8 @@ class UI(QMainWindow):
         ESSsocLimitDynamic  = modbus_register(2903, unit=VEsystem_ID) / 10
         ESSsocLimitDynamic  = f"{ESSsocLimitDynamic:.0f}%"
 #===========================================================================================
+
+
 # END Variables
 #===========================================================================================
 # Conditional Values
@@ -351,7 +595,7 @@ class UI(QMainWindow):
                       11: "Other Hub-1",
                       245: "Wake-Up",
                       252:"EXT Control"}
-        
+
         SolarErrorDict = {0: "No Error",
                           1: "Error 1: Battery temperature too high",
                           2: "Error 2: Battery voltage too high",
@@ -371,13 +615,13 @@ class UI(QMainWindow):
                           33:"Error 33: Input voltage too high",
                           34:"Error 34: Input current too high"
                           }
-        
-        
+
+
         if BatteryTTG == 0.0:
             BatteryTTG = "Infinite"
         else:
             BatteryTTG = timedelta(seconds = BatteryTTG)
-                      
+
         if BatteryState == 0:
             BatteryState = "Idle"
         elif BatteryState == 1:
@@ -395,19 +639,19 @@ class UI(QMainWindow):
             self.Grid_Watts_LCD.setStyleSheet("QLCDNumber { background: rgb(136, 138, 133); }")
             #self.Grid_FeedIn_Active_Label.setStyleSheet("QLabel { background: rgb(85, 87, 83); color: rgb(0, 0, 0); }")
             #self.Grid_FeedIn_Active_Label.setText("")
-        
+
         if FeedIn == 1:
             self.FeedIn_pushButton.setText('YES')
         elif FeedIn == 0:
             self.FeedIn_pushButton.setText('NO')
-        
+
         if GridCondition == 0:
             Condition = 'OK'
             self.Grid_Condition_lineEdit.setStyleSheet("QLineEdit { background: rgb(136, 138, 133); }");
         elif GridCondition == 2:
             Condition = 'LOST'
             self.Grid_Condition_lineEdit.setStyleSheet("QLineEdit { background: red; }");
-        
+
         #BatterySOC = 70
         if BatterySOC >= 66:
             self.Batt_SOC_progressBar.setStyleSheet("QProgressBar#Batt_SOC_progressBar{selection-background-color:"
@@ -420,12 +664,12 @@ class UI(QMainWindow):
                                                     "rgb(200, 0, 0);}"); # Red
 
         # Total Watts
-        if SolarWatts < 1:
-            self.Total_Watts_label.setHidden(True)
-        else:
-            self.Total_Watts_label.setHidden(False)
-            self.Total_Watts_label.setText(str(SolarWatts))
-            
+        #if SolarWatts < 1:
+        #    self.Total_Watts_label.setHidden(True)
+        #else:
+        #    self.Total_Watts_label.setHidden(False)
+        self.Total_Watts_label.setText(str(SolarWatts))
+
 
 
         # Conditional Modbus Request
@@ -437,7 +681,7 @@ class UI(QMainWindow):
             except AttributeError:
                 TempSensor1 = "Sensor 1 Disconnected or Wrong Address"
                 print("Analog Input Sensor 1 Disconnected or Wrong Address")
-            
+
             try:
                 TempSensor2 = modbus_register(3304,25) / 100 * 1.8 + 32
             except AttributeError:
@@ -448,22 +692,22 @@ class UI(QMainWindow):
             except AttributeError:
                 TempSensor3 = "Sensor 3 Disconnected or Wrong Address"
                 print("Analog Input Sensor 3 Disconnected or Wrong Address")
-        
+
         if Analog_Inputs.lower() == 'y':
-            self.Battery_Box_lineEdit.setText(str(f"{TempSensor1:.1f}"))
-            self.Cabin_Int_lineEdit.setText(str(f"{TempSensor2:.1f}"))
-            self.Cabin_Ext_lineEdit.setText(str(f"{TempSensor3:.1f}"))
+            self.Battery_Box_lcdNumber.display(str(f"{TempSensor1:.1f}"))
+            self.Cabin_Int_lcdNumber.display(str(f"{TempSensor2:.1f}"))
+            self.Cabin_Ext_lcdNumber.display(str(f"{TempSensor3:.1f}"))
         else:
-            self.Battery_Box_lineEdit.setHidden(True)
-            self.Cabin_Int_lineEdit.setHidden(True)
-            self.Cabin_Ext_lineEdit.setHidden(True)
+            self.Battery_Box_lcdNumber.setHidden(True)
+            self.Cabin_Int_lcdNumber.setHidden(True)
+            self.Cabin_Ext_lcdNumber.setHidden(True)
             self.Battery_Box_label.setHidden(True)
             self.Cabin_Int_label.setHidden(True)
             self.Cabin_Ext_label.setHidden(True)
-            
+
             # ===========================================================================================
     #   VE.Bus Status
-    
+
         VEbusStatusDict =  {0:  "OFF",
                             1:  "Low Power",
                             2:  "Fault",
@@ -488,7 +732,7 @@ class UI(QMainWindow):
                             258:"Recharging",
                             259:"Sched charge"
                             }
-    
+
     # ===========================================================================================
     #   VE.Bus Error            
             # https://www.victronenergy.com/live/ve.bus:ve.bus_error_codes#vebus_error_codes1
@@ -534,9 +778,9 @@ class UI(QMainWindow):
                           31:"VE.Bus Error 31",
                           32:"VE.Bus Error 32"
                           }
-    
-    # ===========================================================================================
-    # ESS Battery Life State
+
+# ===========================================================================================
+# ESS Battery Life State
         ESSbatteryLifeStateDict = {0: "Battery Life Disabled",
                                    1: "Restarting",
                                    2: "Self-consumption",
@@ -557,90 +801,91 @@ class UI(QMainWindow):
 # Mains LED
         #Mains = 3
         if Mains == 0: # Off
-            self.Mains_LED.setStyleSheet("QLabel#Mains_LED{color: rgb(65, 65, 65);}");
-    
+            self.Mains_LED.setStyleSheet("QLabel#Mains_LED{color: rgb(28, 28, 28);}");
+
         elif Mains == 1: # On
             self.Mains_LED.setStyleSheet("QLabel#Mains_LED{color: rgb(115, 210, 22);}");
-       
+
         elif Mains >= 2: # Blink
-            self.Mains_LED.setStyleSheet(f"QLabel#Mains_LED{{color: {next(blinkgreen)};}}");
+            #self.qled.value=next(green_led)
+            self.Mains_LED.setStyleSheet(f"QLabel#Mains_LED{{color: {next(blinkgreen_Mains)};}}");
 #====================================================================
 # Inverter LED
-    
+
         if Inverter == 0: # Off
-            self.Inverting_LED.setStyleSheet("QLabel#Inverting_LED{color: rgb(65, 65, 65);}");
-    
+            self.Inverting_LED.setStyleSheet("QLabel#Inverting_LED{color: rgb(28, 28, 28);}");
+
         elif Inverter == 1: # On
             self.Inverting_LED.setStyleSheet("QLabel#Inverting_LED{color: rgb(115, 210, 22);}");
-       
+
         elif Inverter >= 2: # Blink
-            self.Inverting_LED.setStyleSheet(f"QLabel#Inverting_LED{{color: {next(blinkgreen)};}}");
+            self.Inverting_LED.setStyleSheet(f"QLabel#Inverting_LED{{color: {next(blinkgreen_Inverter)};}}");
 #====================================================================
 # Bulk LED
         #Bulk = 2
         if Bulk == 0: # Off
-            self.Bulk_LED.setStyleSheet("QLabel#Bulk_LED{color: rgb(65, 65, 65);}");
-    
+            self.Bulk_LED.setStyleSheet("QLabel#Bulk_LED{color: rgb(28, 28, 28);}");
+
         elif Bulk == 1: # On
             self.Bulk_LED.setStyleSheet("QLabel#Bulk_LED{color: rgb(255, 255, 0);}");
-       
+
         elif Bulk >= 2: # Blink
-            self.Bulk_LED.setStyleSheet(f"QLabel#Bulk_LED{{color: {next(blinkyellow)};}}");
+            self.Bulk_LED.setStyleSheet(f"QLabel#Bulk_LED{{color: {next(blinkyellow_Bulk)};}}");
 #====================================================================
 # Overload LED
         #Overload = 3
         if Overload == 0: # Off
-            self.Overload_LED.setStyleSheet("QLabel#Overload_LED{color: rgb(65, 65, 65);}");
-    
+            self.Overload_LED.setStyleSheet("QLabel#Overload_LED{color: rgb(28, 28, 28);}");
+
         elif Overload == 1: # On
             self.Overload_LED.setStyleSheet("QLabel#Overload_LED{color: rgb(255, 0, 0);}");
-       
+
         elif Overload >= 2: # Blink
-            self.Overload_LED.setStyleSheet(f"QLabel#Overload_LED{{color: {next(blinkred)};}}");
+            self.Overload_LED.setStyleSheet(f"QLabel#Overload_LED{{color: {next(blinkred_OverLoad)};}}");
 #====================================================================
 # Absorption LED
         #Absorption = 3
         if Absorp == 0: # Off
-            self.Absorption_LED.setStyleSheet("QLabel#Absorption_LED{color: rgb(65, 65, 65);}");
-    
+            self.Absorption_LED.setStyleSheet("QLabel#Absorption_LED{color: rgb(28, 28, 28);}");
+
         elif Absorp == 1: # On
             self.Absorption_LED.setStyleSheet("QLabel#Absorption_LED{color: rgb(255, 255, 0);}");
-       
+
         elif Absorp >= 2: # Blink
-            self.Absorption_LED.setStyleSheet(f"QLabel#Absorption_LED{{color: {next(blinkyellow)};}}");
+            self.Absorption_LED.setStyleSheet(f"QLabel#Absorption_LED{{color: {next(blinkyellow_Absorption)};}}");
 #====================================================================
 # Low Battery LED
         #Lowbatt = 3
         if Lowbatt == 0: # Off
-            self.Low_Battery_LED.setStyleSheet("QLabel#Low_Battery_LED{color: rgb(65, 65, 65);}");
-    
+            self.Low_Battery_LED.setStyleSheet("QLabel#Low_Battery_LED{color: rgb(28, 28, 28);}");
+
         elif Lowbatt == 1: # On
             self.Low_Battery_LED.setStyleSheet("QLabel#Low_Battery_LED{color: rgb(255, 0, 0);}");
-       
+
         elif Lowbatt >= 2: # Blink
-            self.Low_Battery_LED.setStyleSheet(f"QLabel#Low_Battery_LED{{color: {next(blinkred)};}}");
+            self.Low_Battery_LED.setStyleSheet(f"QLabel#Low_Battery_LED{{color: {next(blinkred_LoBatt)};}}");
 #====================================================================
 # Float LED
         #Floatchg = 2
         if Floatchg == 0: # Off
-            self.Float_LED.setStyleSheet("QLabel#Float_LED{color: rgb(65, 65, 65);}");
-    
+            self.Float_LED.setStyleSheet("QLabel#Float_LED{color: rgb(28, 28, 28);}");
+
         elif Floatchg == 1: # On
             self.Float_LED.setStyleSheet("QLabel#Float_LED{color: rgb(0, 0, 255);}");
-       
+
         elif Floatchg >= 2: # Blink
-            self.Float_LED.setStyleSheet(f"QLabel#Float_LED{{color: {next(blinkblue)};}}");
+            self.Float_LED.setStyleSheet(f"QLabel#Float_LED{{color: {next(blinkblue_Float)};}}");
 #====================================================================
 # Temperature LED
         #Temperature = 3
         if Temperature == 0: # Off
-            self.Temperature_LED.setStyleSheet("QLabel#Temperature_LED{color: rgb(65, 65, 65);}");
-    
+            self.Temperature_LED.setStyleSheet("QLabel#Temperature_LED{color: rgb(28, 28, 28);}");
+
         elif Temperature == 1: # On
             self.Temperature_LED.setStyleSheet("QLabel#Temperature_LED{color: rgb(255, 0, 0);}");
-       
+
         elif Temperature >= 2: # Blink
-            self.Temperature_LED.setStyleSheet(f"QLabel#Temperature_LED{{color: {next(blinkred)};}}");
+            self.Temperature_LED.setStyleSheet(f"QLabel#Temperature_LED{{color: {next(blinkred_Temp)};}}");
 
 #====================================================================
 #   VE.Bus Status
@@ -683,8 +928,8 @@ class UI(QMainWindow):
             self.ESS_SOC_User_label.setHidden(True)
             self.ESS_SOC_User_Value.setHidden(True)
             self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState])
-            
-        
+
+
 #====================================================================
 #   Multiplus Switch
         if MPswitch == 1:
@@ -699,9 +944,10 @@ class UI(QMainWindow):
 # Populate Screen with Variable Values
 #===========================================================================================
         # Battery Section
-        self.Batt_SOC_progressBar.setMaximum(100 * 10)
-        self.Batt_SOC_progressBar.setValue(BatterySOC * 10)
-        self.Batt_SOC_progressBar.setFormat("%.01f %%" % BatterySOC)
+        self.Batt_SOC_progressBar.setRange(0, 100)
+        #self.Batt_SOC_progressBar.setMaximum(100 * 10)
+        #self.Batt_SOC_progressBar.setFormat("%.1f %%" % BatterySOC)
+        self.Batt_SOC_progressBar.setValue(round(BatterySOC))
         self.Batt_Watts_LCD.display(BatteryWatts)
         self.Batt_Amps_LCD.display(BatteryAmps)
         self.Batt_Volts_LCD.display(BatteryVolts)
@@ -714,8 +960,8 @@ class UI(QMainWindow):
         self.Last_Full_Charge_lineEdit.setText(str(f"{LastFullcharge} Ago"))
         self.Time_Label.setText(dt_string)
         self.Time_To_Go_lineEdit.setText(str(BatteryTTG))
-        
-        
+
+
         # Solar Charger # 1 Section
         self.Solar_Name_1_lineEdit.setText(f"#1 {SolarName1} - {Array1}")
         self.PV_Watts_LCD.display(SolarWatts1)
@@ -727,7 +973,7 @@ class UI(QMainWindow):
         self.Yield_Today_LCD.display(f"{SolarYield1:.3f}")
         self.Yield_Yesterday_LCD.display(f"{SolarYieldYest1:.3f}")
         self.Solar_Charger_State_lineEdit.setText(SolarStateDict[SolarState1])
-        
+
         # Solar Charger # 2 Section
         self.Solar_Name_2_lineEdit.setText(f"#2 {SolarName2} - {Array2}")
         self.PV_Watts_2_LCD.display(SolarWatts2)
@@ -739,11 +985,11 @@ class UI(QMainWindow):
         self.Yield_Today_2_LCD.display(f"{SolarYield2:.3f}")
         self.Yield_Yesterday_2_LCD.display(f"{SolarYieldYest2:.3f}")
         self.Solar_Charger_State2_lineEdit.setText(SolarStateDict[SolarState2])
-        
+
 
         self.Total_Yield_Label.setText(str(f" Yield Today {TotalYield:.3f} kwh"))
         self.Total_Yield_Label_Yest.setText(str(f" Yield Yesterday {TotalYieldYest:.3f} kwh"))
-        
+
         # Multiplus Section
         self.Grid_Set_Point_LCD.display(GridSetPoint)
         self.Grid_Watts_LCD.display(GridWatts)
@@ -756,8 +1002,8 @@ class UI(QMainWindow):
         self.AC_Out_Freq_LCD.display(ACoutHZ)
         self.Grid_Condition_lineEdit.setText(Condition)
         self.Grid_Current_Limit_LCD.display(GridAmpLimit)
-
         self.MultiName_label.setText(MultiName)
+
         if SolarError1 > 0:
             self.Solar_Charger1_Error_Value.setText(SolarErrorDict[SolarError1])
             self.Solar_Charger1_Error_Value.setStyleSheet("QLabel#Solar_Charger1_Error_Value{font-weight: bold; color: red; background-color: black;}");
@@ -765,6 +1011,7 @@ class UI(QMainWindow):
         else:
             self.Solar_Charger1_Error_Value.setText(SolarErrorDict[SolarError1])
             self.Solar_Charger1_Error_Value.setStyleSheet("QLabel#Solar_Charger1_Error_Value{color: rgb(0, 255, 0);}");
+
         if SolarError2 > 0:
             self.Solar_Charger2_Error_Value.setText(SolarErrorDict[SolarError2])
             self.Solar_Charger2_Error_Value.setStyleSheet("QLabel#Solar_Charger2_Error_Value{font-weight: bold; color: red; background-color: black;}");
@@ -772,9 +1019,24 @@ class UI(QMainWindow):
         else:
             self.Solar_Charger2_Error_Value.setText(SolarErrorDict[SolarError2])
             self.Solar_Charger2_Error_Value.setStyleSheet("QLabel#Solar_Charger2_Error_Value{color: rgb(0, 255, 0);}");
-        
+
+
         self.Multiplus_Mode_Value.setText(str(MPswitch))
         self.statusBar.showMessage(dt_string)
+
+        # Chart
+        timestamp = time.time()
+        self.watts_connector.cb_append_data_point(SolarWatts, timestamp)
+        self.bat_watts_connector.cb_append_data_point(BatteryWatts, timestamp)
+        self.amps_connector.cb_append_data_point(BatteryAmps, timestamp)
+        self.volts_connector.cb_append_data_point(BatteryVolts, timestamp)
+        self.soc_connector.cb_append_data_point(BatterySOC, timestamp)
+        self.grid_connector.cb_append_data_point(GridWatts, timestamp)
+        self.Box_Temp_connector.cb_append_data_point(TempSensor1, timestamp)
+        self.Interior_Temp_connector.cb_append_data_point(TempSensor2, timestamp)
+        self.Exterior_Temp_connector.cb_append_data_point(TempSensor3, timestamp)
+
+
 
 #===========================================================================================
 
