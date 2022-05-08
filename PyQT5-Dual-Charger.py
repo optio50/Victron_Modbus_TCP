@@ -49,8 +49,8 @@ client = ModbusClient(ip, port='502')
 VRMid = "d41243d31a90"
 
 
-Analog_Inputs  = 'y'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-                         # Check Analog Input Address around line 360.
+Analog_Inputs  = 'n'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+                         # Check Analog Input Address around line 680.
 
 # Unit ID #'s from Cerbo GX.
 # Do not confuse UnitID with Instance ID.
