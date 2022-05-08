@@ -60,7 +60,10 @@ pip3 install pymodbus
 ./Example.py  
 or  
 ./Example2.py    
-    
+ 
+ 
+To use the PyQt foles you will need
+pip install pymodbus paho-mqtt pglive PyQt5
     
 The PyQT5-Dual-Charger.py and PyQT5-Dual-Charger.ui are PYQT5 files that are used together.    
 Same with PyQT5-Single-Charger.py and PyQT5-Single-Charger.ui    
