@@ -175,7 +175,8 @@ class UI(QMainWindow):
 #===========================================================================================
 # Chart Solar Watts
 
-        pg.setConfigOption('leftButtonPan', False) # Only needed once.
+        pg.setConfigOption('leftButtonPan', False) # For drawing a zooming box. Only needed once.
+        # Because this left button is now false panning is done by dragging the bottom X time labels or the left side Y labels 
         watts_plot = LiveLinePlot(pen='orange', fillLevel=0, brush=(213,129,44,100))
 
         # Data connectors for each plot with dequeue of max_points points
@@ -1032,9 +1033,10 @@ class UI(QMainWindow):
         self.volts_connector.cb_append_data_point(BatteryVolts, timestamp)
         self.soc_connector.cb_append_data_point(BatterySOC, timestamp)
         self.grid_connector.cb_append_data_point(GridWatts, timestamp)
-        self.Box_Temp_connector.cb_append_data_point(TempSensor1, timestamp)
-        self.Interior_Temp_connector.cb_append_data_point(TempSensor2, timestamp)
-        self.Exterior_Temp_connector.cb_append_data_point(TempSensor3, timestamp)
+        if Analog_Inputs.lower() == 'y':
+            self.Box_Temp_connector.cb_append_data_point(TempSensor1, timestamp)
+            self.Interior_Temp_connector.cb_append_data_point(TempSensor2, timestamp)
+            self.Exterior_Temp_connector.cb_append_data_point(TempSensor3, timestamp)
 
 
 
