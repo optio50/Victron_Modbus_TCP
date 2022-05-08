@@ -62,7 +62,7 @@ or
 ./Example2.py    
  
  
-To use the PyQt foles you will need
+To use the PyQt files you will need to.
 pip install pymodbus paho-mqtt pglive PyQt5
     
 The PyQT5-Dual-Charger.py and PyQT5-Dual-Charger.ui are PYQT5 files that are used together.    
