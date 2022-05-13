@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# This file is for a Raspi and a single Victron BlueSmart Solar Charger.
+# This file is for a Raspi and a single Victron SmartSolar Charger.
 
 #from PyQt5.QtWidgets import (QMainWindow, QApplication, QGridLayout, QLabel, QTextEdit, QAction,
 #QPushButton, QProgressBar, QLCDNumber, QWidget, QVBoxLayout, QInputDialog)
@@ -9,8 +9,6 @@ from PyQt5.QtCore import QTime, QTimer, QProcess
 from PyQt5 import uic, QtGui
 from PyQt5.QtGui import QColor
 
-
-from itertools import cycle # Flash the LED's
 import json
 
 # MQTT
@@ -102,9 +100,9 @@ class UI(QMainWindow):
         # Load the ui file
         uic.loadUi("PyQT5-No-Multiplus-Single-Charger.ui", self)
         # Set Window Icon
-        
+
         self.setWindowIcon(QtGui.QIcon('Solar.png'))
-        
+
 #===========================================================================================
 
         # Define crosshair parameters
@@ -113,13 +111,13 @@ class UI(QMainWindow):
         Crosshair.TEXT_KWARGS: {"color": "white"}}
 
 #===========================================================================================
-# Chart Portable Solar Watts
+# Chart Solar Watts
         pg.setConfigOption('leftButtonPan', False) # For drawing a zooming box. Only needed once.
-        # Because this left button is now false panning is done by dragging the bottom X time labels or the left side Y labels 
+        # Because this left button is now false, panning is done by dragging the bottom X time labels or the left side Y labels 
         watts_plot = LiveLinePlot(pen="orange", fillLevel=0, brush=(213,129,44,100))
 
         # Data connectors for each plot with dequeue of max_points points
-        
+
         self.watts_connector = DataConnector(watts_plot, max_points=86400) # 24 hours in seconds
 
         # Setup bottom axis with TIME tick format
@@ -128,25 +126,25 @@ class UI(QMainWindow):
 
         # Create plot itself
         self.Solar_graph_Widget = LivePlotWidget(title="Solar Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
-        
+
         # Show grid
         self.Solar_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
-        
+
         # Set labels
         self.Solar_graph_Widget.setLabel('bottom')
         self.Solar_graph_Widget.setLabel('left', 'Watts')
-        
+
         # Add Line
         self.Solar_graph_Widget.addItem(watts_plot)
-        
+
         # Add chart to Layout in Qt Designer
         self.Chart_Watts_Layout.addWidget(self.Solar_graph_Widget)
 #===========================================================================================
-# Chart Portable Battery Volts
+# Chart Battery Volts
         volts_plot = LiveLinePlot(pen="red", fillLevel=0, brush=(102,0,0,100))
 
         # Data connectors for each plot with dequeue of max_points points
-        
+
         self.volts_connector = DataConnector(volts_plot, max_points=86400) # 24 hours in seconds
 
         # Setup bottom axis with TIME tick format
@@ -159,19 +157,19 @@ class UI(QMainWindow):
         # Show grid
         self.Battery_Volts_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
         
-        self.Battery_Volts_graph_Widget.setLimits(yMin=10.5, yMax=16)
+        # No reason to see huge range plot here. Limit for several volts above and below nominal
+        self.Battery_Volts_graph_Widget.setLimits(yMin=10.5, yMax=16) # 12V system limits, 10.5 - 16. Change for 24V or 48V systems
 
 
         # Set labels
         self.Battery_Volts_graph_Widget.setLabel('bottom')
         self.Battery_Volts_graph_Widget.setLabel('left', 'Volts')
-        
-        
-        
+
+
         # Add Line
         self.Battery_Volts_graph_Widget.addItem(volts_plot)
-        
-        
+
+
         # Add chart to Layout in Qt Designer
         self.Chart_Volts_Layout.addWidget(self.Battery_Volts_graph_Widget)
 #===========================================================================================
@@ -182,7 +180,7 @@ class UI(QMainWindow):
             if ok:
                 mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit",
                                                                    payload=json.dumps({"value": answer}), hostname=ip, port=1883)
-        
+
         def BG_Change():
             color = QColorDialog.getColor()
             if color.isValid():
@@ -194,29 +192,28 @@ class UI(QMainWindow):
 
         self.actionCharger_1_Off.triggered.connect(Charger1_Off)
         self.actionCharger_1_On.triggered.connect(Charger1_On)
-        
-        
+
+
         self.actionSet_Current_Limit_1.triggered.connect(Charger1_Limit)
-        
+
         # Full Screen & Normanl
         self.actionNormal_Screen.triggered.connect(self.showNormal)
         self.actionFull_Screen.triggered.connect(self.showFullScreen)
         self.actionChange_Background_Color.triggered.connect(BG_Change)
-        
-        
-        
+
+
         # make QTimer
         self.qTimer = QTimer()
-        
-        # set interval to 1 s
+
+        # set interval to 1 s. This is the actual refresh rate of the displayed data.
         self.qTimer.setInterval(1000) # 1000 ms = 1 s
-        
+
         # connect timeout signal to signal handler
         self.qTimer.timeout.connect(self.Update_Values)
-        
+
         # start timer
         self.qTimer.start()
-        
+
         # Show The App
         self.show()
 
@@ -247,10 +244,10 @@ class UI(QMainWindow):
 
 
 #===========================================================================================
-# Portable Variables
+# Charger Variables
         SolarName         = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Devices/0/ProductName")
         SolarWatts        = modbus_register(789,SolarCharger_ID) / 10
-        SolarWattsF       = f"{SolarWatts:.0f}"
+        BigWatts          = f"{SolarWatts:.0f}"
         SolarAmps         = modbus_register(772,SolarCharger_ID) / 10
         SolarChargeLimit  = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit")
         SolarVolts        = modbus_register(776,SolarCharger_ID) / 100
@@ -277,7 +274,7 @@ class UI(QMainWindow):
                       11: "Other Hub-1",
                       245: "Wake-Up",
                       252:"EXT Control"}
-        
+
         SolarErrorDict = {0: "No Error",
                           1: "Error 1: Battery temperature too high",
                           2: "Error 2: Battery voltage too high",
@@ -303,8 +300,8 @@ class UI(QMainWindow):
 # Populate Screen with Variable Values
 #===========================================================================================
 
-        # Portable Solar Charger Section
-        self.Total_Watts_label.setText(str(SolarWattsF))
+        # Solar Charger Section
+        self.Total_Watts_label.setText(str(BigWatts))
         self.Solar_Name_lineEdit.setText(f"{SolarName} - {Array1}")
         self.PV_Watts_LCD.display(SolarWatts)
         self.Output_Amps_LCD.display(f"{SolarAmps:.1f}")
@@ -319,9 +316,8 @@ class UI(QMainWindow):
 
         #self.Total_Yield_Label.setText(str(f" Yield Today {TotalYield:.3f} kwh"))
         #self.Total_Yield_Label_Yest.setText(str(f" Yield Yesterday {TotalYieldYest:.3f} kwh"))
-        
-        
-        
+
+
         if SolarError > 0:
             self.Solar_Charger_Error_Value.setText(SolarErrorDict[SolarError])
             self.Solar_Charger_Error_Value.setStyleSheet("QLabel#Solar_Charger_Error_Value{font-weight: bold; color: red; background-color: black;}");
@@ -331,10 +327,10 @@ class UI(QMainWindow):
             self.Solar_Charger_Error_Value.setStyleSheet("QLabel#Solar_Charger_Error_Value{color: rgb(0, 255, 0);}");
 
         self.statusBar.showMessage(dt_string)
-        
+
         # Chart
         timestamp = time.time()
-        
+
         self.watts_connector.cb_append_data_point(SolarWatts, timestamp)
         self.volts_connector.cb_append_data_point(BatteryVolts, timestamp)
 
