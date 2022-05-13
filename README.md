@@ -1,6 +1,8 @@
 # Victron_Modbus_TCP
 Victron Modbus TCP Example
 
+These file's are based on a system that has victron equipment in an "ESS" system. Multiplus, Solar charger, BMV
+
 Be advised.  
 Running the Example2.py file and pressing the arrow key's will change values on the GX device.  
 (↑) or (↓) Arrows To change grid set point.  
@@ -24,9 +26,7 @@ Change the the instance #'s to their correct values
 
 You likely dont have the 3 temperature sensors included. Change the variable to turn them on and off.  
 
-This file is based on a system that has victron equipment in an ESS system. Multiplus, Solar charger, BMV  
-If you dont have ESS enabled change the variable to turn it on and off.  
-
+  
 If you use Example2.py you also need to adjust the portal id value. read the comment on how to find your portal id.  
 This number is needed even with no internet access as its the name of your venus device.  
   
