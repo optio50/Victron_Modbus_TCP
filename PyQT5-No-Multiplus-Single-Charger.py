@@ -43,27 +43,27 @@ from pglive.sources.live_plot_widget import LivePlotWidget
 Counter = 0
 
 # GX Device I.P Address
-Portable_ip = '192.168.20.167'
-Portable_client = ModbusClient(Portable_ip, port='502')
+ip = '192.168.20.167'
+client = ModbusClient(ip, port='502')
 
 # MQTT Request's are for Multiplus LED state's
 # VRM Portal ID from GX device. 
 # AFAIK this ID is needed even with no internet access as its the name of your venus device.
 # Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
-Portable_VRMid = "b827eba69d10"
+VRMid = "b827eba69d10"
 
 
 # ModBus Unit ID
-Portable_SolarCharger_ID = 239
+SolarCharger_ID = 239
 
 #===================================
 # MQTT Instance ID
 # This is the Instance ID not to be confused with the above Unit ID.
 # Device List in VRM or crossed referenced in the CCGX-Modbus-TCP-register-list.xlsx Tab #2
-Portable_MQTT_SolarCharger_ID = 288
+MQTT_SolarCharger_ID = 288
 
 # Onetime Request to start MQTT
-mqttpublish.single("R/"+Portable_VRMid+"/system/0/Serial", hostname=Portable_ip, port=1883)
+mqttpublish.single("R/"+VRMid+"/system/0/Serial", hostname=ip, port=1883)
 
 #===================================
 
@@ -71,14 +71,14 @@ mqttpublish.single("R/"+Portable_VRMid+"/system/0/Serial", hostname=Portable_ip,
 
 Array1 = "Portable 100W Soft Panel"
 
-def Portable_modbus_register(address, unit):
-    msg     = Portable_client.read_input_registers(address, unit=unit)
+def modbus_register(address, unit):
+    msg     = client.read_input_registers(address, unit=unit)
     decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, byteorder=Endian.Big)
     msg     = decoder.decode_16bit_int()
     return msg
 
-def Portable_mqtt_request(mqtt_path):
-    topic = subscribe.simple(mqtt_path, hostname=Portable_ip)
+def mqtt_request(mqtt_path):
+    topic = subscribe.simple(mqtt_path, hostname=ip)
     data  = json.loads(topic.payload)
     topic = data['value']
     return topic
@@ -87,11 +87,11 @@ def Portable_mqtt_request(mqtt_path):
 #===========================================================================================
 # Solar Charger Control
 def Charger1_On():
-        Portable_client.write_registers(address=774, values=1, unit=Portable_SolarCharger_ID) # Turn On
+        client.write_registers(address=774, values=1, unit=SolarCharger_ID) # Turn On
 
 
 def Charger1_Off():
-        Portable_client.write_registers(address=774, values=4, unit=Portable_SolarCharger_ID) # Turn Off
+        client.write_registers(address=774, values=4, unit=SolarCharger_ID) # Turn Off
 
 
 #===========================================================================================
@@ -116,78 +116,78 @@ class UI(QMainWindow):
 # Chart Portable Solar Watts
         pg.setConfigOption('leftButtonPan', False) # For drawing a zooming box. Only needed once.
         # Because this left button is now false panning is done by dragging the bottom X time labels or the left side Y labels 
-        Portable_watts_plot = LiveLinePlot(pen="orange", fillLevel=0, brush=(213,129,44,100))
+        watts_plot = LiveLinePlot(pen="orange", fillLevel=0, brush=(213,129,44,100))
 
         # Data connectors for each plot with dequeue of max_points points
         
-        self.Portable_watts_connector = DataConnector(Portable_watts_plot, max_points=86400) # 24 hours in seconds
+        self.watts_connector = DataConnector(watts_plot, max_points=86400) # 24 hours in seconds
 
         # Setup bottom axis with TIME tick format
         # use Axis.DATETIME to show date
         bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
 
         # Create plot itself
-        self.Portable_Solar_graph_Widget = LivePlotWidget(title="Solar Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+        self.Solar_graph_Widget = LivePlotWidget(title="Solar Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
         
         # Show grid
-        self.Portable_Solar_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+        self.Solar_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
         
         # Set labels
-        self.Portable_Solar_graph_Widget.setLabel('bottom')
-        self.Portable_Solar_graph_Widget.setLabel('left', 'Watts')
+        self.Solar_graph_Widget.setLabel('bottom')
+        self.Solar_graph_Widget.setLabel('left', 'Watts')
         
         # Add Line
-        self.Portable_Solar_graph_Widget.addItem(Portable_watts_plot)
+        self.Solar_graph_Widget.addItem(watts_plot)
         
         # Add chart to Layout in Qt Designer
-        self.Portable_Chart_Watts_Layout.addWidget(self.Portable_Solar_graph_Widget)
+        self.Chart_Watts_Layout.addWidget(self.Solar_graph_Widget)
 #===========================================================================================
 # Chart Portable Battery Volts
-        Portable_volts_plot = LiveLinePlot(pen="red", fillLevel=0, brush=(102,0,0,100))
+        volts_plot = LiveLinePlot(pen="red", fillLevel=0, brush=(102,0,0,100))
 
         # Data connectors for each plot with dequeue of max_points points
         
-        self.Portable_volts_connector = DataConnector(Portable_volts_plot, max_points=86400) # 24 hours in seconds
+        self.volts_connector = DataConnector(volts_plot, max_points=86400) # 24 hours in seconds
 
         # Setup bottom axis with TIME tick format
         # use Axis.DATETIME to show date
         bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
 
         # Create plot itself
-        self.Portable_Battery_Volts_graph_Widget = LivePlotWidget(title="Battery Volts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+        self.Battery_Volts_graph_Widget = LivePlotWidget(title="Battery Volts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
         
         # Show grid
-        self.Portable_Battery_Volts_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+        self.Battery_Volts_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
         
-        self.Portable_Battery_Volts_graph_Widget.setLimits(yMin=10.5, yMax=16)
+        self.Battery_Volts_graph_Widget.setLimits(yMin=10.5, yMax=16)
 
 
         # Set labels
-        self.Portable_Battery_Volts_graph_Widget.setLabel('bottom')
-        self.Portable_Battery_Volts_graph_Widget.setLabel('left', 'Volts')
+        self.Battery_Volts_graph_Widget.setLabel('bottom')
+        self.Battery_Volts_graph_Widget.setLabel('left', 'Volts')
         
         
         
         # Add Line
-        self.Portable_Battery_Volts_graph_Widget.addItem(Portable_volts_plot)
+        self.Battery_Volts_graph_Widget.addItem(volts_plot)
         
         
         # Add chart to Layout in Qt Designer
-        self.Portable_Chart_Volts_Layout.addWidget(self.Portable_Battery_Volts_graph_Widget)
+        self.Chart_Volts_Layout.addWidget(self.Battery_Volts_graph_Widget)
 #===========================================================================================
 
 
         def Charger1_Limit():
             answer, ok = QInputDialog.getInt(self, 'Enter Charger Limit', 'Enter Charger Limit')
             if ok:
-                mqttpublish.single("W/"+Portable_VRMid+"/solarcharger/"+str(Portable_MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit",
-                                                                   payload=json.dumps({"value": answer}), hostname=Portable_ip, port=1883)
+                mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit",
+                                                                   payload=json.dumps({"value": answer}), hostname=ip, port=1883)
         
         def BG_Change():
             color = QColorDialog.getColor()
             if color.isValid():
                 self.centralwidget.setStyleSheet(f"background-color: {color.name()}")
-                self.Portable_Solar_Name_lineEdit.setStyleSheet(f"background-color: {color.name()}")
+                self.Solar_Name_lineEdit.setStyleSheet(f"background-color: {color.name()}")
                 self.tabWidget.setStyleSheet(f"background-color: {color.name()}")
                 
 
@@ -230,7 +230,7 @@ class UI(QMainWindow):
         global Counter
         # Keep Alive MQTT request for Raspi
         if Counter == 10:
-            mqttpublish.single("R/"+Portable_VRMid+"/system/0/Serial", hostname=Portable_ip, port=1883)
+            mqttpublish.single("R/"+VRMid+"/system/0/Serial", hostname=ip, port=1883)
             Counter = 0
 
         Counter += 1
@@ -248,19 +248,19 @@ class UI(QMainWindow):
 
 #===========================================================================================
 # Portable Variables
-        Portable_SolarName         = Portable_mqtt_request("N/"+Portable_VRMid+"/solarcharger/"+str(Portable_MQTT_SolarCharger_ID)+"/Devices/0/ProductName")
-        Portable_SolarWatts        = Portable_modbus_register(789,Portable_SolarCharger_ID) / 10
-        Portable_SolarWattsF       = f"{Portable_SolarWatts:.0f}"
-        Portable_SolarAmps         = Portable_modbus_register(772,Portable_SolarCharger_ID) / 10
-        Portable_SolarChargeLimit  = Portable_mqtt_request("N/"+Portable_VRMid+"/solarcharger/"+str(Portable_MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit")
-        Portable_SolarVolts        = Portable_modbus_register(776,Portable_SolarCharger_ID) / 100
-        Portable_MaxSolarWatts     = Portable_modbus_register(785,Portable_SolarCharger_ID)
-        Portable_MaxSolarWattsYest = Portable_modbus_register(787,Portable_SolarCharger_ID)
-        Portable_SolarYield        = Portable_mqtt_request("N/"+Portable_VRMid+"/solarcharger/"+str(Portable_MQTT_SolarCharger_ID)+"/History/Daily/0/Yield")
-        Portable_SolarYieldYest    = Portable_modbus_register(786,Portable_SolarCharger_ID) / 10
-        Portable_SolarState        = Portable_modbus_register(775,Portable_SolarCharger_ID)
-        Portable_SolarError        = Portable_modbus_register(788,Portable_SolarCharger_ID)
-        Portable_BatteryVolts      = Portable_modbus_register(771,Portable_SolarCharger_ID) / 100
+        SolarName         = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Devices/0/ProductName")
+        SolarWatts        = modbus_register(789,SolarCharger_ID) / 10
+        SolarWattsF       = f"{SolarWatts:.0f}"
+        SolarAmps         = modbus_register(772,SolarCharger_ID) / 10
+        SolarChargeLimit  = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit")
+        SolarVolts        = modbus_register(776,SolarCharger_ID) / 100
+        MaxSolarWatts     = modbus_register(785,SolarCharger_ID)
+        MaxSolarWattsYest = modbus_register(787,SolarCharger_ID)
+        SolarYield        = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/History/Daily/0/Yield")
+        SolarYieldYest    = modbus_register(786,SolarCharger_ID) / 10
+        SolarState        = modbus_register(775,SolarCharger_ID)
+        SolarError        = modbus_register(788,SolarCharger_ID)
+        BatteryVolts      = modbus_register(771,SolarCharger_ID) / 100
 
 # END Variables
 #===========================================================================================
@@ -304,39 +304,39 @@ class UI(QMainWindow):
 #===========================================================================================
 
         # Portable Solar Charger Section
-        self.Portable_Total_Watts_label.setText(str(Portable_SolarWattsF))
-        self.Portable_Solar_Name_lineEdit.setText(f"{Portable_SolarName} - {Array1}")
-        self.Portable_PV_Watts_LCD.display(Portable_SolarWatts)
-        self.Portable_Output_Amps_LCD.display(f"{Portable_SolarAmps:.1f}")
-        self.Portable_Output_Amps_Limit_label.setText(str(Portable_SolarChargeLimit))
-        self.Portable_PV_Volts_LCD.display(Portable_SolarVolts)
-        self.Portable_Max_PV_Watts_Today_LCD.display(Portable_MaxSolarWatts)
-        self.Portable_Max_PV_Watts_Yesterday_LCD.display(Portable_MaxSolarWattsYest)
-        self.Portable_Yield_Today_LCD.display(f"{Portable_SolarYield:.3f}")
-        self.Portable_Yield_Yesterday_LCD.display(f"{Portable_SolarYieldYest:.3f}")
-        self.Portable_Battery_Volts_LCD.display(Portable_BatteryVolts)
-        self.Portable_Solar_Charger_State_lineEdit.setText(SolarStateDict[Portable_SolarState])
+        self.Total_Watts_label.setText(str(SolarWattsF))
+        self.Solar_Name_lineEdit.setText(f"{SolarName} - {Array1}")
+        self.PV_Watts_LCD.display(SolarWatts)
+        self.Output_Amps_LCD.display(f"{SolarAmps:.1f}")
+        self.Output_Amps_Limit_label.setText(str(SolarChargeLimit))
+        self.PV_Volts_LCD.display(SolarVolts)
+        self.Max_PV_Watts_Today_LCD.display(MaxSolarWatts)
+        self.Max_PV_Watts_Yesterday_LCD.display(MaxSolarWattsYest)
+        self.Yield_Today_LCD.display(f"{SolarYield:.3f}")
+        self.Yield_Yesterday_LCD.display(f"{SolarYieldYest:.3f}")
+        self.Battery_Volts_LCD.display(BatteryVolts)
+        self.Solar_Charger_State_lineEdit.setText(SolarStateDict[SolarState])
 
         #self.Total_Yield_Label.setText(str(f" Yield Today {TotalYield:.3f} kwh"))
         #self.Total_Yield_Label_Yest.setText(str(f" Yield Yesterday {TotalYieldYest:.3f} kwh"))
         
         
         
-        if Portable_SolarError > 0:
-            self.Portable_Solar_Charger_Error_Value.setText(SolarErrorDict[Portable_SolarError])
-            self.Portable_Solar_Charger_Error_Value.setStyleSheet("QLabel#Portable_Solar_Charger_Error_Value{font-weight: bold; color: red; background-color: black;}");
+        if SolarError > 0:
+            self.Solar_Charger_Error_Value.setText(SolarErrorDict[SolarError])
+            self.Solar_Charger_Error_Value.setStyleSheet("QLabel#Solar_Charger_Error_Value{font-weight: bold; color: red; background-color: black;}");
 
         else:
-            self.Portable_Solar_Charger_Error_Value.setText(SolarErrorDict[Portable_SolarError])
-            self.Portable_Solar_Charger_Error_Value.setStyleSheet("QLabel#Portable_Solar_Charger_Error_Value{color: rgb(0, 255, 0);}");
+            self.Solar_Charger_Error_Value.setText(SolarErrorDict[SolarError])
+            self.Solar_Charger_Error_Value.setStyleSheet("QLabel#Solar_Charger_Error_Value{color: rgb(0, 255, 0);}");
 
         self.statusBar.showMessage(dt_string)
         
         # Chart
         timestamp = time.time()
         
-        self.Portable_watts_connector.cb_append_data_point(Portable_SolarWatts, timestamp)
-        self.Portable_volts_connector.cb_append_data_point(Portable_BatteryVolts, timestamp)
+        self.watts_connector.cb_append_data_point(SolarWatts, timestamp)
+        self.volts_connector.cb_append_data_point(BatteryVolts, timestamp)
 
 
 

@@ -92,7 +92,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_6">
        <item row="0" column="0">
-        <layout class="QGridLayout" name="Portable_Chart_Watts_Layout"/>
+        <layout class="QGridLayout" name="Chart_Watts_Layout"/>
        </item>
       </layout>
      </widget>
@@ -118,13 +118,13 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_7">
        <item row="0" column="0">
-        <layout class="QGridLayout" name="Portable_Chart_Volts_Layout"/>
+        <layout class="QGridLayout" name="Chart_Volts_Layout"/>
        </item>
       </layout>
      </widget>
     </widget>
    </widget>
-   <widget class="QLabel" name="Portable_Output_Amps_Limit_label">
+   <widget class="QLabel" name="Output_Amps_Limit_label">
     <property name="geometry">
      <rect>
       <x>260</x>
@@ -142,7 +142,7 @@
      <string>*</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="Portable_Solar_Name_lineEdit">
+   <widget class="QLineEdit" name="Solar_Name_lineEdit">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -161,7 +161,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="Portable_Total_Watts_label">
+   <widget class="QLabel" name="Total_Watts_label">
     <property name="geometry">
      <rect>
       <x>320</x>
@@ -201,14 +201,14 @@
     </property>
     <layout class="QFormLayout" name="formLayout_5">
      <item row="0" column="0">
-      <widget class="QLabel" name="Portable_Solar_Charger_Error_label">
+      <widget class="QLabel" name="Solar_Charger_Error_label">
        <property name="text">
         <string>Solar Charger Error:</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLabel" name="Portable_Solar_Charger_Error_Value">
+      <widget class="QLabel" name="Solar_Charger_Error_Value">
        <property name="font">
         <font>
          <weight>75</weight>
@@ -235,7 +235,7 @@
      <item row="0" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLabel" name="Portable_Battery_Volts_label">
+        <widget class="QLabel" name="Battery_Volts_label">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
@@ -250,7 +250,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLCDNumber" name="Portable_Battery_Volts_LCD">
+        <widget class="QLCDNumber" name="Battery_Volts_LCD">
          <property name="minimumSize">
           <size>
            <width>75</width>
@@ -289,7 +289,7 @@
      <item row="1" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_11">
        <item>
-        <widget class="QLabel" name="Portable_PV_Watts_label">
+        <widget class="QLabel" name="PV_Watts_label">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -304,7 +304,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLCDNumber" name="Portable_PV_Watts_LCD">
+        <widget class="QLCDNumber" name="PV_Watts_LCD">
          <property name="minimumSize">
           <size>
            <width>75</width>
@@ -343,7 +343,7 @@
      <item row="2" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_12">
        <item>
-        <widget class="QLabel" name="Portable_Output_Amps_label">
+        <widget class="QLabel" name="Output_Amps_label">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -358,7 +358,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLCDNumber" name="Portable_Output_Amps_LCD">
+        <widget class="QLCDNumber" name="Output_Amps_LCD">
          <property name="minimumSize">
           <size>
            <width>75</width>
@@ -397,7 +397,7 @@
      <item row="3" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_13">
        <item>
-        <widget class="QLabel" name="Portable_PV_Volts_label">
+        <widget class="QLabel" name="PV_Volts_label">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -412,7 +412,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLCDNumber" name="Portable_PV_Volts_LCD">
+        <widget class="QLCDNumber" name="PV_Volts_LCD">
          <property name="minimumSize">
           <size>
            <width>75</width>
@@ -451,7 +451,7 @@
      <item row="4" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_14">
        <item>
-        <widget class="QLabel" name="Portable_Max_PV_Watts_Today_label">
+        <widget class="QLabel" name="Max_PV_Watts_Today_label">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
@@ -466,7 +466,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLCDNumber" name="Portable_Max_PV_Watts_Today_LCD">
+        <widget class="QLCDNumber" name="Max_PV_Watts_Today_LCD">
          <property name="minimumSize">
           <size>
            <width>75</width>
@@ -505,7 +505,7 @@
      <item row="5" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
-        <widget class="QLabel" name="Portable_Max_PV_Watts_Yesterday_label">
+        <widget class="QLabel" name="Max_PV_Watts_Yesterday_label">
          <property name="minimumSize">
           <size>
            <width>80</width>
@@ -532,7 +532,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLCDNumber" name="Portable_Max_PV_Watts_Yesterday_LCD">
+        <widget class="QLCDNumber" name="Max_PV_Watts_Yesterday_LCD">
          <property name="minimumSize">
           <size>
            <width>75</width>
@@ -571,7 +571,7 @@
      <item row="6" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_16">
        <item>
-        <widget class="QLabel" name="Portable_Yield_Today_label">
+        <widget class="QLabel" name="Yield_Today_label">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
@@ -586,7 +586,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLCDNumber" name="Portable_Yield_Today_LCD">
+        <widget class="QLCDNumber" name="Yield_Today_LCD">
          <property name="minimumSize">
           <size>
            <width>75</width>
@@ -625,7 +625,7 @@
      <item row="7" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_17">
        <item>
-        <widget class="QLabel" name="Portable_Yield_Yesterday_label">
+        <widget class="QLabel" name="Yield_Yesterday_label">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
@@ -640,7 +640,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLCDNumber" name="Portable_Yield_Yesterday_LCD">
+        <widget class="QLCDNumber" name="Yield_Yesterday_LCD">
          <property name="minimumSize">
           <size>
            <width>75</width>
@@ -679,7 +679,7 @@
      <item row="8" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_18">
        <item>
-        <widget class="QLabel" name="Portable_Solar_Charger_State_label">
+        <widget class="QLabel" name="Solar_Charger_State_label">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
@@ -694,7 +694,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="Portable_Solar_Charger_State_lineEdit">
+        <widget class="QLineEdit" name="Solar_Charger_State_lineEdit">
          <property name="maximumSize">
           <size>
            <width>75</width>
@@ -727,10 +727,10 @@
    <zorder>layoutWidget</zorder>
    <zorder>Time_Label</zorder>
    <zorder>tabWidget</zorder>
-   <zorder>Portable_Output_Amps_Limit_label</zorder>
-   <zorder>Portable_Total_Watts_label</zorder>
+   <zorder>Output_Amps_Limit_label</zorder>
+   <zorder>Total_Watts_label</zorder>
    <zorder></zorder>
-   <zorder>Portable_Solar_Name_lineEdit</zorder>
+   <zorder>Solar_Name_lineEdit</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
