@@ -70,15 +70,15 @@ MQTT_Bmv_ID           = 277
 MQTT_VEsystem_ID      = 0
 #===================================
 
-
-
-
-# Blinking colors for LED's
-blinkgreen  = cycle(['grey7', 'green1'])
-blinkred    = cycle(['grey7', 'red'])
-blinkyellow = cycle(['grey7', 'yellow'])
-blinkblue   = cycle(['grey7', 'dodgerblue2'])
-#arrow       = cycle(['<','<<','<<<','<<<<'])
+# Cycle colors for blinking LED's (Bright / Dark)
+blinkred_Temp          = cycle(["red","grey7"])
+blinkred_LowBatt       = cycle(["red","grey7"])
+blinkred_OverLoad      = cycle(["red","grey7"])
+blinkyellow_Bulk       = cycle(["yellow","grey7"])
+blinkyellow_Absorption = cycle(["yellow","grey7"])
+blinkgreen_Mains       = cycle(["green1","grey7"])
+blinkgreen_Inverter    = cycle(["green1","grey7"])
+blinkblue_Float        = cycle(["blue","grey7"])
 
 
 def Multiplus_Charger():
@@ -246,7 +246,7 @@ def my_mainloop():
     
         # Switch Position on the Multiplus II
         MPswitch    = modbus_register(33,MultiPlus_ID)
-    
+
     # ===========================================================================================
     #   Unconditional Request's
     
@@ -743,9 +743,10 @@ def my_mainloop():
                            font='Terminal 10 bold')
 
         Mains_label_LED.config(text=f"●",
-                            fg=next(blinkgreen),
+                            fg=next(blinkgreen_Mains),
                             bg='black' ,
                             font='Terminal 22')
+
 #====================================================================
 # Inverter LED
 
@@ -778,7 +779,7 @@ def my_mainloop():
                            font='Terminal 10 bold')
                            
         Inverter_label_LED.config(text=f"●",
-                            fg=next(blinkgreen),
+                            fg=next(blinkgreen_Inverter),
                             bg='black' ,
                             font='Terminal 22')
 #====================================================================
@@ -812,9 +813,10 @@ def my_mainloop():
                            font='Terminal 10 bold')
                            
         Bulk_label_LED.config(text=f"●",
-                            fg=next(blinkyellow),
+                            fg=next(blinkyellow_Bulk),
                             bg='black' ,
                             font='Terminal 22')
+
 #====================================================================
 # Overload LED
 
@@ -847,7 +849,7 @@ def my_mainloop():
                            font='Terminal 10 bold')
 
         Overload_label_LED.config(text=f"●",
-                            fg=next(blinkred),
+                            fg=next(blinkred_OverLoad),
                             bg='black' ,
                             font='Terminal 22')
 #====================================================================
@@ -881,9 +883,10 @@ def my_mainloop():
                            font='Terminal 10 bold')
                            
         Absorp_label_LED.config(text=f"●",
-                            fg=next(blinkyellow),
+                            fg=next(blinkyellow_Absorption),
                             bg='black' ,
                             font='Terminal 22')
+
 #====================================================================
 # Low Battery LED
     if Lowbatt == 0: # Off
@@ -915,7 +918,7 @@ def my_mainloop():
                            font='Terminal 10 bold')
                            
         Lowbatt_label_LED.config(text=f"●",
-                            fg=next(blinkred),
+                            fg=next(blinkred_LowBatt),
                             bg='black' ,
                             font='Terminal 22')
 #====================================================================
@@ -950,9 +953,10 @@ def my_mainloop():
                            font='Terminal 10 bold')
                            
         Float_label_LED.config(text=f"●",
-                            fg=next(blinkblue),
+                            fg=next(blinkblue_Float),
                             bg='black' ,
                             font='Terminal 22')
+
 #====================================================================
 # Temperature LED
     #Temperature = 2
@@ -985,7 +989,7 @@ def my_mainloop():
                            font='Terminal 10 bold')
                            
         Temperature_label_LED.config(text=f"●",
-                            fg=next(blinkred),
+                            fg=next(blinkred_Temp),
                             bg='black' ,
                             font='Terminal 22')
 # ===========================================================================================
