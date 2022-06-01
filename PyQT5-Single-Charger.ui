@@ -7,15 +7,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>998</width>
-    <height>1164</height>
+    <width>990</width>
+    <height>1065</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Victron Solar</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(85, 87, 83);</string>
+   <string notr="true">
+background-color: rgb(46, 52, 54);</string>
   </property>
   <property name="iconSize">
    <size>
@@ -65,7 +66,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Total Watts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(5, 13, 168);</string>
+     <string notr="true">color: rgb(20, 57, 204);</string>
     </property>
     <property name="text">
      <string extracomment="Total Watts">✞</string>
@@ -2769,80 +2770,6 @@ background-color: rgb(136, 138, 133);
      </item>
     </layout>
    </widget>
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="geometry">
-     <rect>
-      <x>1010</x>
-      <y>0</y>
-      <width>851</width>
-      <height>721</height>
-     </rect>
-    </property>
-    <property name="tabPosition">
-     <enum>QTabWidget::South</enum>
-    </property>
-    <property name="currentIndex">
-     <number>3</number>
-    </property>
-    <widget class="QWidget" name="SolarWatts_tab">
-     <attribute name="title">
-      <string>Solar Watts</string>
-     </attribute>
-     <widget class="QWidget" name="layoutWidget_5">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>831</width>
-        <height>671</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="GraphLayoutWatts"/>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="BattVolts_tab">
-     <attribute name="title">
-      <string>Battery Volts</string>
-     </attribute>
-     <layout class="QGridLayout" name="gridLayout_5">
-      <item row="0" column="0">
-       <layout class="QGridLayout" name="GraphLayoutVolts"/>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="tab">
-     <attribute name="title">
-      <string>Battery Amps</string>
-     </attribute>
-     <widget class="QWidget" name="layoutWidget_4">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>831</width>
-        <height>671</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="GraphLayoutAmps"/>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Battery SOC</string>
-     </attribute>
-     <widget class="QWidget" name="layoutWidget_6">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>831</width>
-        <height>671</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="GraphLayoutSOC"/>
-     </widget>
-    </widget>
-   </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
@@ -3020,6 +2947,320 @@ background-color: rgb(136, 138, 133);
      </item>
     </layout>
    </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>0</y>
+      <width>911</width>
+      <height>651</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(25, 26, 27);</string>
+    </property>
+    <property name="tabPosition">
+     <enum>QTabWidget::South</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <property name="elideMode">
+     <enum>Qt::ElideLeft</enum>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>PV Watts</string>
+     </attribute>
+     <widget class="QFrame" name="frame">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>16</y>
+        <width>881</width>
+        <height>591</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <layout class="QGridLayout" name="Chart_Watts_Layout"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_6">
+     <attribute name="title">
+      <string>Batt Watts</string>
+     </attribute>
+     <widget class="QFrame" name="frame_9">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>16</y>
+        <width>881</width>
+        <height>591</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_9">
+       <item row="0" column="0">
+        <layout class="QGridLayout" name="Chart_Bat_Watts_Layout"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>Batt Volts</string>
+     </attribute>
+     <widget class="QFrame" name="frame_5">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>16</y>
+        <width>881</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget_6">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>10</y>
+         <width>861</width>
+         <height>561</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="Chart_Volts_Layout"/>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Batt Amps</string>
+     </attribute>
+     <widget class="QFrame" name="frame_4">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>16</y>
+        <width>881</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>861</width>
+         <height>561</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="Chart_Battery_Amps_Layout"/>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>Batt SOC</string>
+     </attribute>
+     <widget class="QFrame" name="frame_2">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>16</y>
+        <width>881</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>10</y>
+         <width>861</width>
+         <height>561</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="Chart_Battery_SOC_Layout"/>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="title">
+      <string>Grid Watts</string>
+     </attribute>
+     <widget class="QFrame" name="frame_3">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>16</y>
+        <width>881</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget_5">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>10</y>
+         <width>861</width>
+         <height>561</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="Chart_Grid_Watts_Layout"/>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_10">
+     <attribute name="title">
+      <string>Grid Amps</string>
+     </attribute>
+     <widget class="QFrame" name="frame_10">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>16</y>
+        <width>881</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget_9">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>10</y>
+         <width>861</width>
+         <height>561</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="Grid_Amps_Layout"/>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_7">
+     <attribute name="title">
+      <string>A/C Out Watts</string>
+     </attribute>
+     <widget class="QFrame" name="frame_6">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>18</y>
+        <width>881</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget_7">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>10</y>
+         <width>861</width>
+         <height>561</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="AC_Out_Watts_Layout"/>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_9">
+     <attribute name="title">
+      <string>A/C Out Amps</string>
+     </attribute>
+     <widget class="QFrame" name="frame_7">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>18</y>
+        <width>881</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget_8">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>10</y>
+         <width>861</width>
+         <height>561</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="AC_Out_Amps_Layout"/>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>670</y>
+      <width>901</width>
+      <height>311</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="AuxChart_Layout"/>
+   </widget>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
@@ -3057,13 +3298,15 @@ background-color: rgb(136, 138, 133);
    <zorder>Grid_FeedIn_Active_Label</zorder>
    <zorder>line2_2</zorder>
    <zorder>tabWidget</zorder>
+   <zorder>label</zorder>
+   <zorder>label_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>998</width>
+     <width>990</width>
      <height>22</height>
     </rect>
    </property>

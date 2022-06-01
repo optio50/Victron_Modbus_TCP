@@ -40,8 +40,8 @@ client = ModbusClient(ip, port='502')
 # Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
 VRMid = "d41243d31a90"
 
-Analog_Inputs  = 'N'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-                         # Check Analog Input Address around line 315.
+Analog_Inputs  = 'y'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+                         # Check Analog Input Address around line 522.
 
 # Unit ID #'s from Cerbo GX.
 # Do not confuse UnitID with Instance ID.
@@ -49,7 +49,7 @@ Analog_Inputs  = 'N'     # Y or N (case insensitive) to display Gerbo GX Analog 
 # https://github.com/victronenergy/dbus_modbustcp/blob/master/CCGX-Modbus-TCP-register-list.xlsx Tab #2
 #===================================
 # ModBus Unit ID
-SolarCharger_1_ID = 226
+SolarCharger_ID = 226
 MultiPlus_ID      = 227
 Bmv_ID            = 223
 VEsystem_ID       = 100
@@ -57,14 +57,14 @@ VEsystem_ID       = 100
 # MQTT Instance ID
 # This is the Instance ID not to be confused with the above Unit ID.
 # Device List in VRM or crossed referenced in the CCGX-Modbus-TCP-register-list.xlsx Tab #2
-MQTT_SolarCharger_1_ID = 279
+MQTT_SolarCharger_ID = 279
 MQTT_MultiPlus_ID      = 276
 MQTT_Bmv_ID            = 277
 MQTT_VEsystem_ID       = 0
 #===================================
 
-# Describe The Arrays
-Array1 = "4 X 100W Array" # 4 New Renogy 100W Panels
+# Describe The Solar Array
+Array = "4 X 100W Array" # 4 New Renogy 100W Panels
 
 
 
@@ -124,11 +124,11 @@ def ESSbatteriesCharged():
 #===========================================================================================
 # Solar Charger Control
 def Charger1_On():
-        client.write_registers(address=774, values=1, unit=SolarCharger_1_ID) # Turn On
+        client.write_registers(address=774, values=1, unit=SolarCharger_ID) # Turn On
 
 
 def Charger1_Off():
-        client.write_registers(address=774, values=4, unit=SolarCharger_1_ID) # Turn Off
+        client.write_registers(address=774, values=4, unit=SolarCharger_ID) # Turn Off
 
 
 #===========================================================================================
@@ -173,50 +173,50 @@ class UI(QMainWindow):
         Crosshair.TEXT_KWARGS: {"color": "white"}}
 
         # Create plot itself
-        self.Solar_graph_watts_Widget = LivePlotWidget(title="Solar Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+        self.Solar_graph_Widget = LivePlotWidget(title="PV Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
 
         # Show grid
-        self.Solar_graph_watts_Widget.showGrid(x=True, y=True, alpha=0.3)
+        self.Solar_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # SetLimits
+        #self.Solar_graph_Widget.setLimits(yMin=-.1)
 
         # Set labels
-        self.Solar_graph_watts_Widget.setLabel('bottom')
-        self.Solar_graph_watts_Widget.setLabel('left', 'Watts')
+        self.Solar_graph_Widget.setLabel('bottom')
+        self.Solar_graph_Widget.setLabel('left', 'Watts')
 
         # Add Line
-        self.Solar_graph_watts_Widget.addItem(watts_plot)
+        self.Solar_graph_Widget.addItem(watts_plot)
 
         # Add chart to Layout in Qt Designer
-        self.GraphLayoutWatts.addWidget(self.Solar_graph_watts_Widget)
+        self.Chart_Watts_Layout.addWidget(self.Solar_graph_Widget)
 #===========================================================================================
-# Chart Battery Volts
+# Chart Battery Watts
         #pg.setConfigOption('leftButtonPan', False) # Only needed once.
-        batt_volts_plot = LiveLinePlot(pen='purple', fillLevel=0, brush=(88,55,88))
+        bat_watts_plot = LiveLinePlot(pen='purple', fillLevel=0, brush=(88,55,88))
 
         # Data connectors for each plot with dequeue of max_points points
-        self.batt_volts_connector = DataConnector(batt_volts_plot, max_points=86400) # 24 hours in seconds
+        self.bat_watts_connector = DataConnector(bat_watts_plot, max_points=86400) # 24 hours in seconds
 
         # Setup bottom axis with TIME tick format
         # use Axis.DATETIME to show date
         bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
 
         # Create plot itself
-        self.Solar_graph_volts_Widget = LivePlotWidget(title="Battery Volts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+        self.Solar_graph_Widget = LivePlotWidget(title="Battery Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
 
         # Show grid
-        self.Solar_graph_volts_Widget.showGrid(x=True, y=True, alpha=0.3)
-
-        # SetLimits
-        self.Solar_graph_volts_Widget.setLimits(yMin=10.5, yMax=16)
+        self.Solar_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
 
         # Set labels
-        self.Solar_graph_volts_Widget.setLabel('bottom')
-        self.Solar_graph_volts_Widget.setLabel('left', 'Volts')
+        self.Solar_graph_Widget.setLabel('bottom')
+        self.Solar_graph_Widget.setLabel('left', 'Watts')
 
         # Add Line
-        self.Solar_graph_volts_Widget.addItem(batt_volts_plot)
+        self.Solar_graph_Widget.addItem(bat_watts_plot)
 
         # Add chart to Layout in Qt Designer
-        self.GraphLayoutVolts.addWidget(self.Solar_graph_volts_Widget)
+        self.Chart_Bat_Watts_Layout.addWidget(self.Solar_graph_Widget)
 #===========================================================================================
 # Chart Battery Amps
         amps_plot = LiveLinePlot(pen="blue", fillLevel=0, brush=(55,44,213,100))
@@ -229,49 +229,243 @@ class UI(QMainWindow):
         bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
 
         # Create plot itself
-        self.Solar_graph_amps_Widget = LivePlotWidget(title="Battery Amps 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+        self.Battery_Amps_graph_Widget = LivePlotWidget(title="Battery Amps 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
 
         # Show grid
-        self.Solar_graph_amps_Widget.showGrid(x=True, y=True, alpha=0.3)
+        self.Battery_Amps_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
 
         # Set labels
-        self.Solar_graph_amps_Widget.setLabel('bottom')
-        self.Solar_graph_amps_Widget.setLabel('left', 'Percent')
+        self.Battery_Amps_graph_Widget.setLabel('bottom')
+        self.Battery_Amps_graph_Widget.setLabel('left', 'Amps')
 
         # Add Line
-        self.Solar_graph_amps_Widget.addItem(amps_plot)
+        self.Battery_Amps_graph_Widget.addItem(amps_plot)
 
         # Add chart to Layout in Qt Designer
-        self.GraphLayoutAmps.addWidget(self.Solar_graph_amps_Widget)
+        self.Chart_Battery_Amps_Layout.addWidget(self.Battery_Amps_graph_Widget)
 
 #===========================================================================================
 # Chart Battery SOC
-        #pg.setConfigOption('leftButtonPan', False) # Only needed once.
-        batt_soc_plot = LiveLinePlot(pen='purple', fillLevel=0, brush=(88,55,88))
+        soc_plot = LiveLinePlot(pen="magenta")
 
         # Data connectors for each plot with dequeue of max_points points
-        self.batt_soc_connector = DataConnector(batt_soc_plot, max_points=86400) # 24 hours in seconds
+        self.soc_connector = DataConnector(soc_plot, max_points=86400) # 24 hours in seconds
 
         # Setup bottom axis with TIME tick format
         # use Axis.DATETIME to show date
         bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
 
         # Create plot itself
-        self.Solar_graph_soc_Widget = LivePlotWidget(title="Battery SOC 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+        self.Battery_SOC_graph_Widget = LivePlotWidget(title="Battery SOC 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
 
         # Show grid
-        self.Solar_graph_soc_Widget.showGrid(x=True, y=True, alpha=0.3)
-
+        self.Battery_SOC_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
 
         # Set labels
-        self.Solar_graph_soc_Widget.setLabel('bottom')
-        self.Solar_graph_soc_Widget.setLabel('left', 'Watts')
+        self.Battery_SOC_graph_Widget.setLabel('bottom')
+        self.Battery_SOC_graph_Widget.setLabel('left', 'Percent')
 
         # Add Line
-        self.Solar_graph_soc_Widget.addItem(batt_soc_plot)
+        self.Battery_SOC_graph_Widget.addItem(soc_plot)
 
         # Add chart to Layout in Qt Designer
-        self.GraphLayoutSOC.addWidget(self.Solar_graph_soc_Widget)
+        self.Chart_Battery_SOC_Layout.addWidget(self.Battery_SOC_graph_Widget)
+
+#===========================================================================================
+# Chart Battery Volts
+        volts_plot = LiveLinePlot(pen="red", fillLevel=0, brush=(102,0,0,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.volts_connector = DataConnector(volts_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Create plot itself
+        self.Battery_Volts_graph_Widget = LivePlotWidget(title="Battery Volts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Battery_Volts_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # Set labels
+        self.Battery_Volts_graph_Widget.setLabel('bottom')
+        self.Battery_Volts_graph_Widget.setLabel('left', 'Volts')
+
+        # SetLimits
+        self.Battery_Volts_graph_Widget.setLimits(yMin=10.5, yMax=16)
+
+        # Add Line
+        self.Battery_Volts_graph_Widget.addItem(volts_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.Chart_Volts_Layout.addWidget(self.Battery_Volts_graph_Widget)
+#===========================================================================================
+# Chart Grid Watts
+        grid_plot = LiveLinePlot(pen="green", fillLevel=0, brush=(0,102,0,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.grid_connector = DataConnector(grid_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Create plot itself
+        self.Grid_Watts_graph_Widget = LivePlotWidget(title="Grid Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Grid_Watts_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # Set labels
+        self.Grid_Watts_graph_Widget.setLabel('bottom')
+        self.Grid_Watts_graph_Widget.setLabel('left', 'Watts')
+
+        # Add Line
+        self.Grid_Watts_graph_Widget.addItem(grid_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.Chart_Grid_Watts_Layout.addWidget(self.Grid_Watts_graph_Widget)
+
+#===========================================================================================
+# Chart Grid Amps
+        grid_amps_plot = LiveLinePlot(pen="green", fillLevel=0, brush=(0,200,100,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.grid_amps_connector = DataConnector(grid_amps_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Create plot itself
+        self.Grid_Amps_graph_Widget = LivePlotWidget(title="Grid Amps 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Grid_Amps_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # Set labels
+        self.Grid_Amps_graph_Widget.setLabel('bottom')
+        self.Grid_Amps_graph_Widget.setLabel('left', 'Amps')
+
+        # Add Line
+        self.Grid_Amps_graph_Widget.addItem(grid_amps_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.Grid_Amps_Layout.addWidget(self.Grid_Amps_graph_Widget)
+
+#===========================================================================================
+# Chart A/C Out Watts
+
+        ac_out_watts_plot = LiveLinePlot(pen='darkmagenta', fillLevel=0, brush=(50,0,50,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.ac_out_watts_connector = DataConnector(ac_out_watts_plot, max_points=86400) # 24 Hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+        
+        # Define crosshair parameters
+        kwargs = {Crosshair.ENABLED: True,
+        Crosshair.LINE_PEN: pg.mkPen(color="red", width=1),
+        Crosshair.TEXT_KWARGS: {"color": "white"}}
+
+        # Create plot itself
+        self.ac_out_watts_graph_Widget = LivePlotWidget(title="A/C Out Watts 24 Hours", axisItems={'bottom': bottom_axis}, **kwargs)
+        
+        # Show grid
+        self.ac_out_watts_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+        
+        
+        # SetLimits
+        self.ac_out_watts_graph_Widget.setLimits(yMin=-1)
+
+        # Set labels
+        self.ac_out_watts_graph_Widget.setLabel('bottom')
+        self.ac_out_watts_graph_Widget.setLabel('left', 'Watts')
+
+        # Add Line
+        self.ac_out_watts_graph_Widget.addItem(ac_out_watts_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.AC_Out_Watts_Layout.addWidget(self.ac_out_watts_graph_Widget)
+#===========================================================================================
+# Chart A/C Out Amps
+
+        ac_out_amps_plot = LiveLinePlot(pen='grey', fillLevel=0, brush=(65,65,65,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.ac_out_amps_connector = DataConnector(ac_out_amps_plot, max_points=86400) # 24 Hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+        
+        # Define crosshair parameters
+        kwargs = {Crosshair.ENABLED: True,
+        Crosshair.LINE_PEN: pg.mkPen(color="red", width=1),
+        Crosshair.TEXT_KWARGS: {"color": "white"}}
+
+        # Create plot itself
+        self.ac_out_amps_graph_Widget = LivePlotWidget(title="A/C Out Amps 24 Hours", axisItems={'bottom': bottom_axis}, **kwargs)
+        
+        # Show grid
+        self.ac_out_amps_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+        
+        
+        # SetLimits
+        self.ac_out_amps_graph_Widget.setLimits(yMin=-1)
+
+        # Set labels
+        self.ac_out_watts_graph_Widget.setLabel('bottom')
+        self.ac_out_amps_graph_Widget.setLabel('left', 'Amps')
+        
+
+        # Add Line
+        self.ac_out_amps_graph_Widget.addItem(ac_out_amps_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.AC_Out_Amps_Layout.addWidget(self.ac_out_amps_graph_Widget)
+#===========================================================================================
+# Chart Aux Solar Watts
+
+        aux_watts_plot = LiveLinePlot(pen='orange', fillLevel=0, brush=(213,129,44,100), showValues=False)
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.aux_watts_connector = DataConnector(aux_watts_plot, max_points=3600) # 1 Hour in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+        
+        # Define crosshair parameters
+        kwargs = {Crosshair.ENABLED: True,
+        Crosshair.LINE_PEN: pg.mkPen(color="red", width=1),
+        Crosshair.TEXT_KWARGS: {"color": "white"}}
+
+        # Create plot itself
+        self.aux_graph_Widget = LivePlotWidget(title="PV Watts 1 Hour", axisItems={'bottom': bottom_axis}, **kwargs)
+        
+        # Show grid
+        self.aux_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+        
+        
+        # SetLimits
+        #self.aux_graph_Widget.setLimits(yMin=-.1)
+        #self.aux_graph_Widget.setXRange(3500, 3600, padding=None, update=True)
+
+        # Set labels
+        self.aux_graph_Widget.setLabel('bottom')
+        #self.aux_graph_Widget.setLabel('left', 'Watts')
+        
+
+        # Add Line
+        self.aux_graph_Widget.addItem(aux_watts_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.AuxChart_Layout.addWidget(self.aux_graph_Widget)
+
 #===========================================================================================
         
         
@@ -294,11 +488,17 @@ class UI(QMainWindow):
         def Charger1_Limit():
             answer, ok = QInputDialog.getInt(self, 'Enter Charger 1 Limit', 'Enter Charger 1 Limit')
             if ok:
-                mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/Settings/ChargeCurrentLimit",
+                mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit",
                                                                    payload=json.dumps({"value": answer}), hostname=ip, port=1883)
 
 #===========================================================================================
-# Menu Items
+# Menu Function Calls
+        
+        SystemType    = mqtt_request("N/"+VRMid+"/system/0/SystemType")
+
+        if SystemType != "ESS":
+            self.menuESS_Modes.menuAction().setVisible(False)
+        
         self.actionOptimized_Battery_Life_Enabled.triggered.connect(ESSbatteryLifeEnabled)
         self.actionOptimized_Battery_Life_Disabled.triggered.connect(ESSbatteryLifeDisabled)
         self.actionKeep_Batteries_Charged.triggered.connect(ESSbatteriesCharged)
@@ -345,6 +545,8 @@ class UI(QMainWindow):
         # Fri 21 Jan 2022     09:06:57 PM
         dt_string = now.strftime("%a %d %b %Y     %r")
 
+        SystemType       = mqtt_request("N/"+VRMid+"/system/0/SystemType")
+
 #===========================================================================================
         # Battery Section
         BatterySOC       = modbus_register(266,Bmv_ID) / 10
@@ -363,24 +565,24 @@ class UI(QMainWindow):
 #===========================================================================================
         #   Solar Charge Controller # 1
         # MQTT
-        SolarChargeLimit1  = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/Settings/ChargeCurrentLimit")
-        SolarYield1        = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/History/Daily/0/Yield")
-        SolarName1         = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/Devices/0/ProductName")
+        SolarChargeLimit  = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit")
+        SolarYield        = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/History/Daily/0/Yield")
+        SolarName         = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Devices/0/ProductName")
     
         # ModBus
-        SolarWatts1        = modbus_register(789,SolarCharger_1_ID) / 10
+        SolarWatts        = modbus_register(789,SolarCharger_ID) / 10
         #SolarWatts         = modbus_register(850,VEsystem_ID)        # Total of all solar chargers
         #SolarAmps          = modbus_register(851,VEsystem_ID) / 10   # Total of all solar chargers
-        SolarAmps1         = modbus_register(772,SolarCharger_1_ID) / 10
-        SolarVolts1        = modbus_register(776,SolarCharger_1_ID) / 100
-        MaxSolarWatts1     = modbus_register(785,SolarCharger_1_ID)
-        MaxSolarWattsYest1 = modbus_register(787,SolarCharger_1_ID)
-        #SolarYield1        = modbus_register(784,SolarCharger_1_ID) / 10
-        #TotalSolarYield    = modbus_register(790,SolarCharger_1_ID) / 10
-        SolarYieldYest1    = modbus_register(786,SolarCharger_1_ID) / 10
-        SolarOn1           = modbus_register(774,SolarCharger_1_ID)
-        SolarState1        = modbus_register(775,SolarCharger_1_ID)
-        SolarError1        = modbus_register(788,SolarCharger_1_ID)
+        SolarAmps         = modbus_register(772,SolarCharger_ID) / 10
+        SolarVolts        = modbus_register(776,SolarCharger_ID) / 100
+        MaxSolarWatts     = modbus_register(785,SolarCharger_ID)
+        MaxSolarWattsYest = modbus_register(787,SolarCharger_ID)
+        #SolarYield        = modbus_register(784,SolarCharger_ID) / 10
+        #TotalSolarYield    = modbus_register(790,SolarCharger_ID) / 10
+        SolarYieldYest    = modbus_register(786,SolarCharger_ID) / 10
+        SolarOn           = modbus_register(774,SolarCharger_ID)
+        SolarState        = modbus_register(775,SolarCharger_ID)
+        SolarError        = modbus_register(788,SolarCharger_ID)
 
 #===========================================================================================
         # Multiplus Section
@@ -422,11 +624,12 @@ class UI(QMainWindow):
         VEbusError  = modbus_register(32,MultiPlus_ID)
 
         # ESS Info
-        ESSbatteryLifeState = modbus_register(2900,VEsystem_ID)
-        ESSsocLimitUser     = modbus_register(2901,VEsystem_ID) / 10
-        ESSsocLimitUser     = f"{ESSsocLimitUser:.0f}%"
-        ESSsocLimitDynamic  = modbus_register(2903, unit=VEsystem_ID) / 10
-        ESSsocLimitDynamic  = f"{ESSsocLimitDynamic:.0f}%"
+        if SystemType == "ESS":
+            ESSbatteryLifeState = modbus_register(2900,VEsystem_ID)
+            ESSsocLimitUser     = modbus_register(2901,VEsystem_ID) / 10
+            ESSsocLimitUser     = f"{ESSsocLimitUser:.0f}%"
+            ESSsocLimitDynamic  = modbus_register(2903, unit=VEsystem_ID) / 10
+            ESSsocLimitDynamic  = f"{ESSsocLimitDynamic:.0f}%"
 #===========================================================================================
 # END Variables
 #===========================================================================================
@@ -512,7 +715,7 @@ class UI(QMainWindow):
 
         
         self.Total_Watts_label.setHidden(False)
-        self.Total_Watts_label.setText(str(f"{SolarWatts1:.0f}"))
+        self.Total_Watts_label.setText(str(f"{SolarWatts:.0f}"))
             
 
 
@@ -749,29 +952,39 @@ class UI(QMainWindow):
             self.VE_Bus_Error_Value.setText(str(VEbusErrorDict[VEbusError]))
             self.VE_Bus_Error_Value.setStyleSheet("QLabel#VE_Bus_Error_Value{font-weight: bold; color: rgb(0, 255, 0);}");
 
-        # Battery Life Disabled
-        if ESSbatteryLifeState >= 10:
-            self.ESS_SOC_Dynamic_label.setHidden(True)
-            self.ESS_SOC_Dynamic_Value.setHidden(True)
-            self.ESS_SOC_User_Value.setText(str(ESSsocLimitUser))
-            self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState] + "           Optimized (BatteryLife Disabled)")
-        # Battery Life Enabled
-        elif ESSbatteryLifeState >= 1 and ESSbatteryLifeState <= 8:
-            self.ESS_SOC_Dynamic_label.setHidden(False)
-            self.ESS_SOC_Dynamic_Value.setHidden(False)
-            self.ESS_SOC_User_label.setHidden(False)
-            self.ESS_SOC_User_Value.setHidden(False)
-            self.ESS_SOC_User_Value.setText(str(ESSsocLimitUser))
-            self.ESS_SOC_Dynamic_Value.setText(str(ESSsocLimitDynamic))
-            self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState] + "           Optimized (BatteryLife Enabled)")
-        # Keep Batteries Charged Mode
-        elif ESSbatteryLifeState == 9:
+#====================================================================
+
+        if SystemType == "ESS":
+            # Battery Life Disabled
+            if ESSbatteryLifeState >= 10:
+                self.ESS_SOC_Dynamic_label.setHidden(True)
+                self.ESS_SOC_Dynamic_Value.setHidden(True)
+                self.ESS_SOC_User_Value.setText(str(ESSsocLimitUser))
+                self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState] + "           Optimized (BatteryLife Disabled)")
+            # Battery Life Enabled
+            elif ESSbatteryLifeState >= 1 and ESSbatteryLifeState <= 8:
+                self.ESS_SOC_Dynamic_label.setHidden(False)
+                self.ESS_SOC_Dynamic_Value.setHidden(False)
+                self.ESS_SOC_User_label.setHidden(False)
+                self.ESS_SOC_User_Value.setHidden(False)
+                self.ESS_SOC_User_Value.setText(str(ESSsocLimitUser))
+                self.ESS_SOC_Dynamic_Value.setText(str(ESSsocLimitDynamic))
+                self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState] + "           Optimized (BatteryLife Enabled)")
+            # Keep Batteries Charged Mode
+            elif ESSbatteryLifeState == 9:
+                self.ESS_SOC_Dynamic_label.setHidden(True)
+                self.ESS_SOC_Dynamic_Value.setHidden(True)
+                self.ESS_SOC_User_label.setHidden(True)
+                self.ESS_SOC_User_Value.setHidden(True)
+                self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState])
+        
+        elif SystemType != "ESS":
             self.ESS_SOC_Dynamic_label.setHidden(True)
             self.ESS_SOC_Dynamic_Value.setHidden(True)
             self.ESS_SOC_User_label.setHidden(True)
             self.ESS_SOC_User_Value.setHidden(True)
-            self.ESS_Mode_Value.setText(ESSbatteryLifeStateDict[ESSbatteryLifeState])
-            
+            self.ESS_Mode_label.setHidden(True)
+            self.ESS_Mode_Value.setHidden(True)
         
 #====================================================================
 #   Multiplus Switch
@@ -806,17 +1019,17 @@ class UI(QMainWindow):
         
         
         # Solar Charger # 1 Section
-        #self.PV_Watts__Num_Label.setText(f"{SolarWatts1:.0f}")
-        self.Solar_Name_1_lineEdit.setText(f"{SolarName1} - {Array1}")
-        self.PV_Watts_LCD.display(SolarWatts1)
-        self.Output_Amps_LCD.display(f"{SolarAmps1:.1f}")
-        self.Output_Amps_Limit_label.setText(str(SolarChargeLimit1))
-        self.PV_Volts_LCD.display(f"{SolarVolts1:.2f}")
-        self.Max_PV_Watts_Today_LCD.display(MaxSolarWatts1)
-        self.Max_PV_Watts_Yesterday_LCD.display(MaxSolarWattsYest1)
-        self.Yield_Today_LCD.display(f"{SolarYield1:.3f}")
-        self.Yield_Yesterday_LCD.display(f"{SolarYieldYest1:.3f}")
-        self.Solar_Charger_State_lineEdit.setText(SolarStateDict[SolarState1])
+        #self.PV_Watts__Num_Label.setText(f"{SolarWatts:.0f}")
+        self.Solar_Name_1_lineEdit.setText(f"{SolarName} - {Array}")
+        self.PV_Watts_LCD.display(SolarWatts)
+        self.Output_Amps_LCD.display(f"{SolarAmps:.1f}")
+        self.Output_Amps_Limit_label.setText(str(SolarChargeLimit))
+        self.PV_Volts_LCD.display(f"{SolarVolts:.2f}")
+        self.Max_PV_Watts_Today_LCD.display(MaxSolarWatts)
+        self.Max_PV_Watts_Yesterday_LCD.display(MaxSolarWattsYest)
+        self.Yield_Today_LCD.display(f"{SolarYield:.3f}")
+        self.Yield_Yesterday_LCD.display(f"{SolarYieldYest:.3f}")
+        self.Solar_Charger_State_lineEdit.setText(SolarStateDict[SolarState])
 
         #self.Total_Yield_Label.setText(str(f" Yield Today {TotalYield:.3f} kwh"))
         #self.Total_Yield_Label_Yest.setText(str(f" Yield Yesterday {TotalYieldYest:.3f} kwh"))
@@ -835,23 +1048,31 @@ class UI(QMainWindow):
         self.Grid_Current_Limit_LCD.display(GridAmpLimit)
 
         self.MultiName_label.setText(MultiName)
-        if SolarError1 > 0:
-            self.Solar_Charger1_Error_Value.setText(SolarErrorDict[SolarError1])
+        if SolarError > 0:
+            self.Solar_Charger1_Error_Value.setText(SolarErrorDict[SolarError])
             self.Solar_Charger1_Error_Value.setStyleSheet("QLabel#Solar_Charger1_Error_Value{font-weight: bold; color: red; background-color: black;}");
 
         else:
-            self.Solar_Charger1_Error_Value.setText(SolarErrorDict[SolarError1])
+            self.Solar_Charger1_Error_Value.setText(SolarErrorDict[SolarError])
             self.Solar_Charger1_Error_Value.setStyleSheet("QLabel#Solar_Charger1_Error_Value{color: rgb(0, 255, 0);}");
 
 
         self.Multiplus_Mode_Value.setText(str(MPswitch))
         self.statusBar.showMessage(dt_string)
         
+        # Chart
         timestamp = time.time()
-        self.watts_connector.cb_append_data_point(SolarWatts1, timestamp)
+        self.watts_connector.cb_append_data_point(SolarWatts, timestamp)
+        self.bat_watts_connector.cb_append_data_point(BatteryWatts, timestamp)
         self.amps_connector.cb_append_data_point(BatteryAmps, timestamp)
-        self.batt_volts_connector.cb_append_data_point(BatteryVolts, timestamp)
-        self.batt_soc_connector.cb_append_data_point(BatterySOC, timestamp)
+        self.volts_connector.cb_append_data_point(BatteryVolts, timestamp)
+        self.soc_connector.cb_append_data_point(BatterySOC, timestamp)
+        self.grid_connector.cb_append_data_point(GridWatts, timestamp)
+        self.ac_out_watts_connector.cb_append_data_point(ACoutWatts, timestamp)
+        self.ac_out_amps_connector.cb_append_data_point(ACoutAmps, timestamp)
+        self.grid_amps_connector.cb_append_data_point(GridAmps, timestamp)
+        self.aux_watts_connector.cb_append_data_point(SolarWatts, timestamp)
+
 
 
 #===========================================================================================
