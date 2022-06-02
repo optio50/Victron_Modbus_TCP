@@ -1,5 +1,13 @@
 # Victron_Modbus_TCP
-Victron Modbus TCP Example
+Victron Modbus TCP & MQTT Example
+
+For whatever reason the Cerbo GX does not appear to require a MQTT keep-alive request where the raspberry pi does.
+The only one of these files that incorporates such a request is the stand alone system with no Multiplus.
+PyQT5-No-Multiplus-Single-Charger.py
+
+If you run a raspberry pi you will need the request in the update value function with a counter.
+see PyQT5-No-Multiplus-Single-Charger.py for an example.
+
 
 These file's are based on a system that has victron equipment in an "ESS" system. Multiplus, Solar charger, BMV
 
