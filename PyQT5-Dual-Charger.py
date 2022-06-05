@@ -32,7 +32,7 @@ import pyqtgraph as pg
 from pglive.kwargs import Crosshair, Axis
 from pglive.sources.data_connector import DataConnector
 from pglive.sources.live_axis import LiveAxis
-from pglive.sources.live_plot import LiveVBarPlot, LiveLinePlot
+from pglive.sources.live_plot import LiveLinePlot
 from pglive.sources.live_plot_widget import LivePlotWidget
 
 
@@ -41,17 +41,18 @@ ip = '192.168.20.156'
 
 client = ModbusClient(ip, port='502')
 
-
+#===================================
 # MQTT Request's are for Multiplus LED state's
 # VRM Portal ID from GX device. 
 # AFAIK this ID is needed even with no internet access as its the name of your venus device.
 # Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
 VRMid = "d41243d31a90"
+#===================================
 
-
-Analog_Inputs  = 'n'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+Analog_Inputs  = 'Y'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
                          # Check Analog Input Address around line 680.
 
+#===================================
 # Unit ID #'s from Cerbo GX.
 # Do not confuse UnitID with Instance ID.
 # You can also get the UnitID from the GX device. Menu --> Settings --> Services --> ModBusTCP --> Available Services
@@ -79,6 +80,7 @@ MQTT_VEsystem_ID       = 0
 Array1 = "4 X 100W Array" # 4 New Renogy 100W Panels
 Array2 = "250W Panel" # Used 250W panel. Typical Ouput 200W
 
+#===================================
 
 def modbus_register(address, unit):
     msg     = client.read_input_registers(address, unit=unit)
@@ -192,10 +194,13 @@ class UI(QMainWindow):
         Crosshair.TEXT_KWARGS: {"color": "white"}}
 
         # Create plot itself
-        self.Solar_graph_Widget = LivePlotWidget(title="Solar Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+        self.Solar_graph_Widget = LivePlotWidget(title="PV Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
 
         # Show grid
         self.Solar_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # SetLimits
+        #self.Solar_graph_Widget.setLimits(yMin=-.1)
 
         # Set labels
         self.Solar_graph_Widget.setLabel('bottom')
@@ -344,6 +349,33 @@ class UI(QMainWindow):
         self.Chart_Grid_Watts_Layout.addWidget(self.Grid_Watts_graph_Widget)
 
 #===========================================================================================
+# Chart Grid Amps
+        grid_amps_plot = LiveLinePlot(pen="green", fillLevel=0, brush=(0,200,100,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.grid_amps_connector = DataConnector(grid_amps_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Create plot itself
+        self.Grid_Amps_graph_Widget = LivePlotWidget(title="Grid Amps 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.Grid_Amps_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # Set labels
+        self.Grid_Amps_graph_Widget.setLabel('bottom')
+        self.Grid_Amps_graph_Widget.setLabel('left', 'Watts')
+
+        # Add Line
+        self.Grid_Amps_graph_Widget.addItem(grid_amps_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.Grid_Amps_Layout.addWidget(self.Grid_Amps_graph_Widget)
+
+#===========================================================================================
 # Chart Cabin Temperatures
         Exterior_Temp_plot = LiveLinePlot(pen="cyan", name='Cabin Exterior')
         Interior_Temp_plot = LiveLinePlot(pen="red", name='Cabin Interior')
@@ -384,6 +416,187 @@ class UI(QMainWindow):
         # Add chart to Layout in Qt Designer
         self.Temperature_Layout.addWidget(self.Temperature_graph_Widget)
 #===========================================================================================
+# Chart A/C Out Watts
+
+        ac_out_watts_plot = LiveLinePlot(pen='darkmagenta', fillLevel=0, brush=(50,0,50,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.ac_out_watts_connector = DataConnector(ac_out_watts_plot, max_points=86400) # 24 Hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+        
+        # Define crosshair parameters
+        kwargs = {Crosshair.ENABLED: True,
+        Crosshair.LINE_PEN: pg.mkPen(color="red", width=1),
+        Crosshair.TEXT_KWARGS: {"color": "white"}}
+
+        # Create plot itself
+        self.ac_out_watts_graph_Widget = LivePlotWidget(title="A/C Out Watts 24 Hours", axisItems={'bottom': bottom_axis}, **kwargs)
+        
+        # Show grid
+        self.ac_out_watts_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+        
+        
+        # SetLimits
+        self.ac_out_watts_graph_Widget.setLimits(yMin=-1)
+
+        # Set labels
+        self.ac_out_watts_graph_Widget.setLabel('bottom')
+        
+
+        # Add Line
+        self.ac_out_watts_graph_Widget.addItem(ac_out_watts_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.AC_Out_Watts_Layout.addWidget(self.ac_out_watts_graph_Widget)
+#===========================================================================================
+# Chart Solar Watts PV 1
+
+        PV1watts_plot = LiveLinePlot(pen=(102,255,255), fillLevel=0, brush=(102,255,255,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.PV1watts_connector = DataConnector(PV1watts_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Define crosshair parameters
+        kwargs = {Crosshair.ENABLED: True,
+        Crosshair.LINE_PEN: pg.mkPen(color="red", width=1),
+        Crosshair.TEXT_KWARGS: {"color": "white"}}
+
+        # Create plot itself
+        self.PV1_graph_Widget = LivePlotWidget(title="PV 1 Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.PV1_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # SetLimits
+        #self.PV1_graph_Widget.setLimits(yMin=-.1)
+
+        # Set labels
+        self.PV1_graph_Widget.setLabel('bottom')
+        self.PV1_graph_Widget.setLabel('left', 'Watts')
+
+        # Add Line
+        self.PV1_graph_Widget.addItem(PV1watts_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.PV1_Watts_Layout.addWidget(self.PV1_graph_Widget)
+#===========================================================================================
+# Chart Solar Watts PV 2
+
+        PV2watts_plot = LiveLinePlot(pen=(102,102,255), fillLevel=0, brush=(102,102,255,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.PV2watts_connector = DataConnector(PV2watts_plot, max_points=86400) # 24 hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+
+        # Define crosshair parameters
+        kwargs = {Crosshair.ENABLED: True,
+        Crosshair.LINE_PEN: pg.mkPen(color="red", width=1),
+        Crosshair.TEXT_KWARGS: {"color": "white"}}
+
+        # Create plot itself
+        self.PV2_graph_Widget = LivePlotWidget(title="PV 2 Watts 24 Hrs", axisItems={'bottom': bottom_axis}, **kwargs)
+
+        # Show grid
+        self.PV2_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+
+        # SetLimits
+        #self.PV2_graph_Widget.setLimits(yMin=-.1)
+
+        # Set labels
+        self.PV2_graph_Widget.setLabel('bottom')
+        self.PV2_graph_Widget.setLabel('left', 'Watts')
+
+        # Add Line
+        self.PV2_graph_Widget.addItem(PV2watts_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.PV2_Watts_Layout.addWidget(self.PV2_graph_Widget)
+#===========================================================================================
+# Chart A/C Out Amps
+
+        ac_out_amps_plot = LiveLinePlot(pen='grey', fillLevel=0, brush=(65,65,65,100))
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.ac_out_amps_connector = DataConnector(ac_out_amps_plot, max_points=86400) # 24 Hours in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+        
+        # Define crosshair parameters
+        kwargs = {Crosshair.ENABLED: True,
+        Crosshair.LINE_PEN: pg.mkPen(color="red", width=1),
+        Crosshair.TEXT_KWARGS: {"color": "white"}}
+
+        # Create plot itself
+        self.ac_out_amps_graph_Widget = LivePlotWidget(title="A/C Out Amps 24 Hours", axisItems={'bottom': bottom_axis}, **kwargs)
+        
+        # Show grid
+        self.ac_out_amps_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+        
+        
+        # SetLimits
+        self.ac_out_amps_graph_Widget.setLimits(yMin=-1)
+
+        # Set labels
+        self.ac_out_amps_graph_Widget.setLabel('bottom')
+        
+
+        # Add Line
+        self.ac_out_amps_graph_Widget.addItem(ac_out_amps_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.AC_Out_Amps_Layout.addWidget(self.ac_out_amps_graph_Widget)
+#===========================================================================================
+# Chart Aux Solar Watts
+
+        aux_watts_plot = LiveLinePlot(pen='orange', fillLevel=0, brush=(213,129,44,100), showValues=False)
+
+        # Data connectors for each plot with dequeue of max_points points
+        self.aux_watts_connector = DataConnector(aux_watts_plot, max_points=3600) # 1 Hour in seconds
+
+        # Setup bottom axis with TIME tick format
+        # use Axis.DATETIME to show date
+        bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+        
+        # Define crosshair parameters
+        kwargs = {Crosshair.ENABLED: True,
+        Crosshair.LINE_PEN: pg.mkPen(color="red", width=1),
+        Crosshair.TEXT_KWARGS: {"color": "white"}}
+
+        # Create plot itself
+        self.aux_graph_Widget = LivePlotWidget(title="PV Watts 1 Hour", axisItems={'bottom': bottom_axis}, **kwargs)
+        
+        # Show grid
+        self.aux_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+        
+        
+        # SetLimits
+        #self.aux_graph_Widget.setLimits(yMin=-.1)
+        #self.aux_graph_Widget.setXRange(3500, 3600, padding=None, update=True)
+
+        # Set labels
+        self.aux_graph_Widget.setLabel('bottom')
+        #self.aux_graph_Widget.setLabel('left', 'Watts')
+        
+
+        # Add Line
+        self.aux_graph_Widget.addItem(aux_watts_plot)
+
+        # Add chart to Layout in Qt Designer
+        self.AuxChart_Layout.addWidget(self.aux_graph_Widget)
+
+#===========================================================================================
 
         def SetGridWatts():
             watts   = self.Set_Grid_Watts_lineEdit.text()
@@ -402,13 +615,13 @@ class UI(QMainWindow):
                 client.write_registers(address=2901, values=answer * 10, unit=VEsystem_ID)
 
         def Charger1_Limit():
-            answer, ok = QInputDialog.getInt(self, 'Enter Charger 1 Limit', 'Enter Charger 1 Limit')
+            answer, ok = QInputDialog.getInt(self, 'Enter Charger 1 Limit', 'Enter Charger 1 Limit', 20)
             if ok:
                 mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/Settings/ChargeCurrentLimit",
                                                                    payload=json.dumps({"value": answer}), hostname=ip, port=1883)
 
         def Charger2_Limit():
-            answer, ok = QInputDialog.getInt(self, 'Enter Charger 1 Limit', 'Enter Charger 1 Limit')
+            answer, ok = QInputDialog.getInt(self, 'Enter Charger 2 Limit', 'Enter Charger 2 Limit', 15)
             if ok:
                 mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_2_ID)+"/Settings/ChargeCurrentLimit",
                                                                    payload=json.dumps({"value": answer}), hostname=ip, port=1883)
@@ -491,16 +704,19 @@ class UI(QMainWindow):
 #===========================================================================================
         #   Solar Charge Controller # 1
         # MQTT
+        #global SolarChargeLimit1
         SolarChargeLimit1  = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/Settings/ChargeCurrentLimit")
+        SolarChargeLimit1  = f"{SolarChargeLimit1:.0f}"
         SolarYield1        = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/History/Daily/0/Yield")
         SolarName1         = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/Devices/0/ProductName")
-
+        
         # ModBus
         SolarWatts1        = modbus_register(789,SolarCharger_1_ID) / 10
         SolarWatts         = modbus_register(850,VEsystem_ID)        # Total of all solar chargers
-        SolarAmps          = modbus_register(851,VEsystem_ID) / 10   # Total of all solar chargers
-        SolarAmps1         = modbus_register(772,SolarCharger_1_ID) / 10
+        #SolarAmps          = modbus_register(851,VEsystem_ID) / 10   # Total of all solar chargers
+        SolarAmps1         = modbus_register(772,SolarCharger_1_ID) / 10 # Amps To Battery
         SolarVolts1        = modbus_register(776,SolarCharger_1_ID) / 100
+        PvAmps1             = SolarWatts1 / SolarVolts1
         MaxSolarWatts1     = modbus_register(785,SolarCharger_1_ID)
         MaxSolarWattsYest1 = modbus_register(787,SolarCharger_1_ID)
         #SolarYield1        = modbus_register(784,SolarCharger_1_ID) / 10
@@ -514,13 +730,15 @@ class UI(QMainWindow):
         #   Solar Charge Controller # 2
         # MQTT
         SolarChargeLimit2  = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_2_ID)+"/Settings/ChargeCurrentLimit")
+        SolarChargeLimit2  = f"{SolarChargeLimit2:.0f}"
         SolarYield2        = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_2_ID)+"/History/Daily/0/Yield")
         SolarName2         = mqtt_request("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_2_ID)+"/Devices/0/ProductName")
 
         # ModBus
         SolarWatts2         = modbus_register(789,SolarCharger_2_ID) / 10
-        SolarAmps2          = modbus_register(772,SolarCharger_2_ID) / 10
+        SolarAmps2          = modbus_register(772,SolarCharger_2_ID) / 10 # Amps To Battery
         SolarVolts2         = modbus_register(776,SolarCharger_2_ID) / 100
+        PvAmps2             = SolarWatts2 / SolarVolts2
         MaxSolarWatts2      = modbus_register(785,SolarCharger_2_ID)
         MaxSolarWattsYest2  = modbus_register(787,SolarCharger_2_ID)
         #SolarYield2         = modbus_register(784,SolarCharger_2_ID) / 10
@@ -531,10 +749,15 @@ class UI(QMainWindow):
         SolarError2         = modbus_register(788,SolarCharger_2_ID)
         TotalYield = SolarYield1 + SolarYield2
         TotalYieldYest = SolarYieldYest1 + SolarYieldYest2
+        
+        MaxTotalWattsToday = MaxSolarWatts1 + MaxSolarWatts2
+        MaxTotalWattsYest = MaxSolarWattsYest1 + MaxSolarWattsYest2
 #===========================================================================================
         # Multiplus Section
         #   Grid Input & A/C Out
         FeedIn        = modbus_register(2707,VEsystem_ID)
+        FeedInLimited = modbus_register(2709,VEsystem_ID)
+        FeedInMax     = modbus_register(2706,VEsystem_ID) / .01
         GridSetPoint  = modbus_register(2700,VEsystem_ID)
         GridWatts     = modbus_register(820,VEsystem_ID)
         GridAmps      = modbus_register(6,MultiPlus_ID) / 10
@@ -580,12 +803,11 @@ class UI(QMainWindow):
         ESSsocLimitDynamic  = modbus_register(2903, unit=VEsystem_ID) / 10
         ESSsocLimitDynamic  = f"{ESSsocLimitDynamic:.0f}%"
 #===========================================================================================
-
-
 # END Variables
 #===========================================================================================
 # Conditional Values
 #===========================================================================================
+
         SolarStateDict = {0:  "OFF",
                       2:  "Fault",
                       3:  "Bulk",
@@ -641,10 +863,18 @@ class UI(QMainWindow):
             #self.Grid_FeedIn_Active_Label.setStyleSheet("QLabel { background: rgb(85, 87, 83); color: rgb(0, 0, 0); }")
             #self.Grid_FeedIn_Active_Label.setText("")
 
+        if FeedIn == 1 and FeedInLimited == 1:
+            self.Grid_FeedIn_Limit_Label.setHidden(False)
+            self.Grid_FeedIn_Limit_Label.setText(f"Feed In Limited to {FeedInMax:.0f} W")
+        else:
+            self.Grid_FeedIn_Limit_Label.setHidden(True)
+
+
         if FeedIn == 1:
-            self.FeedIn_pushButton.setText('YES')
+            self.FeedIn_pushButton.setText('Enabled')
+            
         elif FeedIn == 0:
-            self.FeedIn_pushButton.setText('NO')
+            self.FeedIn_pushButton.setText('Disabled')
 
         if GridCondition == 0:
             Condition = 'OK'
@@ -969,6 +1199,7 @@ class UI(QMainWindow):
         self.Output_Amps_LCD.display(f"{SolarAmps1:.1f}")
         self.Output_Amps_Limit_label.setText(str(SolarChargeLimit1))
         self.PV_Volts_LCD.display(f"{SolarVolts1:.2f}")
+        self.PV_Amps1_LCD.display(f"{PvAmps1:.2f}")
         self.Max_PV_Watts_Today_LCD.display(MaxSolarWatts1)
         self.Max_PV_Watts_Yesterday_LCD.display(MaxSolarWattsYest1)
         self.Yield_Today_LCD.display(f"{SolarYield1:.3f}")
@@ -981,6 +1212,7 @@ class UI(QMainWindow):
         self.Output_Amps_2_LCD.display(f"{SolarAmps2:.1f}")
         self.Output_Amps_Limit_2_label.setText(str(SolarChargeLimit2))
         self.PV_Volts_2_LCD.display(SolarVolts2)
+        self.PV_Amps_2_LCD.display(f"{PvAmps2:.2f}")
         self.Max_PV_Watts_Today_2_LCD.display(MaxSolarWatts2)
         self.Max_PV_Watts_Yesterday_2_LCD.display(MaxSolarWattsYest2)
         self.Yield_Today_2_LCD.display(f"{SolarYield2:.3f}")
@@ -990,6 +1222,8 @@ class UI(QMainWindow):
 
         self.Total_Yield_Label.setText(str(f" Yield Today {TotalYield:.3f} kwh"))
         self.Total_Yield_Label_Yest.setText(str(f" Yield Yesterday {TotalYieldYest:.3f} kwh"))
+        self.Max_Watts_Today_Label.setText(str(f"Max Watts Today {MaxTotalWattsToday} W"))
+        self.Max_Watts_Yest_Label.setText(str(f"Max Watts Yesterday {MaxTotalWattsYest} W"))
 
         # Multiplus Section
         self.Grid_Set_Point_LCD.display(GridSetPoint)
@@ -1033,6 +1267,14 @@ class UI(QMainWindow):
         self.volts_connector.cb_append_data_point(BatteryVolts, timestamp)
         self.soc_connector.cb_append_data_point(BatterySOC, timestamp)
         self.grid_connector.cb_append_data_point(GridWatts, timestamp)
+        self.aux_watts_connector.cb_append_data_point(SolarWatts, timestamp)
+        self.ac_out_watts_connector.cb_append_data_point(ACoutWatts, timestamp)
+        self.ac_out_amps_connector.cb_append_data_point(ACoutAmps, timestamp)
+        self.grid_amps_connector.cb_append_data_point(GridAmps, timestamp)
+        
+        self.PV1watts_connector.cb_append_data_point(SolarWatts1, timestamp)
+        self.PV2watts_connector.cb_append_data_point(SolarWatts2, timestamp)
+        
         if Analog_Inputs.lower() == 'y':
             self.Box_Temp_connector.cb_append_data_point(TempSensor1, timestamp)
             self.Interior_Temp_connector.cb_append_data_point(TempSensor2, timestamp)
