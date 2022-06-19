@@ -741,8 +741,11 @@ selection-background-color: rgb(36, 232, 20);</string>
 background-color: rgb(136, 138, 133);
 }</string>
        </property>
+       <property name="smallDecimalPoint">
+        <bool>false</bool>
+       </property>
        <property name="digitCount">
-        <number>3</number>
+        <number>5</number>
        </property>
        <property name="segmentStyle">
         <enum>QLCDNumber::Flat</enum>
@@ -779,7 +782,7 @@ background-color: rgb(136, 138, 133);
 }</string>
        </property>
        <property name="smallDecimalPoint">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="digitCount">
         <number>5</number>
@@ -819,7 +822,7 @@ background-color: rgb(136, 138, 133);
 }</string>
        </property>
        <property name="smallDecimalPoint">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="digitCount">
         <number>5</number>
