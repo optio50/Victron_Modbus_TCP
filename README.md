@@ -72,8 +72,8 @@ or
  
 To use the PyQt files you will need to.    
 
-```pip install pymodbus paho-mqtt pglive```
-install PyQT5 with your package manager.    
+```pip install pymodbus paho-mqtt pglive```    
+install PyQT5 with your package manager.     
 such as ```sudo apt install python3-pyqt5```
 
 The PyQT5-Dual-Charger.py and PyQT5-Dual-Charger.ui are PYQT5 files that are used together.    
