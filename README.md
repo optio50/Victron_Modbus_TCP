@@ -78,7 +78,7 @@ The PyQT5-Dual-Charger.py and PyQT5-Dual-Charger.ui are PYQT5 files that are use
 Same with PyQT5-Single-Charger.py and PyQT5-Single-Charger.ui    
 Just run the .py file and the .ui file will auto load.    
 execute in the cloned directory as the icon file is in that location.    
-
+Your system theme / font will dictate the style and appearence of the Pyqt program.
 
 The TK-VictronSolar.py file is ready if you have the correct Victron equipment. such as Multiplus, BMV, Solar charger, Venus GX device.    
 execute in the cloned directory as the icon file is in that location.
