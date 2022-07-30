@@ -6,7 +6,11 @@ The only one of these files that incorporates such a request is the stand alone 
 PyQT5-No-Multiplus-Single-Charger.py
 
 If you run a raspberry pi you will need the request in the update value function with a counter.
-see PyQT5-No-Multiplus-Single-Charger.py for an example.
+See PyQT5-No-Multiplus-Single-Charger.py for an example.
+
+If you find that the Cerbo-GX DOES need a MQTT keep-alive you will need to implement this into the various scripts.
+See PyQT5-No-Multiplus-Single-Charger.py for an example.
+(Maybe my situation is unique in not needing a Cerbo-GX MQTT keep-alive)
 
 
 These file's are based on a system that has victron equipment in an "ESS" system. Multiplus, Solar charger, BMV
