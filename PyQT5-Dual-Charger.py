@@ -29,6 +29,8 @@ import sys
 
 # Chart
 import pyqtgraph as pg
+# Live Chart values using PgLive
+# https://github.com/domarm-comat/pglive
 from pglive.kwargs import Crosshair, Axis
 from pglive.sources.data_connector import DataConnector
 from pglive.sources.live_axis import LiveAxis
@@ -50,7 +52,7 @@ VRMid = "d41243d31a90"
 #===================================
 
 Analog_Inputs  = 'Y'     # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-                         # Check Analog Input Address around line 680.
+                         # Check Analog Input Address around line 920.
 
 #===================================
 # Unit ID #'s from Cerbo GX.
@@ -78,7 +80,8 @@ MQTT_VEsystem_ID       = 0
 
 # Describe The Arrays
 Array1 = "4 X 100W Array" # 4 New Renogy 100W Panels
-Array2 = "250W Panel" # Used 250W panel. Typical Ouput 200W
+Array2 = "310W Panel" # New 310W panel
+#Array2 = "250W Panel" # Used 250W panel. Typical Ouput 200W
 
 #===================================
 
@@ -757,7 +760,7 @@ class UI(QMainWindow):
         #   Grid Input & A/C Out
         FeedIn        = modbus_register(2707,VEsystem_ID)
         FeedInLimited = modbus_register(2709,VEsystem_ID)
-        FeedInMax     = modbus_register(2706,VEsystem_ID) / .01
+        FeedInMax     = modbus_register(66,MultiPlus_ID) / .01
         GridSetPoint  = modbus_register(2700,VEsystem_ID)
         GridWatts     = modbus_register(820,VEsystem_ID)
         GridAmps      = modbus_register(6,MultiPlus_ID) / 10
@@ -799,9 +802,12 @@ class UI(QMainWindow):
         # ESS Info
         ESSbatteryLifeState = modbus_register(2900,VEsystem_ID)
         ESSsocLimitUser     = modbus_register(2901,VEsystem_ID) / 10
-        ESSsocLimitUser     = f"{ESSsocLimitUser:.0f}%"
         ESSsocLimitDynamic  = modbus_register(2903, unit=VEsystem_ID) / 10
+        if ESSsocLimitDynamic <= ESSsocLimitUser: # The ESS value will never be below the user value in the "Remote Console"
+        # https://energytalk.co.za/t/possible-to-manually-change-active-soc-limit-on-victron/294?page=2
+            ESSsocLimitDynamic = ESSsocLimitUser
         ESSsocLimitDynamic  = f"{ESSsocLimitDynamic:.0f}%"
+        ESSsocLimitUser     = f"{ESSsocLimitUser:.0f}%"
 #===========================================================================================
 # END Variables
 #===========================================================================================
@@ -865,7 +871,7 @@ class UI(QMainWindow):
 
         if FeedIn == 1 and FeedInLimited == 1:
             self.Grid_FeedIn_Limit_Label.setHidden(False)
-            self.Grid_FeedIn_Limit_Label.setText(f"Feed In Limited to {FeedInMax:.0f} W")
+            self.Grid_FeedIn_Limit_Label.setText(f"Feed In Limited to {FeedInMax:.0f} W per Phase")
         else:
             self.Grid_FeedIn_Limit_Label.setHidden(True)
 
@@ -1078,7 +1084,7 @@ class UI(QMainWindow):
         #Absorption = 3
         if Absorp == 0: # Off
             self.Absorption_LED.setStyleSheet("QLabel#Absorption_LED{color: rgb(28, 28, 28);}");
-
+                                                         # Orange rgb(247, 119, 7)
         elif Absorp == 1: # On
             self.Absorption_LED.setStyleSheet("QLabel#Absorption_LED{color: rgb(255, 255, 0);}");
 
@@ -1089,7 +1095,7 @@ class UI(QMainWindow):
         #Lowbatt = 3
         if Lowbatt == 0: # Off
             self.Low_Battery_LED.setStyleSheet("QLabel#Low_Battery_LED{color: rgb(28, 28, 28);}");
-
+                                                         # Orange rgb(247, 119, 7)
         elif Lowbatt == 1: # On
             self.Low_Battery_LED.setStyleSheet("QLabel#Low_Battery_LED{color: rgb(255, 0, 0);}");
 
@@ -1103,7 +1109,7 @@ class UI(QMainWindow):
 
         elif Floatchg == 1: # On
             self.Float_LED.setStyleSheet("QLabel#Float_LED{color: rgb(0, 0, 255);}");
-
+                                                         # Orange rgb(247, 119, 7)
         elif Floatchg >= 2: # Blink
             self.Float_LED.setStyleSheet(f"QLabel#Float_LED{{color: {next(blinkblue_Float)};}}");
 #====================================================================
