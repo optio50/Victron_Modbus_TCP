@@ -61,7 +61,9 @@ PyQT5-Dual-Charger.ui
 
 TK-VictronSolar.py    
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/VictronSolar-SingleMPPT.apng?raw=true)    
-    
+
+PyQT5-No-Multiplus-Single-Charger-JBD-BMS.py
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/PyQT5-No-Multiplus-Single-Charger-JBD-BMS.png?raw=true)    
     
 To install  
 git clone https://github.com/optio50/Victron_Modbus_TCP  
