@@ -158,7 +158,7 @@ class UI(QMainWindow):
         self.Battery_Volts_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
         
         # No reason to see huge range plot here. Limit for several volts above and below nominal
-        self.Battery_Volts_graph_Widget.setLimits(yMin=10.5, yMax=16) # 12V system limits, 10.5 - 16. Change for 24V or 48V systems
+        #self.Battery_Volts_graph_Widget.setLimits(yMin=10.5, yMax=16) # 12V system limits, 10.5 - 16. Change for 24V or 48V systems
 
 
         # Set labels
