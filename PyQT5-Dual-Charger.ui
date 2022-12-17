@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>993</width>
-    <height>1023</height>
+    <width>988</width>
+    <height>1072</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,117 +24,13 @@
    </size>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="Solar_Name_2_lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>630</x>
-      <y>195</y>
-      <width>361</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-    <property name="frame">
-     <bool>false</bool>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="Total_Watts_label">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>230</y>
-      <width>361</width>
-      <height>101</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Noto Sans</family>
-      <pointsize>95</pointsize>
-      <weight>75</weight>
-      <italic>false</italic>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Total Watts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(206, 92, 0);</string>
-    </property>
-    <property name="text">
-     <string extracomment="Total Watts">✞</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="Total_Yield_Label">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>357</y>
-      <width>211</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="Solar_Name_1_lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>195</y>
-      <width>351</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-    <property name="frame">
-     <bool>false</bool>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
-    </property>
-   </widget>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <widget class="Line" name="line">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>6</x>
       <y>185</y>
       <width>971</width>
       <height>16</height>
@@ -144,59 +40,10 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="Time_Label">
-    <property name="geometry">
-     <rect>
-      <x>659</x>
-      <y>12</y>
-      <width>331</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>13</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(233, 185, 110);</string>
-    </property>
-    <property name="text">
-     <string>00:00:00</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="Total_Yield_Label_Yest">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>390</y>
-      <width>211</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
    <widget class="Line" name="line2">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>6</x>
       <y>503</y>
       <width>971</width>
       <height>16</height>
@@ -206,348 +53,20 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="MultiName_label">
-    <property name="geometry">
-     <rect>
-      <x>620</x>
-      <y>515</y>
-      <width>351</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>590</x>
-      <y>535</y>
-      <width>391</width>
-      <height>180</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="Mains_Label">
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Mains</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="Bulk_Label">
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Bulk</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QLabel" name="Temperature_LED">
-       <property name="font">
-        <font>
-         <pointsize>22</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(29, 28, 28);</string>
-       </property>
-       <property name="text">
-        <string>●</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="Float_LED">
-       <property name="font">
-        <font>
-         <pointsize>22</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(29, 28, 28);</string>
-       </property>
-       <property name="text">
-        <string>●</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QLabel" name="Temperature_Label">
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Temperature</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="Inverting_Label">
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Inverting</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLabel" name="Inverting_LED">
-       <property name="font">
-        <font>
-         <pointsize>22</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(29, 28, 28);</string>
-       </property>
-       <property name="text">
-        <string>●</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="Float_Label">
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Float</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="Bulk_LED">
-       <property name="font">
-        <font>
-         <pointsize>22</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(29, 28, 28);</string>
-       </property>
-       <property name="text">
-        <string>●</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="Low_Battery_Label">
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Low Battery</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="Overload_Label">
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Overload</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QLabel" name="Low_Battery_LED">
-       <property name="font">
-        <font>
-         <pointsize>22</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(29, 28, 28);</string>
-       </property>
-       <property name="text">
-        <string>●</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="Absorption_Label">
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Absorption</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLabel" name="Overload_LED">
-       <property name="font">
-        <font>
-         <pointsize>22</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(29, 28, 28);</string>
-       </property>
-       <property name="text">
-        <string>●</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="Mains_LED">
-       <property name="font">
-        <font>
-         <pointsize>22</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(28, 28, 28);</string>
-       </property>
-       <property name="text">
-        <string>●</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="Absorption_LED">
-       <property name="font">
-        <font>
-         <pointsize>22</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(29, 28, 28);</string>
-       </property>
-       <property name="text">
-        <string>●</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-    <zorder>Float_Label</zorder>
-    <zorder>Mains_Label</zorder>
-    <zorder>Bulk_Label</zorder>
-    <zorder>Temperature_LED</zorder>
-    <zorder>Float_LED</zorder>
-    <zorder>Temperature_Label</zorder>
-    <zorder>Inverting_Label</zorder>
-    <zorder>Inverting_LED</zorder>
-    <zorder>Bulk_LED</zorder>
-    <zorder>Low_Battery_Label</zorder>
-    <zorder>Overload_Label</zorder>
-    <zorder>Low_Battery_LED</zorder>
-    <zorder>Absorption_Label</zorder>
-    <zorder>Overload_LED</zorder>
-    <zorder>Mains_LED</zorder>
-    <zorder>Absorption_LED</zorder>
-   </widget>
-   <widget class="QLabel" name="Grid_FeedIn_Active_Label">
-    <property name="geometry">
-     <rect>
-      <x>428</x>
-      <y>526</y>
-      <width>161</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="toolTip">
-     <string>Negative Value Indicates Flow into Grid</string>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-    </property>
-   </widget>
    <widget class="Line" name="line2_2">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>810</y>
+      <x>6</x>
+      <y>819</y>
       <width>971</width>
-      <height>16</height>
+      <height>2</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>2</height>
+     </size>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -556,7 +75,7 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>266</x>
       <y>555</y>
       <width>157</width>
       <height>32</height>
@@ -629,667 +148,7 @@ background-color: green;
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>8</y>
-      <width>299</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_8">
-     <item>
-      <widget class="QLabel" name="Batt_SOC_Label">
-       <property name="minimumSize">
-        <size>
-         <width>91</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>80</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Battery</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QProgressBar" name="Batt_SOC_progressBar">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(136, 138, 133);
-color: rgb(0, 0, 0);
-selection-background-color: rgb(36, 232, 20);</string>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="textVisible">
-        <bool>true</bool>
-       </property>
-       <property name="invertedAppearance">
-        <bool>false</bool>
-       </property>
-       <property name="textDirection">
-        <enum>QProgressBar::BottomToTop</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>181</x>
-      <y>42</y>
-      <width>83</width>
-      <height>144</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_5">
-     <item>
-      <widget class="QLCDNumber" name="Batt_Watts_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="smallDecimalPoint">
-        <bool>false</bool>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLCDNumber" name="Batt_Amps_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="smallDecimalPoint">
-        <bool>false</bool>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLCDNumber" name="Batt_Volts_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="smallDecimalPoint">
-        <bool>false</bool>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLCDNumber" name="DC_Power_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>3</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>43</y>
-      <width>143</width>
-      <height>141</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_6">
-     <item>
-      <widget class="QLabel" name="Batt_Watts_Label">
-       <property name="minimumSize">
-        <size>
-         <width>102</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>80</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Battery Watts</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="Batt_Amps_Label">
-       <property name="minimumSize">
-        <size>
-         <width>111</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>80</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Battery Amps</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="Batt_Volts_Label">
-       <property name="minimumSize">
-        <size>
-         <width>111</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>80</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Battery Volts</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="DC_Power_Label">
-       <property name="minimumSize">
-        <size>
-         <width>141</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>80</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>DC System Watts</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>8</y>
-      <width>308</width>
-      <height>180</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_3">
-     <item row="0" column="0">
-      <widget class="QLabel" name="Batt_State_Label">
-       <property name="minimumSize">
-        <size>
-         <width>141</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Battery State</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" colspan="2">
-      <widget class="QLineEdit" name="Batt_State_lineEdit">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <family>Monospace</family>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="acceptDrops">
-        <bool>true</bool>
-       </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(136, 138, 133);</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="2">
-      <widget class="QLabel" name="Last_Discharge_Label">
-       <property name="minimumSize">
-        <size>
-         <width>1</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Last Discharge AH</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLCDNumber" name="Last_Discharge_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>4</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" colspan="2">
-      <widget class="QLabel" name="Consumed_AH_Label">
-       <property name="minimumSize">
-        <size>
-         <width>141</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Consumed AH</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLCDNumber" name="Consumed_AH_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>4</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0" colspan="2">
-      <widget class="QLabel" name="Max_Charge_Amps_Label">
-       <property name="minimumSize">
-        <size>
-         <width>141</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Multi+ Max Charge Amps</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QLCDNumber" name="Max_Charge_Amps_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>3</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0" colspan="2">
-      <widget class="QLabel" name="Charge_Cycles_Label">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>200</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Charge Cycles</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QLCDNumber" name="Charge_Cycles_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>3</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>11</x>
+      <x>7</x>
       <y>664</y>
       <width>501</width>
       <height>33</height>
@@ -1331,7 +190,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -1386,7 +245,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -1405,7 +264,7 @@ background-color: rgb(136, 138, 133);
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>11</x>
+      <x>7</x>
       <y>627</y>
       <width>501</width>
       <height>33</height>
@@ -1447,7 +306,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -1502,7 +361,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -1521,211 +380,7 @@ background-color: rgb(136, 138, 133);
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>590</y>
-      <width>501</width>
-      <height>33</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
-      <widget class="QLabel" name="Grid_Watts_label">
-       <property name="maximumSize">
-        <size>
-         <width>160</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Grid Watts</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLCDNumber" name="Grid_Watts_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="toolTip">
-        <string>Negative Value Indicates Flow into Grid</string>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="AC_Out_Watts_label">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>200</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>A/C Output Watts</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLCDNumber" name="AC_Out_Watts_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>553</y>
-      <width>251</width>
-      <height>33</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_7">
-     <item>
-      <widget class="QLabel" name="Grid_Set_Point_label">
-       <property name="minimumSize">
-        <size>
-         <width>160</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>0</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Grid Set Point Watts</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLCDNumber" name="Grid_Set_Point_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>11</x>
+      <x>7</x>
       <y>700</y>
       <width>501</width>
       <height>33</height>
@@ -1767,7 +422,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -1822,7 +477,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -1841,7 +496,7 @@ background-color: rgb(136, 138, 133);
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>6</x>
       <y>737</y>
       <width>251</width>
       <height>33</height>
@@ -1921,7 +576,7 @@ background-color: rgb(136, 138, 133);
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>5</x>
+      <x>1</x>
       <y>774</y>
       <width>261</width>
       <height>33</height>
@@ -1978,7 +633,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -1997,7 +652,7 @@ background-color: rgb(136, 138, 133);
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>296</x>
       <y>776</y>
       <width>216</width>
       <height>32</height>
@@ -2029,19 +684,20 @@ background-color: rgb(136, 138, 133);
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>1000</x>
-      <y>1</y>
+      <x>990</x>
+      <y>0</y>
       <width>911</width>
       <height>651</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>7</pointsize>
+      <pointsize>10</pointsize>
+      <kerning>true</kerning>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(25, 26, 27);</string>
+     <string notr="true"/>
     </property>
     <property name="tabPosition">
      <enum>QTabWidget::South</enum>
@@ -2052,61 +708,28 @@ background-color: rgb(136, 138, 133);
     <property name="elideMode">
      <enum>Qt::ElideLeft</enum>
     </property>
+    <property name="movable">
+     <bool>true</bool>
+    </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>PV Watts</string>
      </attribute>
-     <widget class="QFrame" name="frame">
+     <widget class="QWidget" name="gridLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>15</x>
-        <y>16</y>
-        <width>881</width>
-        <height>591</height>
+        <x>-1</x>
+        <y>-1</y>
+        <width>911</width>
+        <height>621</height>
        </rect>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::WinPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="0">
-        <layout class="QGridLayout" name="Chart_Watts_Layout"/>
-       </item>
-      </layout>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_6">
-     <attribute name="title">
-      <string>Batt Watts</string>
-     </attribute>
-     <widget class="QFrame" name="frame_9">
-      <property name="geometry">
-       <rect>
-        <x>15</x>
-        <y>16</y>
-        <width>881</width>
-        <height>591</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::WinPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_9">
-       <item row="0" column="0">
-        <layout class="QGridLayout" name="Chart_Bat_Watts_Layout"/>
-       </item>
-      </layout>
+      <layout class="QGridLayout" name="Chart_Watts_Layout"/>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
-      <string>Batt Volts</string>
+      <string>Battery</string>
      </attribute>
      <widget class="QFrame" name="frame_5">
       <property name="geometry">
@@ -2114,7 +737,7 @@ background-color: rgb(136, 138, 133);
         <x>15</x>
         <y>16</y>
         <width>881</width>
-        <height>581</height>
+        <height>591</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -2126,51 +749,19 @@ background-color: rgb(136, 138, 133);
       <widget class="QWidget" name="layoutWidget_6">
        <property name="geometry">
         <rect>
-         <x>11</x>
-         <y>10</y>
-         <width>861</width>
-         <height>561</height>
+         <x>0</x>
+         <y>0</y>
+         <width>881</width>
+         <height>591</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="Chart_Volts_Layout"/>
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Batt Amps</string>
-     </attribute>
-     <widget class="QFrame" name="frame_4">
-      <property name="geometry">
-       <rect>
-        <x>15</x>
-        <y>16</y>
-        <width>881</width>
-        <height>581</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::WinPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
-      </property>
-      <widget class="QWidget" name="layoutWidget_3">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>861</width>
-         <height>561</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="Chart_Battery_Amps_Layout"/>
-      </widget>
-     </widget>
-    </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
-      <string>Batt SOC</string>
+      <string>SOC</string>
      </attribute>
      <widget class="QFrame" name="frame_2">
       <property name="geometry">
@@ -2178,7 +769,7 @@ background-color: rgb(136, 138, 133);
         <x>15</x>
         <y>16</y>
         <width>881</width>
-        <height>581</height>
+        <height>591</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -2190,10 +781,10 @@ background-color: rgb(136, 138, 133);
       <widget class="QWidget" name="layoutWidget_4">
        <property name="geometry">
         <rect>
-         <x>11</x>
-         <y>10</y>
-         <width>861</width>
-         <height>561</height>
+         <x>0</x>
+         <y>0</y>
+         <width>881</width>
+         <height>591</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="Chart_Battery_SOC_Layout"/>
@@ -2202,7 +793,7 @@ background-color: rgb(136, 138, 133);
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
-      <string>Grid Watts</string>
+      <string>Grid</string>
      </attribute>
      <widget class="QFrame" name="frame_3">
       <property name="geometry">
@@ -2210,7 +801,7 @@ background-color: rgb(136, 138, 133);
         <x>15</x>
         <y>16</y>
         <width>881</width>
-        <height>581</height>
+        <height>591</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -2222,59 +813,27 @@ background-color: rgb(136, 138, 133);
       <widget class="QWidget" name="layoutWidget_5">
        <property name="geometry">
         <rect>
-         <x>11</x>
-         <y>10</y>
-         <width>861</width>
-         <height>561</height>
+         <x>0</x>
+         <y>0</y>
+         <width>881</width>
+         <height>591</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="Chart_Grid_Watts_Layout"/>
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_10">
-     <attribute name="title">
-      <string>Grid Amps</string>
-     </attribute>
-     <widget class="QFrame" name="frame_10">
-      <property name="geometry">
-       <rect>
-        <x>14</x>
-        <y>16</y>
-        <width>881</width>
-        <height>581</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::WinPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
-      </property>
-      <widget class="QWidget" name="layoutWidget_9">
-       <property name="geometry">
-        <rect>
-         <x>11</x>
-         <y>10</y>
-         <width>861</width>
-         <height>561</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="Grid_Amps_Layout"/>
-      </widget>
-     </widget>
-    </widget>
     <widget class="QWidget" name="tab_7">
      <attribute name="title">
-      <string>A/C Out Watts</string>
+      <string>A/C Out</string>
      </attribute>
      <widget class="QFrame" name="frame_6">
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>18</y>
+        <y>16</y>
         <width>881</width>
-        <height>581</height>
+        <height>590</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -2286,51 +845,19 @@ background-color: rgb(136, 138, 133);
       <widget class="QWidget" name="layoutWidget_7">
        <property name="geometry">
         <rect>
-         <x>11</x>
-         <y>10</y>
-         <width>861</width>
-         <height>561</height>
+         <x>0</x>
+         <y>0</y>
+         <width>881</width>
+         <height>591</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="AC_Out_Watts_Layout"/>
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_9">
-     <attribute name="title">
-      <string>A/C Out Amps</string>
-     </attribute>
-     <widget class="QFrame" name="frame_7">
-      <property name="geometry">
-       <rect>
-        <x>15</x>
-        <y>18</y>
-        <width>881</width>
-        <height>581</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::WinPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
-      </property>
-      <widget class="QWidget" name="layoutWidget_8">
-       <property name="geometry">
-        <rect>
-         <x>11</x>
-         <y>10</y>
-         <width>861</width>
-         <height>561</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="AC_Out_Amps_Layout"/>
-      </widget>
-     </widget>
-    </widget>
     <widget class="QWidget" name="tab_8">
      <attribute name="title">
-      <string>Temperatures</string>
+      <string>Temps</string>
      </attribute>
      <widget class="QFrame" name="frame_8">
       <property name="geometry">
@@ -2338,7 +865,7 @@ background-color: rgb(136, 138, 133);
         <x>15</x>
         <y>16</y>
         <width>881</width>
-        <height>581</height>
+        <height>591</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -2347,16 +874,22 @@ background-color: rgb(136, 138, 133);
       <property name="frameShadow">
        <enum>QFrame::Sunken</enum>
       </property>
-      <layout class="QGridLayout" name="gridLayout_8">
-       <item row="0" column="0">
-        <layout class="QGridLayout" name="Temperature_Layout"/>
-       </item>
-      </layout>
+      <widget class="QWidget" name="layoutWidget_10">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>881</width>
+         <height>591</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="Temperature_Layout"/>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_11">
      <attribute name="title">
-      <string>PV 1 Watts</string>
+      <string>PV Watts 1,2</string>
      </attribute>
      <widget class="QFrame" name="frame_11">
       <property name="geometry">
@@ -2373,150 +906,402 @@ background-color: rgb(136, 138, 133);
       <property name="frameShadow">
        <enum>QFrame::Sunken</enum>
       </property>
-      <layout class="QGridLayout" name="gridLayout_17">
-       <item row="0" column="0">
-        <layout class="QGridLayout" name="PV1_Watts_Layout"/>
-       </item>
-      </layout>
+      <widget class="QWidget" name="layoutWidget_11">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>881</width>
+         <height>591</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="PV1_Watts_Layout"/>
+      </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_12">
+    <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>PV 2 Watts</string>
+      <string>MP Charger State</string>
      </attribute>
-     <widget class="QFrame" name="frame_12">
+     <widget class="QWidget" name="layoutWidget_25">
       <property name="geometry">
        <rect>
-        <x>15</x>
-        <y>14</y>
-        <width>881</width>
-        <height>591</height>
+        <x>0</x>
+        <y>0</y>
+        <width>911</width>
+        <height>621</height>
        </rect>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::WinPanel</enum>
+      <layout class="QGridLayout" name="MP_Charger_Layout"/>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_6">
+     <attribute name="title">
+      <string>Charger 1 State</string>
+     </attribute>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>911</width>
+        <height>621</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="Charger1_State_Layout"/>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_9">
+     <attribute name="title">
+      <string>Charger 2 State</string>
+     </attribute>
+     <widget class="QWidget" name="layoutWidget_24">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>911</width>
+        <height>621</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="Charger2_State_Layout"/>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_10">
+     <attribute name="title">
+      <string>Event</string>
+     </attribute>
+     <widget class="QTextBrowser" name="textBrowser">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>891</width>
+        <height>491</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(85, 87, 83);</string>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Sunken</enum>
       </property>
-      <layout class="QGridLayout" name="gridLayout_18">
+      <property name="readOnly">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>10</y>
+        <width>76</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;State Changes&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Solar Charger (On / Off)&lt;/p&gt;&lt;p&gt;Grid Condition (Lost / Restored)&lt;/p&gt;&lt;p&gt;Inverter Status (On / Off)&lt;/p&gt;&lt;p&gt;Mains (On/ Off. Feed-In Status)&lt;/p&gt;&lt;p&gt;Multiplus Charging Status (Bulk, Absorption, Float)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Event History</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="History_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>620</x>
+        <y>550</y>
+        <width>80</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button clears the entire History&lt;/p&gt;&lt;p&gt;The HistoryBox is Editable&lt;/p&gt;&lt;p&gt;You can delete unwanted individual lines.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Clear History</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="Started_label">
+      <property name="geometry">
+       <rect>
+        <x>343</x>
+        <y>592</y>
+        <width>351</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Recording started on </string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>530</y>
+        <width>458</width>
+        <height>54</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
-        <layout class="QGridLayout" name="PV2_Watts_Layout"/>
+        <widget class="QCheckBox" name="Grid_checkBox">
+         <property name="text">
+          <string>Grid Lost</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="Inv_checkBox">
+         <property name="text">
+          <string>Inverter On/Off</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QCheckBox" name="Multi_checkBox">
+         <property name="statusTip">
+          <string/>
+         </property>
+         <property name="text">
+          <string>Multi+ Charge Status</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="SCC_checkBox">
+         <property name="text">
+          <string>Solar Charger Status</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="Mains_checkBox">
+         <property name="text">
+          <string>Mains On / Off / Feed-in</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QCheckBox" name="ESS_Status_checkBox">
+         <property name="text">
+          <string>ESS Status</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
     </widget>
    </widget>
-   <widget class="QLabel" name="Max_Watts_Today_Label">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>430</y>
-      <width>261</width>
-      <height>20</height>
+      <x>8</x>
+      <y>590</y>
+      <width>501</width>
+      <height>33</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="Max_Watts_Yest_Label">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>460</y>
-      <width>281</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="Line" name="line_2">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>411</y>
-      <width>311</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <widget class="QLabel" name="Grid_Watts_label">
+       <property name="maximumSize">
+        <size>
+         <width>160</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Grid Watts</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLCDNumber" name="Grid_Watts_LCD">
+       <property name="minimumSize">
+        <size>
+         <width>81</width>
+         <height>31</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>81</width>
+         <height>31</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+       </property>
+       <property name="digitCount">
+        <number>5</number>
+       </property>
+       <property name="segmentStyle">
+        <enum>QLCDNumber::Flat</enum>
+       </property>
+       <property name="value" stdset="0">
+        <double>0.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="AC_Out_Watts_label">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>A/C Output Watts</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLCDNumber" name="AC_Out_Watts_LCD">
+       <property name="minimumSize">
+        <size>
+         <width>81</width>
+         <height>31</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>81</width>
+         <height>31</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+       </property>
+       <property name="digitCount">
+        <number>5</number>
+       </property>
+       <property name="segmentStyle">
+        <enum>QLCDNumber::Flat</enum>
+       </property>
+       <property name="value" stdset="0">
+        <double>0.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>1000</x>
-      <y>660</y>
-      <width>911</width>
-      <height>321</height>
+      <x>9</x>
+      <y>11</y>
+      <width>299</width>
+      <height>28</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="AuxChart_Layout"/>
-   </widget>
-   <widget class="QLabel" name="Grid_FeedIn_Limit_Label">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>525</y>
-      <width>151</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Feed In Limit</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>738</x>
-      <y>54</y>
-      <width>145</width>
-      <height>118</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_10">
+    <layout class="QFormLayout" name="formLayout_14">
      <item row="0" column="0">
-      <widget class="QLabel" name="Time_To_Go_Label">
+      <widget class="QLabel" name="Batt_SOC_Label">
+       <property name="minimumSize">
+        <size>
+         <width>91</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="font">
         <font>
          <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Battery Time To Go</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <string>Battery</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLineEdit" name="Time_To_Go_lineEdit">
+     <item row="0" column="1">
+      <widget class="QProgressBar" name="Batt_SOC_progressBar">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="font">
         <font>
          <pointsize>10</pointsize>
@@ -2528,18 +1313,41 @@ background-color: rgb(136, 138, 133);
         <bool>false</bool>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(136, 138, 133);</string>
+        <string notr="true">background-color: rgb(136, 138, 133);
+color: rgb(0, 0, 0);
+selection-background-color: rgb(36, 232, 20);</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="textVisible">
+        <bool>true</bool>
+       </property>
+       <property name="invertedAppearance">
+        <bool>false</bool>
+       </property>
+       <property name="textDirection">
+        <enum>QProgressBar::BottomToTop</enum>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="Last_Full_Charge_Label">
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>347</x>
+      <y>9</y>
+      <width>291</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="formLayout_15">
+     <item row="0" column="0">
+      <widget class="QLabel" name="Batt_State_Label">
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>141</width>
          <height>23</height>
         </size>
        </property>
@@ -2549,21 +1357,31 @@ background-color: rgb(136, 138, 133);
         </font>
        </property>
        <property name="text">
-        <string>Last Full Charge</string>
+        <string>Battery State</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
-      <widget class="QLineEdit" name="Last_Full_Charge_lineEdit">
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="Batt_State_lineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="font">
         <font>
+         <family>Monospace</family>
          <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
+         <weight>75</weight>
+         <bold>true</bold>
         </font>
+       </property>
+       <property name="acceptDrops">
+        <bool>true</bool>
        </property>
        <property name="autoFillBackground">
         <bool>false</bool>
@@ -2574,6 +1392,9 @@ background-color: rgb(136, 138, 133);
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
     </layout>
@@ -2581,71 +1402,571 @@ background-color: rgb(136, 138, 133);
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>12</x>
-      <y>522</y>
-      <width>248</width>
-      <height>27</height>
+      <x>9</x>
+      <y>45</y>
+      <width>234</width>
+      <height>146</height>
      </rect>
     </property>
-    <layout class="QFormLayout" name="formLayout_5">
+    <layout class="QFormLayout" name="formLayout_13">
      <item row="0" column="0">
-      <widget class="QLabel" name="FeedIn_label">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Feed Excess PV To Grid</string>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="Batt_Watts_Label">
+         <property name="minimumSize">
+          <size>
+           <width>102</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Battery Watts</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Batt_Amps_Label">
+         <property name="minimumSize">
+          <size>
+           <width>111</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Battery Amps</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Batt_Volts_Label">
+         <property name="minimumSize">
+          <size>
+           <width>111</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Battery Volts</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="DC_Power_Label">
+         <property name="minimumSize">
+          <size>
+           <width>141</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>DC System Watts</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item row="0" column="1">
-      <widget class="QPushButton" name="FeedIn_pushButton">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Button Displays Current Mode&lt;/p&gt;&lt;p&gt;Enabled = On&lt;/p&gt;&lt;p&gt;Disabled = Off&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLCDNumber" name="Batt_Watts_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="smallDecimalPoint">
+          <bool>false</bool>
+         </property>
+         <property name="digitCount">
+          <number>5</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="Batt_Amps_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="smallDecimalPoint">
+          <bool>false</bool>
+         </property>
+         <property name="digitCount">
+          <number>5</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="Batt_Volts_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="smallDecimalPoint">
+          <bool>false</bool>
+         </property>
+         <property name="digitCount">
+          <number>5</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="DC_Power_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="digitCount">
+          <number>4</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>347</x>
+      <y>40</y>
+      <width>282</width>
+      <height>146</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="formLayout_16">
+     <item row="0" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QLabel" name="Last_Discharge_Label">
+         <property name="minimumSize">
+          <size>
+           <width>1</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Last Discharge AH</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Consumed_AH_Label">
+         <property name="minimumSize">
+          <size>
+           <width>141</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Consumed AH</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Max_Charge_Amps_Label">
+         <property name="minimumSize">
+          <size>
+           <width>141</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Multi+ Max Charge Amps</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Charge_Cycles_Label">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Charge Cycles</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="1">
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QLCDNumber" name="Last_Discharge_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="digitCount">
+          <number>4</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="Consumed_AH_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="digitCount">
+          <number>4</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="Max_Charge_Amps_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="digitCount">
+          <number>3</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="Charge_Cycles_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="digitCount">
+          <number>3</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>195</y>
+      <width>971</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_17">
+     <item>
+      <widget class="QLineEdit" name="Solar_Name_1_lineEdit">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton:hover {
-background-color: green;
-
-}</string>
+        <string notr="true">color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
-        <string>Yes / No</string>
+        <string>*</string>
        </property>
-       <property name="checkable">
+       <property name="frame">
         <bool>false</bool>
        </property>
-       <property name="default">
-        <bool>false</bool>
-       </property>
-       <property name="flat">
-        <bool>false</bool>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>12</x>
-      <y>931</y>
-      <width>971</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="ESS_SOC_Dynamic_label">
-       <property name="text">
-        <string>ESS SOC (Dynamic):</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="ESS_SOC_Dynamic_Value">
+     <item>
+      <widget class="QLineEdit" name="Solar_Name_2_lineEdit">
        <property name="font">
         <font>
          <weight>75</weight>
@@ -2655,262 +1976,14 @@ background-color: green;
        <property name="text">
         <string>*</string>
        </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>12</x>
-      <y>913</y>
-      <width>971</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_2">
-     <item row="0" column="0">
-      <widget class="QLabel" name="ESS_SOC_User_label">
-       <property name="text">
-        <string>ESS SOC Limit (User):</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="ESS_SOC_User_Value">
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>*</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>12</x>
-      <y>895</y>
-      <width>971</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_3">
-     <item row="0" column="0">
-      <widget class="QLabel" name="ESS_Mode_label">
-       <property name="text">
-        <string>ESS Mode:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="ESS_Mode_Value">
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>*</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>12</x>
-      <y>877</y>
-      <width>971</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_4">
-     <item row="0" column="0">
-      <widget class="QLabel" name="Solar_Charger2_Error_label">
-       <property name="text">
-        <string>Solar Charger #2 Error:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="Solar_Charger2_Error_Value">
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>*</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>12</x>
-      <y>859</y>
-      <width>971</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_6">
-     <item row="0" column="0">
-      <widget class="QLabel" name="Solar_Charger1_Error_label">
-       <property name="text">
-        <string>Solar Charger #1 Error:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="Solar_Charger1_Error_Value">
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>*</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>12</x>
-      <y>841</y>
-      <width>971</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_7">
-     <item row="0" column="0">
-      <widget class="QLabel" name="VE_Bus_Error_label">
-       <property name="text">
-        <string>V.E Bus Error:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="VE_Bus_Error_Value">
-       <property name="text">
-        <string>*</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>12</x>
-      <y>823</y>
-      <width>971</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_9">
-     <item row="0" column="0">
-      <widget class="QLabel" name="System_State_label">
-       <property name="text">
-        <string>System State:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="System_State_Value">
-       <property name="text">
-        <string>*</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>632</x>
-      <y>719</y>
-      <width>266</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_10">
-     <item row="0" column="0">
-      <widget class="QLabel" name="Battery_Box_label">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <property name="text">
-        <string>Battery Box Temperature     °F</string>
-       </property>
-       <property name="scaledContents">
+       <property name="frame">
         <bool>false</bool>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLCDNumber" name="Battery_Box_lcdNumber">
-       <property name="minimumSize">
-        <size>
-         <width>65</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>65</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(136, 138, 133);</string>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -2919,690 +1992,132 @@ background-color: green;
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>632</x>
-      <y>749</y>
-      <width>267</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_11">
-     <item row="0" column="0">
-      <widget class="QLabel" name="Cabin_Int_label">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <property name="text">
-        <string>Cabin Interior Temperature °F</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLCDNumber" name="Cabin_Int_lcdNumber">
-       <property name="minimumSize">
-        <size>
-         <width>65</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>65</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(136, 138, 133);</string>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>632</x>
-      <y>779</y>
-      <width>267</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_12">
-     <item row="0" column="0">
-      <widget class="QLabel" name="Cabin_Ext_label">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <property name="text">
-        <string>Cabin Exterior Temperature °F</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLCDNumber" name="Cabin_Ext_lcdNumber">
-       <property name="minimumSize">
-        <size>
-         <width>60</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>65</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(136, 138, 133);</string>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QLabel" name="Output_Amps_Limit_label">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>259</y>
-      <width>21</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>7</x>
-      <y>292</y>
-      <width>301</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_5">
-     <item row="0" column="0">
-      <widget class="QLabel" name="PV_Volts_label">
-       <property name="minimumSize">
-        <size>
-         <width>135</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>135</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>PV Volts / Amps</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLCDNumber" name="PV_Volts_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLCDNumber" name="PV_Amps1_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>183</x>
-      <y>217</y>
-      <width>83</width>
-      <height>70</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_6">
-     <item row="0" column="0">
-      <widget class="QLCDNumber" name="PV_Watts_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>3</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLCDNumber" name="Output_Amps_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>60</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>80</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>4</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>183</x>
-      <y>328</y>
-      <width>83</width>
-      <height>176</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_7">
-     <item row="0" column="0">
-      <widget class="QLCDNumber" name="Max_PV_Watts_Today_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>3</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLCDNumber" name="Max_PV_Watts_Yesterday_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>3</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLCDNumber" name="Yield_Today_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLCDNumber" name="Yield_Yesterday_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>81</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLineEdit" name="Solar_Charger_State_lineEdit">
-       <property name="maximumSize">
-        <size>
-         <width>80</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(136, 138, 133);</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
+      <x>331</x>
       <y>215</y>
-      <width>171</width>
-      <height>71</height>
+      <width>331</width>
+      <height>290</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_11">
-     <item row="0" column="0">
-      <widget class="QLabel" name="PV_Watts_label">
+    <layout class="QVBoxLayout" name="verticalLayout_7">
+     <item>
+      <widget class="QLabel" name="Total_Watts_label">
        <property name="font">
         <font>
-         <pointsize>12</pointsize>
+         <family>Noto Sans</family>
+         <pointsize>88</pointsize>
+         <weight>75</weight>
+         <italic>false</italic>
+         <bold>true</bold>
         </font>
        </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Total Watts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: orangered;</string>
+       </property>
        <property name="text">
-        <string>PV Watts</string>
+        <string extracomment="Total Watts">✞</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="Output_Amps_label">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Battery Amps &amp;amp; Limit&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <widget class="QLabel" name="Total_Yield_Label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Total_Yield_Label_Yest">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Max_Watts_Today_Label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Max_Watts_Yest_Label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>326</y>
-      <width>172</width>
-      <height>181</height>
+      <x>673</x>
+      <y>222</y>
+      <width>331</width>
+      <height>286</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_12">
-     <item row="0" column="0">
-      <widget class="QLabel" name="Max_PV_Watts_Today_label">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Max PV Watts Today</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="Max_PV_Watts_Yesterday_label">
-       <property name="minimumSize">
-        <size>
-         <width>170</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>0</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Max PV Watts Yesterday</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="Yield_Today_label">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Yield Today kwh</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="Yield_Yesterday_label">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Yield Yesterday kwh</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="Solar_Charger_State_label">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Solar Charger State</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QLabel" name="Output_Amps_Limit_2_label">
-    <property name="geometry">
-     <rect>
-      <x>947</x>
-      <y>261</y>
-      <width>31</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>679</x>
-      <y>223</y>
-      <width>171</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_2">
+    <layout class="QFormLayout" name="formLayout_18">
      <item row="0" column="0">
       <widget class="QLabel" name="PV_Watts_2_label">
        <property name="font">
@@ -3615,31 +2130,7 @@ background-color: rgb(136, 138, 133);
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="Output_Amps_2_label">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Battery Amps &amp;amp; Limit&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>856</x>
-      <y>219</y>
-      <width>83</width>
-      <height>70</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_13">
-     <item row="0" column="0">
+     <item row="0" column="1">
       <widget class="QLCDNumber" name="PV_Watts_2_LCD">
        <property name="minimumSize">
         <size>
@@ -3662,7 +2153,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -3677,165 +2168,203 @@ background-color: rgb(136, 138, 133);
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLCDNumber" name="Output_Amps_2_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>81</width>
-         <height>31</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>80</width>
-         <height>31</height>
-        </size>
-       </property>
+      <widget class="QLabel" name="Output_Amps_2_label">
        <property name="font">
         <font>
          <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
-}</string>
-       </property>
-       <property name="digitCount">
-        <number>4</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>678</x>
-      <y>294</y>
-      <width>304</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_14">
-     <item row="0" column="0">
-      <widget class="QLabel" name="PV_Volts_2_label">
-       <property name="minimumSize">
-        <size>
-         <width>135</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>135</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>PV Volts / Amps</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Battery Amps &amp;amp; Limit&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLCDNumber" name="PV_Volts_2_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_12">
+       <item>
+        <widget class="QLCDNumber" name="Output_Amps_2_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
 }</string>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
+         </property>
+         <property name="digitCount">
+          <number>4</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Output_Amps_Limit_2_label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="0" column="2">
-      <widget class="QLCDNumber" name="PV_Amps_2_LCD">
-       <property name="minimumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+     <item row="2" column="0" colspan="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_15">
+       <item>
+        <widget class="QLabel" name="PV_Volts_2_label">
+         <property name="minimumSize">
+          <size>
+           <width>135</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>135</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>PV Volts / Amps</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>13</width>
+             <height>17</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLCDNumber" name="PV_Volts_2_LCD">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
 }</string>
-       </property>
-       <property name="digitCount">
-        <number>5</number>
-       </property>
-       <property name="segmentStyle">
-        <enum>QLCDNumber::Flat</enum>
-       </property>
-       <property name="value" stdset="0">
-        <double>0.000000000000000</double>
-       </property>
-      </widget>
+           </property>
+           <property name="digitCount">
+            <number>5</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="value" stdset="0">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLCDNumber" name="PV_Amps_2_LCD">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+           </property>
+           <property name="digitCount">
+            <number>5</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="value" stdset="0">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>13</width>
+             <height>17</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>678</x>
-      <y>326</y>
-      <width>182</width>
-      <height>181</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_15">
-     <item row="0" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="Max_PV_Watts_Today_2_label">
        <property name="font">
         <font>
@@ -3847,73 +2376,7 @@ background-color: rgb(136, 138, 133);
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="Max_PV_Watts_Yesterday_2_label">
-       <property name="minimumSize">
-        <size>
-         <width>180</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Max PV Watts Yesterday</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="Yield_Today_2_label">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Yield Today kwh</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="Yield_Yesterday_2_label">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Yield Yesterday kwh</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="Solar_Charger_State2_label">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Solar Charger State</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>861</x>
-      <y>326</y>
-      <width>83</width>
-      <height>181</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_16">
-     <item row="0" column="0">
+     <item row="3" column="1">
       <widget class="QLCDNumber" name="Max_PV_Watts_Today_2_LCD">
        <property name="minimumSize">
         <size>
@@ -3936,7 +2399,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -3950,7 +2413,25 @@ background-color: rgb(136, 138, 133);
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="4" column="0">
+      <widget class="QLabel" name="Max_PV_Watts_Yesterday_2_label">
+       <property name="minimumSize">
+        <size>
+         <width>180</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Max PV Watts Yesterday</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
       <widget class="QLCDNumber" name="Max_PV_Watts_Yesterday_2_LCD">
        <property name="minimumSize">
         <size>
@@ -3973,7 +2454,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -3987,7 +2468,19 @@ background-color: rgb(136, 138, 133);
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="5" column="0">
+      <widget class="QLabel" name="Yield_Today_2_label">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Yield Today kwh</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
       <widget class="QLCDNumber" name="Yield_Today_2_LCD">
        <property name="minimumSize">
         <size>
@@ -4010,7 +2503,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -4024,7 +2517,19 @@ background-color: rgb(136, 138, 133);
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="6" column="0">
+      <widget class="QLabel" name="Yield_Yesterday_2_label">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Yield Yesterday kwh</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
       <widget class="QLCDNumber" name="Yield_Yesterday_2_LCD">
        <property name="minimumSize">
         <size>
@@ -4047,7 +2552,7 @@ background-color: rgb(136, 138, 133);
        </property>
        <property name="styleSheet">
         <string notr="true">QLCDNumber{
-background-color: rgb(136, 138, 133);
+background-color: rgb( 85, 87, 83 );
 }</string>
        </property>
        <property name="digitCount">
@@ -4061,7 +2566,19 @@ background-color: rgb(136, 138, 133);
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="7" column="0">
+      <widget class="QLabel" name="Solar_Charger_State2_label">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Solar Charger State</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
       <widget class="QLineEdit" name="Solar_Charger_State2_lineEdit">
        <property name="maximumSize">
         <size>
@@ -4092,68 +2609,1531 @@ background-color: rgb(136, 138, 133);
      </item>
     </layout>
    </widget>
-   <zorder>Output_Amps_Limit_label</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>Output_Amps_Limit_2_label</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>Solar_Name_2_lineEdit</zorder>
-   <zorder>Total_Watts_label</zorder>
-   <zorder>Total_Yield_Label</zorder>
-   <zorder>Solar_Name_1_lineEdit</zorder>
-   <zorder>line</zorder>
-   <zorder>Time_Label</zorder>
-   <zorder>Total_Yield_Label_Yest</zorder>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>586</x>
+      <y>516</y>
+      <width>391</width>
+      <height>205</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="QLabel" name="MultiName_label">
+       <property name="text">
+        <string>*</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="Mains_Label">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Mains</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="Bulk_Label">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Bulk</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
+        <widget class="QLabel" name="Temperature_LED">
+         <property name="font">
+          <font>
+           <pointsize>22</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(29, 28, 28);</string>
+         </property>
+         <property name="text">
+          <string>●</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="Float_LED">
+         <property name="font">
+          <font>
+           <pointsize>22</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(29, 28, 28);</string>
+         </property>
+         <property name="text">
+          <string>●</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="QLabel" name="Temperature_Label">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Temperature</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="Inverting_Label">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Inverting</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLabel" name="Inverting_LED">
+         <property name="font">
+          <font>
+           <pointsize>22</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(29, 28, 28);</string>
+         </property>
+         <property name="text">
+          <string>●</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="Float_Label">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Float</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="Bulk_LED">
+         <property name="font">
+          <font>
+           <pointsize>22</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(29, 28, 28);</string>
+         </property>
+         <property name="text">
+          <string>●</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="Low_Battery_Label">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Low Battery</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="Overload_Label">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Overload</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLabel" name="Low_Battery_LED">
+         <property name="font">
+          <font>
+           <pointsize>22</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(29, 28, 28);</string>
+         </property>
+         <property name="text">
+          <string>●</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="Absorption_Label">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Absorption</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLabel" name="Overload_LED">
+         <property name="font">
+          <font>
+           <pointsize>22</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(29, 28, 28);</string>
+         </property>
+         <property name="text">
+          <string>●</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="Mains_LED">
+         <property name="font">
+          <font>
+           <pointsize>22</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(28, 28, 28);</string>
+         </property>
+         <property name="text">
+          <string>●</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="Absorption_LED">
+         <property name="font">
+          <font>
+           <pointsize>22</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(29, 28, 28);</string>
+         </property>
+         <property name="text">
+          <string>●</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>642</x>
+      <y>720</y>
+      <width>301</width>
+      <height>108</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_5">
+     <property name="topMargin">
+      <number>9</number>
+     </property>
+     <property name="bottomMargin">
+      <number>9</number>
+     </property>
+     <property name="verticalSpacing">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <layout class="QFormLayout" name="formLayout_10">
+       <item row="0" column="0">
+        <widget class="QLabel" name="TempSensor1_label">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLCDNumber" name="TempSensor1_lcdNumber">
+         <property name="minimumSize">
+          <size>
+           <width>65</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>65</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0">
+      <layout class="QFormLayout" name="formLayout_11">
+       <item row="0" column="0">
+        <widget class="QLabel" name="TempSensor2_label">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLCDNumber" name="TempSensor2_lcdNumber">
+         <property name="minimumSize">
+          <size>
+           <width>65</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>65</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0">
+      <layout class="QFormLayout" name="formLayout_12">
+       <item row="0" column="0">
+        <widget class="QLabel" name="TempSensor3_label">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLCDNumber" name="TempSensor3_lcdNumber">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>65</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>645</x>
+      <y>6</y>
+      <width>302</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_8">
+     <item>
+      <widget class="QLabel" name="Time_Label">
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(233, 185, 110);</string>
+       </property>
+       <property name="text">
+        <string>00:00:00</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_13">
+       <item>
+        <widget class="QLabel" name="Time_To_Go_Label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Battery Time To Go</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="Time_To_Go_lineEdit">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(136, 138, 133);</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_14">
+       <item>
+        <widget class="QLabel" name="Last_Full_Charge_Label">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Last Full Charge</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="Last_Full_Charge_lineEdit">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(136, 138, 133);</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>13</x>
+      <y>222</y>
+      <width>311</width>
+      <height>286</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="formLayout_17">
+     <item row="0" column="0">
+      <widget class="QLabel" name="PV_Watts_label">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>PV Watts</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLCDNumber" name="PV_Watts_LCD">
+       <property name="minimumSize">
+        <size>
+         <width>81</width>
+         <height>31</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>81</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+       </property>
+       <property name="digitCount">
+        <number>3</number>
+       </property>
+       <property name="segmentStyle">
+        <enum>QLCDNumber::Flat</enum>
+       </property>
+       <property name="value" stdset="0">
+        <double>0.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="Output_Amps_label">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Battery Amps &amp;amp; Limit&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_11">
+       <item>
+        <widget class="QLCDNumber" name="Output_Amps_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="digitCount">
+          <number>4</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Output_Amps_Limit_label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0" colspan="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_16">
+       <item>
+        <widget class="QLabel" name="PV_Volts_label">
+         <property name="minimumSize">
+          <size>
+           <width>135</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>135</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>PV Volts / Amps</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>13</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLCDNumber" name="PV_Volts_LCD">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+           </property>
+           <property name="digitCount">
+            <number>5</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="value" stdset="0">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLCDNumber" name="PV_Amps1_LCD">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+           </property>
+           <property name="digitCount">
+            <number>5</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="value" stdset="0">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>13</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="Max_PV_Watts_Today_label">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Max PV Watts Today</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLCDNumber" name="Max_PV_Watts_Today_LCD">
+       <property name="minimumSize">
+        <size>
+         <width>81</width>
+         <height>31</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>81</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+       </property>
+       <property name="digitCount">
+        <number>3</number>
+       </property>
+       <property name="segmentStyle">
+        <enum>QLCDNumber::Flat</enum>
+       </property>
+       <property name="value" stdset="0">
+        <double>0.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="Max_PV_Watts_Yesterday_label">
+       <property name="minimumSize">
+        <size>
+         <width>170</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>0</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Max PV Watts Yesterday</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLCDNumber" name="Max_PV_Watts_Yesterday_LCD">
+       <property name="minimumSize">
+        <size>
+         <width>81</width>
+         <height>31</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>81</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+       </property>
+       <property name="digitCount">
+        <number>3</number>
+       </property>
+       <property name="segmentStyle">
+        <enum>QLCDNumber::Flat</enum>
+       </property>
+       <property name="value" stdset="0">
+        <double>0.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="Yield_Today_label">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Yield Today kwh</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLCDNumber" name="Yield_Today_LCD">
+       <property name="minimumSize">
+        <size>
+         <width>81</width>
+         <height>31</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>81</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+       </property>
+       <property name="digitCount">
+        <number>5</number>
+       </property>
+       <property name="segmentStyle">
+        <enum>QLCDNumber::Flat</enum>
+       </property>
+       <property name="value" stdset="0">
+        <double>0.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="Yield_Yesterday_label">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Yield Yesterday kwh</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLCDNumber" name="Yield_Yesterday_LCD">
+       <property name="minimumSize">
+        <size>
+         <width>81</width>
+         <height>31</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>81</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+       </property>
+       <property name="digitCount">
+        <number>5</number>
+       </property>
+       <property name="segmentStyle">
+        <enum>QLCDNumber::Flat</enum>
+       </property>
+       <property name="value" stdset="0">
+        <double>0.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="Solar_Charger_State_label">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Solar Charger State</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLineEdit" name="Solar_Charger_State_lineEdit">
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(136, 138, 133);</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>284</x>
+      <y>526</y>
+      <width>291</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_19">
+     <item>
+      <widget class="QLabel" name="Grid_FeedIn_Limit_Label">
+       <property name="toolTip">
+        <string>Check register's 66, 67, 68 --&gt; L1, L2, L3</string>
+       </property>
+       <property name="text">
+        <string>Feed In Limit</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="Grid_FeedIn_Active_Label">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Negative Value Indicates Flow into Grid</string>
+       </property>
+       <property name="text">
+        <string>*</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>521</y>
+      <width>253</width>
+      <height>66</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="formLayout_5">
+     <item row="0" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <widget class="QLabel" name="FeedIn_label">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Feed Excess PV To Grid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Grid_Set_Point_label">
+         <property name="minimumSize">
+          <size>
+           <width>160</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>0</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Grid Set Point Watts</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="1">
+      <layout class="QVBoxLayout" name="verticalLayout_10">
+       <item>
+        <widget class="QPushButton" name="FeedIn_pushButton">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Button Displays Current Mode&lt;/p&gt;&lt;p&gt;Enabled = On&lt;/p&gt;&lt;p&gt;Disabled = Off&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton:hover {
+background-color: green;
+
+}</string>
+         </property>
+         <property name="text">
+          <string>Yes / No</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="Grid_Set_Point_LCD">
+         <property name="minimumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>81</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+background-color: rgb( 85, 87, 83 );
+}</string>
+         </property>
+         <property name="digitCount">
+          <number>5</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+         <property name="value" stdset="0">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="Reset_VEbus_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>740</y>
+      <width>91</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:hover {
+background-color: green;
+
+}</string>
+    </property>
+    <property name="text">
+     <string>Reset V.E. Bus</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>829</y>
+      <width>961</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <property name="verticalSpacing">
+      <number>1</number>
+     </property>
+     <item row="0" column="0">
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="System_State_label">
+         <property name="text">
+          <string>System State:                    </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="System_State_Value">
+         <property name="text">
+          <string>*</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0">
+      <layout class="QFormLayout" name="formLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="VE_Bus_Error_label">
+         <property name="text">
+          <string>V.E Bus Error:                    </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="VE_Bus_Error_Value">
+         <property name="text">
+          <string>*</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0">
+      <layout class="QFormLayout" name="formLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="Solar_Charger1_Error_label">
+         <property name="text">
+          <string>Solar Charger #1 Error:  </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="Solar_Charger1_Error_Value">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="0">
+      <layout class="QFormLayout" name="formLayout_4">
+       <item row="0" column="0">
+        <widget class="QLabel" name="Solar_Charger2_Error_label">
+         <property name="text">
+          <string>Solar Charger #2 Error:  </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="Solar_Charger2_Error_Value">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="0">
+      <layout class="QFormLayout" name="formLayout_6">
+       <item row="0" column="0">
+        <widget class="QLabel" name="ESS_Mode_label">
+         <property name="text">
+          <string>ESS Mode:                         </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="ESS_Mode_Value">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="0">
+      <layout class="QFormLayout" name="formLayout_7">
+       <item row="0" column="0">
+        <widget class="QLabel" name="ESS_SOC_User_label">
+         <property name="text">
+          <string>ESS SOC Limit (User):      </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="ESS_SOC_User_Value">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="6" column="0">
+      <layout class="QFormLayout" name="formLayout_9">
+       <item row="0" column="0">
+        <widget class="QLabel" name="ESS_SOC_Dynamic_label">
+         <property name="text">
+          <string>ESS SOC (Dynamic):        </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="ESS_SOC_Dynamic_Value">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>*</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
    <zorder>line2</zorder>
-   <zorder>MultiName_label</zorder>
-   <zorder>Grid_FeedIn_Active_Label</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>line</zorder>
    <zorder>line2_2</zorder>
    <zorder>tabWidget</zorder>
-   <zorder>Max_Watts_Today_Label</zorder>
-   <zorder>Max_Watts_Yest_Label</zorder>
-   <zorder>line_2</zorder>
-   <zorder>Grid_FeedIn_Limit_Label</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>Reset_VEbus_pushButton</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>993</width>
+     <width>988</width>
      <height>22</height>
     </rect>
    </property>
@@ -4208,6 +4188,7 @@ background-color: rgb(136, 138, 133);
     </property>
     <addaction name="actionFull_Screen"/>
     <addaction name="actionNormal_Screen"/>
+    <addaction name="actionChange_Background_Color"/>
    </widget>
    <addaction name="menuESS_Modes"/>
    <addaction name="menuMultiplus_Modes"/>
@@ -4305,6 +4286,11 @@ QSizeGrip {
   <action name="actionNormal_Screen">
    <property name="text">
     <string>Exit Full Screen</string>
+   </property>
+  </action>
+  <action name="actionChange_Background_Color">
+   <property name="text">
+    <string>Change Background Color</string>
    </property>
   </action>
  </widget>
