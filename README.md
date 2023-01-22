@@ -1,11 +1,31 @@
 # Victron_Modbus_TCP
 Victron Modbus TCP & MQTT Example
 
-For whatever reason the Cerbo GX does not appear to require a MQTT keep-alive request where the raspberry pi does.
+Indeed I was mistaken about the Cerbo Keep-Alive. I had installed the Grafana Docker over a year ago and it has its own keep alive in it.  
+I had stopped using grafana and forgot all about it. Its since been removed.   
+I have an alternate way to run the keep-alive on the cerbo (or Pi) its self.  
+
+The file's are provided above, named Keep-Alive.py and Forever.py  
+The Keep-Alive.py is run via a kind of pseudo monitoring script (forever.py).  
+Place both files in the cerbo /data directory and make sure they are set executable.
+edit the /data/rc.local file (nano rc.local) and make an entry that looks like this  
+```
+#!/bin/bash   
+sleep 30   
+/data/forever.py /data/keep-alive.py
+```   
+ctrl+o to write the file to disk and ctrl+x to exit   
+reboot the cerbo and the keep-alive should do its job.  
+the sleep command is to ensure the cerbo has had time to accomplish a full startup routine.
+
+You can still incororate the keep-alive into the different scripts provided here if you prefer that method.
+
+
+~~For whatever reason the Cerbo GX does not appear to require a MQTT keep-alive request where the raspberry pi does.~~
 The only one of these files that incorporates such a request is the stand alone system with no Multiplus.
 PyQT5-No-Multiplus-Single-Charger.py
 
-If you run a raspberry pi you will need the request in the update value function with a counter.
+If you run a raspberry pi you will need the request in the update_value function with a counter.
 See PyQT5-No-Multiplus-Single-Charger.py for an example.
 
 If you find that the Cerbo-GX DOES need a MQTT keep-alive you will need to implement this into the various scripts.
