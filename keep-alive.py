@@ -10,7 +10,7 @@ ip = '192.168.20.156'
 
 # VRM Portal ID from GX device. 
 # Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
-VRMid = "d41243d31a90"
+VRMid = "XXXXXXXXXXX"
 
 #===================================
 mqttpublish.single("R/"+VRMid+"/system/0/Serial", hostname=ip, port=1883)
