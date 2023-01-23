@@ -12,7 +12,7 @@ edit the /data/rc.local file (nano rc.local) and make an entry that looks like t
 ```
 #!/bin/bash   
 sleep 30   
-/data/forever.py /data/keep-alive.py
+/data/forever.py /data/keep-alive.py &
 ```   
 ctrl+o to write the file to disk and ctrl+x to exit   
 reboot the cerbo and the keep-alive should do its job.  
