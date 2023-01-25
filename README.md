@@ -25,7 +25,7 @@ You can still incororate the keep-alive into the different scripts provided here
 The only one of these files that incorporates such a request is the stand alone system with no Multiplus.
 PyQT5-No-Multiplus-Single-Charger.py
 
-If you run a raspberry pi you will need the request in the update_value function with a counter.
+If you want to run the keep-alive in the script instead of the standalone keep-alive you will need the MQTT request in the update_value function with a counter.
 See PyQT5-No-Multiplus-Single-Charger.py for an example.
 
 If you find that the Cerbo-GX DOES need a MQTT keep-alive you will need to implement this into the various scripts.
