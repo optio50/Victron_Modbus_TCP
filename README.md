@@ -28,11 +28,6 @@ PyQT5-No-Multiplus-Single-Charger.py
 If you want to run the keep-alive in the script instead of the standalone keep-alive you will need the MQTT request in the update_value function with a counter.
 See PyQT5-No-Multiplus-Single-Charger.py for an example.
 
-If you find that the Cerbo-GX DOES need a MQTT keep-alive you will need to implement this into the various scripts.
-See PyQT5-No-Multiplus-Single-Charger.py for an example.
-(Maybe my situation is unique in not needing a Cerbo-GX MQTT keep-alive)
-
-
 These file's are based on a system that has victron equipment in an "ESS" system. Multiplus, Solar charger, BMV
 
 Be advised.  
