@@ -1,7 +1,10 @@
 # Victron_Modbus_TCP
 Victron Modbus TCP & MQTT Example
 
-Indeed I was mistaken about the Cerbo Keep-Alive. I had installed the Grafana Docker over a year ago and it has its own keep alive in it.  
+These file's are based on a system that has victron equipment in an "ESS" system. Multiplus, Solar charger, BMV
+
+Regarding the GX MQTT keepalive.  
+Indeed I was mistaken about the Cerbo Keep-Alive. I had installed the Grafana Docker over a year ago and it has its own keep alive in it.
 I had stopped using grafana and forgot all about it. Its since been removed.   
 I have an alternate way to run the keep-alive on the cerbo (or Pi) its self.  
 
@@ -28,7 +31,6 @@ PyQT5-No-Multiplus-Single-Charger.py
 If you want to run the keep-alive in the script instead of the standalone keep-alive you will need the MQTT request in the update_value function with a counter.
 See PyQT5-No-Multiplus-Single-Charger.py for an example.
 
-These file's are based on a system that has victron equipment in an "ESS" system. Multiplus, Solar charger, BMV
 
 Be advised.  
 Running the Example2.py file and pressing the arrow key's will change values on the GX device.  
