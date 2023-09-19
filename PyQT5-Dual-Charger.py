@@ -68,7 +68,8 @@ Analog_Inputs  = 'Y'     # Y or N (case insensitive) to display Gerbo GX Analog 
 if Analog_Inputs.lower() == 'y': 
     """
     Change the IDx value to match the cerbo gx input value. If you dont
-    use all three inputs you might have to modify the modbus request
+    use all three inputs you might have to modify the modbus request near line 550
+    and comment the unused inputs below.
     """
     Tempsensor1_Name = "Battery Box Temperature     °F"
     ID1 = 24
@@ -78,7 +79,7 @@ if Analog_Inputs.lower() == 'y':
     ID3 = 26
 
 #===================================
-""" I am intializeing these two variables as None to make sure the QThread has completed before Chart Update Thread is run """
+""" intializeing these two variables as None to make sure the QThread has completed before Chart Update Thread is run """
 VEbusError = None # MQTT request portion
 VEbusStatus  = None # Modbus request portion
 
@@ -107,9 +108,9 @@ MQTT_VEsystem_ID       = 0
 
 
 # Describe The Arrays
-Array1 = "4 X 100W Array" # 4 New Renogy 100W Panels
+Array1 = "400W Panel" # New 400W Panel
 Array2 = "310W Panel" # New 310W panel
-#Array2 = "250W Panel" # Used 250W panel. Typical Ouput 200W
+
 
 # ===========================================================================================
 
@@ -211,25 +212,72 @@ SolarStateDict = {0:  "OFF",
                   252:"EXT Control"}
 # ===========================================================================================
 
-SolarErrorDict = {0: "No Error",
-                          1: "Error 1: Battery temperature too high",
-                          2: "Error 2: Battery voltage too high",
-                          3: "Error 3: Battery temperature sensor miswired (+)",
-                          4: "Error 4: Battery temperature sensor miswired (-)",
-                          5: "Error 5: Battery temperature sensor disconnected",
-                          6: "Error 6: Battery voltage sense miswired (+)",
-                          7: "Error 7: Battery voltage sense miswired (-)",
-                          8: "Error 8: Battery voltage sense disconnected",
-                          9: "Error 9: Battery voltage wire losses too high",
-                          17:"Error 17: Charger temperature too high",
-                          18:"Error 18: Charger over-current",
-                          19:"Error 19: Charger current polarity reversed",
-                          20:"Error 20: Bulk time limit exceeded",
-                          22:"Error 22: Charger temperature sensor miswired",
-                          23:"Error 23: Charger temperature sensor disconnected",
-                          33:"Error 33: Input voltage too high",
-                          34:"Error 34: Input current too high"
-                          }
+SolarErrorDict = {0:"No Error",
+                    1:"Error 1: Battery temperature too high",
+                    2:"Error 2: Battery voltage too high",
+                    3:"Error 3: Battery temperature sensor miswired (+)",
+                    4:"Error 4: Battery temperature sensor miswired (-)",
+                    5:"Error 5: Remote temperature sensor failure (connection lost)",
+                    6:"Error 6: Battery voltage sense miswired (+)",
+                    7:"Error 7: Battery voltage sense miswired (-)",
+                    8:"Error 8: Battery voltage sense disconnected",
+                    11:"Error 11: Battery high ripple voltage",
+                    14:"Error 14: Battery low temperature",
+                    17:"Error 17: Controller overheated despite reduced output current",
+                    18:"Error 18: Controller over-current",
+                    20:"Error 20: Maximum Bulk-time exceeded",
+                    21:"Error 21: Current sensor issue",
+                    22:"Error 22: Internal temperature sensor failure",
+                    23:"Error 23: Internal temperature sensor failure",
+                    24:"Error 24: Fan failure",
+                    26:"Error 26: Terminal overheated",
+                    27:"Error 27: Charger short circuit",
+                    28:"Error 28: Power stage issue",
+                    29:"Error 29: Over-Charge protection",
+                    33:"Error 33: PV Input over-voltage",
+                    34:"Error 34: PV Input over-current",
+                    35:"Error 35: PV Input over-power",
+                    38:"Error 38: PV Input is internally shorted in order to protect the battery from over-charging",
+                    39:"Error 39: PV Input is internally shorted in order to protect the battery from over-charging",
+                    40:"Error 40: PV Input failed to shutdown",
+                    41:"Error 41: Inverter shutdown (PV isolation)",
+                    42:"Error 42: Inverter shutdown (PV isolation)",
+                    43:"Error 43: Inverter shutdown (Ground Fault)",
+                    50:"Error 50: Inverter overload, Inverter peak current",
+                    51:"Error 51: Inverter temperature too high",
+                    52:"Error 52: Inverter overload, Inverter peak current",
+                    53:"Error 53: Inverter output voltage",
+                    54:"Error 54: Inverter output voltage",
+                    55:"Error 55: Inverter self test failed",
+                    56:"Error 56: Inverter self test failed",
+                    57:"Error 57: Inverter ac voltage on output",
+                    58:"Error 58: Inverter self test failed",
+                    67:"Error 67: BMS Connection lost",
+                    68:"Error 68: Network misconfigured",
+                    69:"Error 69: Network misconfigured",
+                    70:"Error 70: Network misconfigured",
+                    71:"Error 71: Network misconfigured",
+                    80:"Error 80: PV Input is internally shorted in order to protect the battery from over-charging",
+                    81:"Error 81: PV Input is internally shorted in order to protect the battery from over-charging",
+                    82:"Error 82: PV Input is internally shorted in order to protect the battery from over-charging",
+                    83:"Error 83: PV Input is internally shorted in order to protect the battery from over-charging",
+                    84:"Error 84: PV Input is internally shorted in order to protect the battery from over-charging",
+                    85:"Error 85: PV Input is internally shorted in order to protect the battery from over-charging",
+                    86:"Error 86: PV Input is internally shorted in order to protect the battery from over-charging",
+                    87:"Error 87: PV Input is internally shorted in order to protect the battery from over-charging",
+                    114:"Error 114: CPU temperature too high",
+                    116:"Error 116: Calibration data lost",
+                    117:"Error 117: Incompatible firmware",
+                    119:"Error 119: Settings data lost",
+                    121:"Error 121: Tester fail",
+                    200:"Error 200: Internal DC voltage error",
+                    201:"Error 201: Internal DC voltage error",
+                    202:"Error 202: Internal GFCI sensor error",
+                    203:"Error 203: Internal supply voltage error",
+                    205:"Error 205: Internal supply voltage error",
+                    212:"Error 212: Internal supply voltage error",
+                    215:"Error 215: Internal supply voltage error"
+                  }
 # ===========================================================================================
 #   VE.Bus Status
 VEbusStatusDict =  {0:  "OFF",
@@ -310,7 +358,7 @@ ESSbatteryLifeStateDict = {0: "Battery Life Disabled",
                            5: "Discharge disabled. SoC below BatteryLife Dynamic SoC",
                            6: "SoC has been below SoC limit for more than 24 hours. Slow Charging battery",
                            7: "Multi is in sustain mode",
-                           8: "Recharge, SOC dropped 5% or more below MinSOC",
+                           8: "Recharge, SOC dropped 5% or more below minimum SOC",
                            9: "Keep batteries charged mode enabled",
                            10:"Self consumption, SoC at or above minimum SoC",
                            11:"Discharge Disabled (Low SoC), SoC is below minimum SoC",
@@ -331,8 +379,8 @@ class Worker(QObject):
         """Long-running task."""
         # global variables for the charts that are in a seperate thread
         global VEbusError, VEbusStatus, SolarWatts, SolarWatts1, SolarWatts2, BatterySOC, BatteryWatts ,BatteryAmps, \
-        BatteryVolts, BatterySOC, GridWatts, GridAmps,  ACoutWatts,  ACoutAmps, Mains, \
-        Inverter, Bulk, Floatchg, Absorp, GridCondition, timestamp, TempSensor1, TempSensor2, \
+        BatteryVolts, BatterySOC, GridWattsL1, GridWattsL2, GridAmpsL1, GridAmpsL2, ACoutWattsL1, ACoutWattsL2,  ACoutAmpsL1, ACoutAmpsL2, Mains, \
+        Inverter, Bulk, Floatchg, Absorp, GridCondition, ACoutHZ, timestamp, TempSensor1, TempSensor2, \
         TempSensor3, SolarState1, SolarState2, SolarState1Index, SolarState2Index, dt_string, SolarVolts1, \
         SolarState1_Old, SolarState2_Old, GridCondition_Old, SolarVolts1_Old, Inverter_Old, Mains_Old, \
         Absorp_Old, Floatchg_Old, Bulk_Old, ESSbatteryLifeState_Old
@@ -395,6 +443,7 @@ class Worker(QObject):
                 #SolarAmps          = modbus_register(851,VEsystem_ID) / 10   # Total of all solar chargers
                 SolarAmps1         = modbus_register(772,SolarCharger_1_ID) / 10 # Amps To Battery
                 SolarVolts1        = modbus_register(776,SolarCharger_1_ID) / 100
+                #SolarVolts1        = f"{SolarVolts1:.1f}"
                 PvAmps1            = SolarWatts1 / SolarVolts1
                 MaxSolarWatts1     = modbus_register(785,SolarCharger_1_ID)
                 MaxSolarWattsYest1 = modbus_register(787,SolarCharger_1_ID)
@@ -436,18 +485,25 @@ class Worker(QObject):
                 #   Grid Input & A/C Out
                 FeedIn        = modbus_register(2707,VEsystem_ID)
                 FeedInLimited = modbus_register(2709,VEsystem_ID)
-                FeedInMax     = modbus_register(66,MultiPlus_ID) / .01
+                FeedInMax     = modbus_register(66,MultiPlus_ID) / .01 # L1
                 GridSetPoint  = modbus_register(2700,VEsystem_ID)
-                GridWatts     = modbus_register(820,VEsystem_ID)
-                GridAmps      = modbus_register(6,MultiPlus_ID) / 10
-                GridVolts     = modbus_register(3,MultiPlus_ID) / 10
-                GridHZ        = modbus_register(9,MultiPlus_ID) / 100
-                ACoutWatts    = modbus_register(817,VEsystem_ID)
-                ACoutAmps     = modbus_register(18,MultiPlus_ID) / 10
-                ACoutVolts    = modbus_register(15,MultiPlus_ID) / 10
-                ACoutHZ       = modbus_register(21,MultiPlus_ID) / 100
+                GridWattsL1   = modbus_register(820,VEsystem_ID)
+                GridWattsL2   = modbus_register(821,VEsystem_ID)
+                GridAmpsL1    = modbus_register(6,MultiPlus_ID) / 10
+                GridAmpsL2    = modbus_register(7,MultiPlus_ID) / 10
+                GridVoltsL1   = modbus_register(3,MultiPlus_ID) / 10
+                GridVoltsL2   = modbus_register(4,MultiPlus_ID) / 10
+                GridHZ        = modbus_register(9,MultiPlus_ID) / 100 # Both L1 & L2
+                ACoutWattsL1  = modbus_register(817,VEsystem_ID) / 1# 817 VEsystem_ID
+                ACoutWattsL2  = modbus_register(818,VEsystem_ID) / 1# 818 VEsystem_ID
+                ACoutAmpsL1   = modbus_register(18,MultiPlus_ID) / 10
+                ACoutAmpsL2   = modbus_register(19,MultiPlus_ID) / 10
+                ACoutVoltsL1  = modbus_register(15,MultiPlus_ID) / 10
+                ACoutVoltsL2  = modbus_register(16,MultiPlus_ID) / 10
+                ACoutHZ       = modbus_register(21,MultiPlus_ID) / 100 # Both L1 & L2
                 GridCondition = modbus_register(64,MultiPlus_ID)
                 GridAmpLimit  = modbus_register(22,MultiPlus_ID) / 10
+
 
                 # LED's
                 Mains         = mqtt_request("N/"+VRMid+"/vebus/"+str(MQTT_MultiPlus_ID)+"/Leds/Mains")
@@ -516,6 +572,11 @@ class Worker(QObject):
                 SolarState1Index  = list(SolarStateDict.keys()).index(SolarState1)
                 SolarState2Index  = list(SolarStateDict.keys()).index(SolarState2)
 
+                # GX Firmware
+                #FW_Installed = mqtt_request("N/"+VRMid+"/platform/0/Firmware/Installed/Version")
+                #FW_Available = mqtt_request("N/"+VRMid+"/platform/0/Firmware/Online/AvailableVersion")
+                #FW_Backup    = mqtt_request("N/"+VRMid+"/platform/0/Firmware/Backup/AvailableVersion")
+
 #===========================================================================================
 # END Variables
 #===========================================================================================
@@ -567,13 +628,19 @@ class Worker(QObject):
                         "FeedInLimited":       FeedInLimited,
                         "FeedInMax":           FeedInMax,    
                         "GridSetPoint":        GridSetPoint, 
-                        "GridWatts":           GridWatts,    
-                        "GridAmps":            GridAmps,     
-                        "GridVolts":           GridVolts,    
+                        "GridWattsL1":         GridWattsL1,    
+                        "GridWattsL2":         GridWattsL2,
+                        "GridAmpsL1":          GridAmpsL1,     
+                        "GridAmpsL2":          GridAmpsL2,
+                        "GridVoltsL1":         GridVoltsL1,    
+                        "GridVoltsL2":         GridVoltsL2,
                         "GridHZ":              GridHZ,       
-                        "ACoutWatts":          ACoutWatts,   
-                        "ACoutAmps":           ACoutAmps,    
-                        "ACoutVolts":          ACoutVolts,   
+                        "ACoutWattsL1":        ACoutWattsL1,
+                        "ACoutWattsL2":        ACoutWattsL2,
+                        "ACoutAmpsL1":         ACoutAmpsL1,
+                        "ACoutAmpsL2":         ACoutAmpsL2,    
+                        "ACoutVoltsL1":        ACoutVoltsL1,   
+                        "ACoutVoltsL2":        ACoutVoltsL2,
                         "ACoutHZ":             ACoutHZ,      
                         "GridCondition":       GridCondition,
                         "GridAmpLimit":        GridAmpLimit, 
@@ -595,6 +662,9 @@ class Worker(QObject):
                         "TempSensor1":         TempSensor1,
                         "TempSensor2":         TempSensor2,
                         "TempSensor3":         TempSensor3,
+                        #"FW_Installed":        FW_Installed,
+                        #"FW_Available":        FW_Available,
+                        #"FW_Backup":           FW_Backup,
                         "timestamp":           timestamp
                         }
             self.progress.emit(results)
@@ -615,15 +685,25 @@ class Window(QMainWindow):
         
         def clear_history():
             self.textBrowser.clear()
-            
+        
+        
         def VEbusReset():
             client.write_registers(address=62, values=1, unit=MultiPlus_ID)
             self.textBrowser.append(f"{dt_string} ---- | ---- Resetting V.E. Bus")
 
 
+        def Input_Amps_Limit():
+            answer, ok = QInputDialog.getInt(self, 'Enter New AC Input Amps Limit', 'Enter New AC Input Amps Limit',
+                                            25, 10, 50, 5)
+            if ok:
+                client.write_registers(address=22, values=answer * 10, unit=MultiPlus_ID)
+
+
         self.History_pushButton.clicked.connect(clear_history)
         
         self.Reset_VEbus_pushButton.clicked.connect(VEbusReset)
+        
+        self.ACin_Amp_Limit_pushButton.clicked.connect(Input_Amps_Limit)
 
 #===========================================================================================
         # Define crosshair parameters
@@ -750,12 +830,16 @@ class Window(QMainWindow):
         self.Chart_Volts_Layout.addWidget(self.Battery_Volts_graph_Widget)
 #===========================================================================================
 # Chart Grid Watts, Amps
-        grid_watts_plot = LiveLinePlot(pen="blue", name='Watts')
-        grid_amps_plot = LiveLinePlot(pen="green", name='Amps')
+        grid_watts_L1_plot = LiveLinePlot(pen="blue", name='Watts L1',fillLevel=0, brush=(102,102,255,100))
+        grid_watts_L2_plot = LiveLinePlot(pen="darkmagenta", name='Watts L2',fillLevel=0, brush=(170,120,225,50))
+        grid_amps_L1_plot = LiveLinePlot(pen="green", name='Amps L1')
+        grid_amps_L2_plot = LiveLinePlot(pen="red", name='Amps L2')
 
         # Data connectors for each plot with dequeue of max_points points
-        self.grid_connector = DataConnector(grid_watts_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
-        self.grid_amps_connector = DataConnector(grid_amps_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+        self.grid_watts_L1_connector = DataConnector(grid_watts_L1_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+        self.grid_watts_L2_connector = DataConnector(grid_watts_L2_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+        self.grid_amps_L1_connector = DataConnector(grid_amps_L1_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+        self.grid_amps_L2_connector = DataConnector(grid_amps_L2_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
 
         # Setup bottom axis with TIME tick format
         # use Axis.DATETIME to show date
@@ -781,9 +865,11 @@ class Window(QMainWindow):
         self.Grid_Watts_graph_Widget.addLegend() # If plot is named, auto add name to legend
 
         # Add Line
-        self.Grid_Watts_graph_Widget.addItem(grid_watts_plot)
-        self.Grid_Watts_graph_Widget.addItem(grid_amps_plot)
-
+        self.Grid_Watts_graph_Widget.addItem(grid_watts_L1_plot)
+        self.Grid_Watts_graph_Widget.addItem(grid_watts_L2_plot)
+        self.Grid_Watts_graph_Widget.addItem(grid_amps_L1_plot)
+        self.Grid_Watts_graph_Widget.addItem(grid_amps_L2_plot)
+        
         # Add chart to Layout in Qt Designer
         self.Chart_Grid_Watts_Layout.addWidget(self.Grid_Watts_graph_Widget)
 
@@ -791,68 +877,75 @@ class Window(QMainWindow):
 #===========================================================================================
 # Chart Cabin Temperatures. Battery Box, Cabin Interior, Cabin Exterior
 
-        Exterior_Temp_plot = LiveLinePlot(pen="cyan", name='Cabin Exterior')
-        Interior_Temp_plot = LiveLinePlot(pen="red", name='Cabin Interior')
-        Box_Temp_plot = LiveLinePlot(pen="yellow", name='Battery Box')
+        if Analog_Inputs.lower() == 'y':
+            Exterior_Temp_plot = LiveLinePlot(pen="cyan", name='Cabin Exterior')
+            Interior_Temp_plot = LiveLinePlot(pen="red", name='Cabin Interior')
+            Box_Temp_plot = LiveLinePlot(pen="yellow", name='Battery Box')
 
-        # Data connectors for each plot with dequeue of max_points points
-        self.Exterior_Temp_connector = DataConnector(Exterior_Temp_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
-        self.Interior_Temp_connector = DataConnector(Interior_Temp_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
-        self.Box_Temp_connector      = DataConnector(Box_Temp_plot,      max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
-
-
-        # Setup bottom axis with TIME tick format
-        # use Axis.DATETIME to show date
-        Box_Temp_plot_bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
-
-        # Create plot itself
-        self.Temperature_graph_Widget = LivePlotWidget(title="Cabin Temperatures °F, 24 Hours",
-        axisItems={'bottom': Box_Temp_plot_bottom_axis},
-        x_range_controller=LiveAxisRange(roll_on_tick=900, offset_left=2), **kwargs)
-
-        self.Temperature_graph_Widget.x_range_controller.crop_left_offset_to_data = True
-
-        #self.Temperature_graph_Widget = LivePlotWidget(title="Cabin Temperatures °F 24 Hrs", axisItems={'bottom': Box_Temp_plot_bottom_axis}, **kwargs)
-
-        # Show grid
-        self.Temperature_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
+            # Data connectors for each plot with dequeue of max_points points
+            self.Exterior_Temp_connector = DataConnector(Exterior_Temp_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+            self.Interior_Temp_connector = DataConnector(Interior_Temp_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+            self.Box_Temp_connector      = DataConnector(Box_Temp_plot,      max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
 
 
-        # Set labels
-        self.Temperature_graph_Widget.setLabel('bottom')
-        #self.Temperature_graph_Widget.setLabel('bottom', 'Time', units='hh:mm:ss' )
-        #self.Temperature_graph_Widget.getAxis('bottom').enableAutoSIPrefix(False)
-        self.Temperature_graph_Widget.setLabel('left', '°F')
+            # Setup bottom axis with TIME tick format
+            # use Axis.DATETIME to show date
+            Box_Temp_plot_bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
 
-        # Add Floating Legend
-        self.Temperature_graph_Widget.addLegend() # If plot is named, add name to legend
+            # Create plot itself
+            self.Temperature_graph_Widget = LivePlotWidget(title="Cabin Temperatures °F, 24 Hours",
+            axisItems={'bottom': Box_Temp_plot_bottom_axis},
+            x_range_controller=LiveAxisRange(roll_on_tick=900, offset_left=2), **kwargs)
 
-        # Add Line
-        self.Temperature_graph_Widget.addItem(Box_Temp_plot) #1 the addItem sequence effects the legend order
-        self.Temperature_graph_Widget.addItem(Exterior_Temp_plot) #2
-        self.Temperature_graph_Widget.addItem(Interior_Temp_plot) #3
+            self.Temperature_graph_Widget.x_range_controller.crop_left_offset_to_data = True
+
+            #self.Temperature_graph_Widget = LivePlotWidget(title="Cabin Temperatures °F 24 Hrs", axisItems={'bottom': Box_Temp_plot_bottom_axis}, **kwargs)
+
+            # Show grid
+            self.Temperature_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
 
 
-        # Add chart to Layout in Qt Designer
-        self.Temperature_Layout.addWidget(self.Temperature_graph_Widget)
+            # Set labels
+            self.Temperature_graph_Widget.setLabel('bottom')
+            #self.Temperature_graph_Widget.setLabel('bottom', 'Time', units='hh:mm:ss' )
+            #self.Temperature_graph_Widget.getAxis('bottom').enableAutoSIPrefix(False)
+            self.Temperature_graph_Widget.setLabel('left', '°F')
+
+            # Add Floating Legend
+            self.Temperature_graph_Widget.addLegend() # If plot is named, add name to legend
+
+            # Add Line
+            self.Temperature_graph_Widget.addItem(Box_Temp_plot) #1 the addItem sequence effects the legend order
+            self.Temperature_graph_Widget.addItem(Exterior_Temp_plot) #2
+            self.Temperature_graph_Widget.addItem(Interior_Temp_plot) #3
+
+
+            # Add chart to Layout in Qt Designer
+            self.Temperature_Layout.addWidget(self.Temperature_graph_Widget)
 #===========================================================================================
 # Chart A/C Out Watts, Amps
         #, symbol='o', symbolSize=3, symbolPen ='darkmagenta'
-        ac_out_watts_plot = LiveLinePlot(pen='darkmagenta', name='Watts')
-        ac_out_amps_plot = LiveLinePlot(pen='green', name='Amps')
+        ac_out_watts_L1_plot = LiveLinePlot(pen='darkmagenta', name='Watts L1')
+        ac_out_watts_L2_plot = LiveLinePlot(pen='yellow', name='Watts L2')
+        ac_out_amps_L1_plot  = LiveLinePlot(pen='orangered', name='Amps L1')
+        ac_out_amps_L2_plot  = LiveLinePlot(pen='green', name='Amps L2')
+        ac_out_freq_plot  = LiveLinePlot(pen='pink', name='Freq')
 
         # Data connectors for each plot with dequeue of max_points points
-        self.ac_out_watts_connector = DataConnector(ac_out_watts_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
-        self.ac_out_amps_connector  = DataConnector(ac_out_amps_plot,  max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+        self.ac_out_watts_L1_connector = DataConnector(ac_out_watts_L1_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+        self.ac_out_watts_L2_connector = DataConnector(ac_out_watts_L2_plot, max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+        self.ac_out_amps_L1_connector  = DataConnector(ac_out_amps_L1_plot,  max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+        self.ac_out_amps_L2_connector  = DataConnector(ac_out_amps_L2_plot,  max_points=40072, update_rate=.75) # 1.5 seconds in 24 hrs
+        self.ac_out_freq_connector  = DataConnector(ac_out_freq_plot,  max_points=40072, update_rate=.75)
 
         # Setup bottom axis with TIME tick format
         # use Axis.DATETIME to show date
-        ac_out_watts_bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
+        ac_out_watts_L1_bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.TIME})
 
 
         # Create plot itself
-        self.ac_out_watts_graph_Widget = LivePlotWidget(title="A/C Out Watts & Amps, 24 Hours",
-        axisItems={'bottom': ac_out_watts_bottom_axis},
+        self.ac_out_watts_graph_Widget = LivePlotWidget(title="A/C Out Watts, Amps & Freq, 24 Hours",
+        axisItems={'bottom': ac_out_watts_L1_bottom_axis},
         x_range_controller=LiveAxisRange(roll_on_tick=900, offset_left=2), **kwargs)
 
         self.ac_out_watts_graph_Widget.x_range_controller.crop_left_offset_to_data = True
@@ -873,8 +966,11 @@ class Window(QMainWindow):
         self.ac_out_watts_graph_Widget.addLegend() # If plot is named auto add name to legend
 
         # Add Line
-        self.ac_out_watts_graph_Widget.addItem(ac_out_watts_plot)
-        self.ac_out_watts_graph_Widget.addItem(ac_out_amps_plot)
+        self.ac_out_watts_graph_Widget.addItem(ac_out_watts_L1_plot)
+        self.ac_out_watts_graph_Widget.addItem(ac_out_watts_L2_plot)
+        self.ac_out_watts_graph_Widget.addItem(ac_out_amps_L1_plot)
+        self.ac_out_watts_graph_Widget.addItem(ac_out_amps_L2_plot)
+        self.ac_out_watts_graph_Widget.addItem(ac_out_freq_plot)
 
 
         # Add chart to Layout in Qt Designer
@@ -1045,14 +1141,20 @@ class Window(QMainWindow):
 #===========================================================================================
 # End Charts
 #===========================================================================================
+
         def SetGridWatts():
-            watts   = self.Set_Grid_Watts_lineEdit.text()
-            builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
-            builder.reset()
-            builder.add_16bit_int(int(watts))
-            payload = builder.to_registers()
-            client.write_registers(2700, payload[0])
-            self.Set_Grid_Watts_lineEdit.setText("")
+            answer, ok = QInputDialog.getInt(self, 'Enter Desired Grid Watts', 'Enter New Grid Watts Value',
+                                            25, -1000, 1000, 5)
+            if ok:
+                watts   = answer
+                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
+                builder.reset()
+                builder.add_16bit_int(int(watts))
+                payload = builder.to_registers()
+                client.write_registers(2700, payload[0])
+                self.textBrowser.append(f"{dt_string} ---- | ---- Set Grid Watts Changed to    {watts} Watts")
+
+
 
 
         def ESSuser():
@@ -1066,12 +1168,14 @@ class Window(QMainWindow):
             if ok:
                 mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_1_ID)+"/Settings/ChargeCurrentLimit",
                                                                    payload=json.dumps({"value": answer}), hostname=ip, port=1883)
+                self.textBrowser.append(f"{dt_string} ---- | ---- Charger 1 Limit Changed to    {answer} Amps")
 
         def Charger2_Limit():
             answer, ok = QInputDialog.getInt(self, 'Enter Charger 2 Limit', 'Enter Charger 2 Limit', 15)
             if ok:
                 mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_2_ID)+"/Settings/ChargeCurrentLimit",
                                                                    payload=json.dumps({"value": answer}), hostname=ip, port=1883)
+                self.textBrowser.append(f"{dt_string} ---- | ---- Charger 2 Limit Changed to    {answer} Amps")
 
         def BG_Change():
             color = QColorDialog.getColor()
@@ -1080,8 +1184,6 @@ class Window(QMainWindow):
                 #self.Solar_Name_1_lineEdit.setStyleSheet(f"background-color: {color.name()}")
                 #self.Solar_Name_2_lineEdit.setStyleSheet(f"background-color: {color.name()}")
                 self.tabWidget.setStyleSheet(f"background-color: {color.name()}")
-
-
 
 
         self.actionOptimized_Battery_Life_Enabled.triggered.connect(ESSbatteryLifeEnabled)
@@ -1311,8 +1413,10 @@ class Window(QMainWindow):
                 # A/C In
                 ##start = time.monotonic_ns()
                 
-                self.grid_amps_connector.cb_append_data_point(GridAmps, timestamp)
-                self.grid_connector.cb_append_data_point(GridWatts, timestamp)
+                self.grid_amps_L1_connector.cb_append_data_point(GridAmpsL1, timestamp)
+                self.grid_amps_L2_connector.cb_append_data_point(GridAmpsL2, timestamp)
+                self.grid_watts_L1_connector.cb_append_data_point(GridWattsL1, timestamp)
+                self.grid_watts_L2_connector.cb_append_data_point(GridWattsL2, timestamp)
                 #self.one_hr_watts_connector.cb_append_data_point(SolarWatts, timestamp)
     
                 ##finish=time.monotonic_ns()
@@ -1325,8 +1429,11 @@ class Window(QMainWindow):
                 # A/C Out
                 ##start = time.monotonic_ns()
     
-                self.ac_out_watts_connector.cb_append_data_point(ACoutWatts, timestamp)
-                self.ac_out_amps_connector.cb_append_data_point(ACoutAmps, timestamp)
+                self.ac_out_watts_L1_connector.cb_append_data_point(ACoutWattsL1, timestamp)
+                self.ac_out_watts_L2_connector.cb_append_data_point(ACoutWattsL2, timestamp)
+                self.ac_out_amps_L1_connector.cb_append_data_point(ACoutAmpsL1, timestamp)
+                self.ac_out_amps_L2_connector.cb_append_data_point(ACoutAmpsL2, timestamp)
+                self.ac_out_freq_connector.cb_append_data_point(ACoutHZ, timestamp)
     
                 ##finish=time.monotonic_ns()
                 ##duration = finish -  start
@@ -1387,6 +1494,20 @@ class Window(QMainWindow):
 #===========================================================================================
     def update(self, results): # Update all the UI widgets
 
+        global Counter
+        Counter = 0
+        # This is the Keep Alive MQTT request for Raspi
+        if Counter >= 5: # Every 5 Loops send MQTT KeepAlive
+            try:
+                mqttpublish.single("R/"+VRMid+"/system/0/Serial", hostname=ip, port=1883)
+                Counter = 0 # After 5 Loops reset Counter to zero, then begin counting again.
+            except OSError:
+                print('No Contact to ' + ip)
+                print(dt_string)
+                pass
+        Counter += 1 # Increment the counter by 1
+
+
         # Battery Time To Go
         if results["BatteryTTG"] == 0.0:
             results["BatteryTTG"] = "Infinite"
@@ -1402,16 +1523,16 @@ class Window(QMainWindow):
             results["BatteryState"] = "Discharging"
 
         # If grid watts is less than zero feedin is active and show the label "FeedIn Active"
-        if results["GridWatts"] < 0 and results["Mains"] >= 2:
+        if results["GridWattsL1"] < 0 and results["Mains"] >= 2:
             self.Grid_FeedIn_Active_Label.setHidden(False)
-            self.Grid_Watts_LCD.setStyleSheet("QLCDNumber { background: rgb(0, 128, 255); }");
-            self.Grid_FeedIn_Active_Label.setText(f"FeedIn Active {results['GridWatts']}")
+            self.Grid_Watts_LCD_L1.setStyleSheet("QLCDNumber { background: rgb(0, 128, 255); }");
+            self.Grid_FeedIn_Active_Label.setText(f"FeedIn Active {results['GridWattsL1']}")
             self.Grid_FeedIn_Active_Label.setStyleSheet("QLabel { background: rgb(0, 128, 255); color: rgb(0, 0, 0); }")
 
         # If grid watts is NOT less than zero, Hide the label "FeedIn Active"
         else:
             self.Grid_FeedIn_Active_Label.setHidden(True)
-            self.Grid_Watts_LCD.setStyleSheet("QLCDNumber { background: rgb(85, 87, 83); }")
+            self.Grid_Watts_LCD_L1.setStyleSheet("QLCDNumber { background: rgb(85, 87, 83); }")
 
         # If "Feedin" is allowed and it is limited, show thw label and its limit
         if results["FeedIn"] == 1 and results["FeedInLimited"] == 1:
@@ -1641,12 +1762,19 @@ class Window(QMainWindow):
             results["MPswitch"] = "ON"
         elif results["MPswitch"] == 4:
             results["MPswitch"] = "OFF"
+        
+        if results["MPswitch"] != "ON":
+            self.Multiplus_Mode_Value.setStyleSheet("QLineEdit { background: rgb(255, 191, 0); }");
+        else:
+            self.Multiplus_Mode_Value.setStyleSheet("QLineEdit { background: ; }");
+
 
 
 #===========================================================================================
 # Populate Screen with Variable Values
 #===========================================================================================
         # Battery Section
+    
         self.Batt_SOC_progressBar.setRange(0, 100)
         self.Batt_SOC_progressBar.setValue(round(results["BatterySOC"]))
         self.Batt_SOC_progressBar.setToolTip(f'{results["BatterySOC"]:.1f} Percent')
@@ -1666,10 +1794,10 @@ class Window(QMainWindow):
 
         # Solar Charger # 1 Section
         self.Solar_Name_1_lineEdit.setText(str(f"#1 {results['SolarName1']} - {Array1}"))
-        self.PV_Watts_LCD.display(results["SolarWatts1"])
+        self.PV_Watts_LCD.display(str(f"{results['SolarWatts1']:.0f}"))
         self.Output_Amps_LCD.display(str(f"{results['SolarAmps1']:.1f}"))
         self.Output_Amps_Limit_label.setText(results["SolarChargeLimit1"])
-        self.PV_Volts_LCD.display(f"{results['SolarVolts1']:.2f}")
+        self.PV_Volts_LCD.display(str(f"{results['SolarVolts1']:.1f}"))
         self.PV_Amps1_LCD.display(f"{results['PvAmps1']:.2f}")
         self.Max_PV_Watts_Today_LCD.display(results["MaxSolarWatts1"])
         self.Max_PV_Watts_Yesterday_LCD.display(results["MaxSolarWattsYest1"])
@@ -1679,7 +1807,7 @@ class Window(QMainWindow):
 
         # Solar Charger # 2 Section
         self.Solar_Name_2_lineEdit.setText(f"#2 {results['SolarName2']} - {Array2}")
-        self.PV_Watts_2_LCD.display(results["SolarWatts2"])
+        self.PV_Watts_2_LCD.display(str(f"{results['SolarWatts2']:.0f}"))
         self.Output_Amps_2_LCD.display(f"{results['SolarAmps2']:.1f}")
         self.Output_Amps_Limit_2_label.setText(results['SolarChargeLimit2'])
         self.PV_Volts_2_LCD.display(results["SolarVolts2"])
@@ -1698,17 +1826,28 @@ class Window(QMainWindow):
 
         # Multiplus Section
         self.Grid_Set_Point_LCD.display(results["GridSetPoint"])
-        self.Grid_Watts_LCD.display(results["GridWatts"])
-        self.AC_Out_Watts_LCD.display(results["ACoutWatts"])
-        self.Grid_Amps_LCD.display(results["GridAmps"])
-        self.AC_Out_Amps_LCD.display(results["ACoutAmps"])
-        self.Grid_Volts_LCD.display(results["GridVolts"])
-        self.AC_Out_Volts_LCD.display(results["ACoutVolts"])
+        self.Grid_Watts_LCD_L1.display(results["GridWattsL1"])
+        self.Grid_Watts_LCD_L2.display(results["GridWattsL2"])
+        self.AC_Out_Watts_LCD_L1.display(results["ACoutWattsL1"])
+        self.AC_Out_Watts_LCD_L2.display(results["ACoutWattsL2"])
+        self.Grid_Amps_LCD_L1.display(results["GridAmpsL1"])
+        self.Grid_Amps_LCD_L2.display(results["GridAmpsL2"])
+        self.AC_Out_Amps_LCD_L1.display(results["ACoutAmpsL1"])
+        self.AC_Out_Amps_LCD_L2.display(results["ACoutAmpsL2"])
+        self.Grid_Volts_LCD_L1.display(results["GridVoltsL1"])
+        self.Grid_Volts_LCD_L2.display(results["GridVoltsL2"])
+        self.AC_Out_Volts_LCD_L1.display(results["ACoutVoltsL1"])
+        self.AC_Out_Volts_LCD_L2.display(results["ACoutVoltsL2"])
         self.Grid_Freq_LCD.display(results["GridHZ"])
         self.AC_Out_Freq_LCD.display(results["ACoutHZ"])
         self.Grid_Condition_lineEdit.setText(Condition)
         self.Grid_Current_Limit_LCD.display(results["GridAmpLimit"])
         self.MultiName_label.setText(results["MultiName"])
+        
+        # GX Firmware Section
+        #self.Firmware_Installed_Value_label.setText(str(f"{results['FW_Installed']}"))
+        #self.Firmware_Available_Value_label.setText(str(f"{results['FW_Available']}"))
+        #self.Firmware_Backup_Value_label.setText(str(f"{results['FW_Backup']}"))
         
 #===========================================================================================
 # Text Browser Log, Event History
@@ -1749,7 +1888,7 @@ class Window(QMainWindow):
                 if Mains == 1:
                     self.textBrowser.append(f"{dt_string} ---- | ---- Mains Changed to   Normal")
                     Mains_Old = Mains
-                elif Mains >= 2 and GridWatts < 0:
+                elif Mains >= 2 and GridWattsL1 < 0:
                     self.textBrowser.append(f"{dt_string} ---- | ---- Mains Changed to Feed-In Active")
                     Mains_Old = Mains
 
