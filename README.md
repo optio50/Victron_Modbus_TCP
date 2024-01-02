@@ -4,9 +4,7 @@ Victron Modbus TCP & MQTT Example
 These file's are based on a system that has victron equipment in an "ESS" system. Multiplus, Solar charger, BMV
 
 Regarding the GX MQTT keepalive.  
-Indeed I was mistaken about the Cerbo Keep-Alive. I had installed the Grafana Docker over a year ago and it has its own keep alive in it.
-I had stopped using grafana and forgot all about it. Its since been removed.   
-I have an alternate way to run the keep-alive on the cerbo (or Pi) its self.  
+run the keep-alive on the cerbo (or Pi) its self.  
 
 The file's are provided above, named Keep-Alive.py and Forever.py  
 The Keep-Alive.py is run via a kind of pseudo monitoring script (forever.py).  
@@ -21,25 +19,7 @@ ctrl+o to write the file to disk and ctrl+x to exit
 reboot the cerbo and the keep-alive should do its job.  
 the sleep command is to ensure the cerbo has had time to accomplish a full startup routine.
 
-You can still incororate the keep-alive into the different scripts provided here if you prefer that method.
-
-
-~~For whatever reason the Cerbo GX does not appear to require a MQTT keep-alive request where the raspberry pi does.~~
-The only one of these files that incorporates such a request is the stand alone system with no Multiplus.
-PyQT5-No-Multiplus-Single-Charger.py
-
 If you want to run the keep-alive in the script instead of the standalone keep-alive you will need the MQTT request in the update_value function with a counter.
-See PyQT5-No-Multiplus-Single-Charger.py for an example.
-
-
-Be advised.  
-Running the Example2.py file and pressing the arrow key's will change values on the GX device.  
-(↑) or (↓) Arrows To change grid set point.  
-(←) or (→) Arrows To Change ESS SOC limit.  
-Pressing the Page-Up button toggles the ESS mode. "Keep batteries charged and Optimized (with battery life)"  
-  
-Example.py has no ability to control. Only monitor  
-
 
 An example of the Victron TCP Modbus.  
 If you intend to use this example for yourself it will require tweaking a few things. 
@@ -56,19 +36,10 @@ Change the the instance #'s to their correct values
 You likely dont have the 3 temperature sensors included. Change the variable to turn them on and off.  
 
   
-If you use Example2.py you also need to adjust the portal id value. read the comment on how to find your portal id.  
-This number is needed even with no internet access as its the name of your venus device.  
-  
-Examply.py should work on a very basic system such as running on the venus GX device itself. Minimal requirements.  
-Example2.py has some additional requirements and should be run on your local nix* machine.
 
-Example.py requires modbus enabled on the GX device  
-Example2.py requires modbus & Mqtt enabled on the GX device.  
-  
-Example.py
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/Modbus_2022-02-13_19-40-40.png?raw=true) 
   
-Example2.py      
+   
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/Peek_2022-02-19_14-30.apng?raw=true)
   
 PyQT5-Dual-Charger.py    
@@ -112,7 +83,7 @@ Just run the .py file and the .ui file will auto load.
 execute in the cloned directory as the icon file is in that location.    
 Your system theme / font will dictate the style and appearence of the Pyqt program.
 
-You must have the correct Victron equipment. such as Multiplus, BMV, Solar charger, Venus GX device.    
+You must have the correct Victron equipment. such as Multiplus with ESS, BMV, Solar charger, Venus GX device.    
 
 
  
