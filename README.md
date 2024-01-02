@@ -66,18 +66,18 @@ Example.py requires modbus enabled on the GX device
 Example2.py requires modbus & Mqtt enabled on the GX device.  
   
 Example.py
-![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/Modbus_2022-02-13_19-40-40.png?raw=true) 
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/Modbus_2022-02-13_19-40-40.png?raw=true) 
   
 Example2.py      
-![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/Peek_2022-02-19_14-30.apng?raw=true)
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/Peek_2022-02-19_14-30.apng?raw=true)
   
 PyQT5-Dual-Charger.py    
 PyQT5-Dual-Charger.ui    
-![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/PyQt-Dual-Charger3.apng?raw=true)    
-![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/MP-Status.png?raw=true)
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/PyQt-Dual-Charger3.apng?raw=true)    
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/MP-Status.png?raw=true)
 
 TK-VictronSolar.py    
-![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/VictronSolar-SingleMPPT.apng?raw=true)    
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/VictronSolar-SingleMPPT.apng?raw=true)    
 
 PyQT5-No-Multiplus-Single-Charger-JBD-BMS.py    
 This file is for a Raspi and a single Victron SmartSolar Charger. Also includes a Serial UART BMS (JBD in my case).    
@@ -86,7 +86,7 @@ Venus OS Serial BMS info
 https://github.com/Louisvdw/dbus-serialbattery    
 USB Serial interface https://overkillsolar.com/product/usb-module-for-bms/    
 The connector included did not fit my BMS, YMMV. I cut the BMS BlueTooth cable in half and soldered the UART wire's to the connector wire's    
-![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/PyQT5-No-Multiplus-Single-Charger-JBD-BMS.png?raw=true)    
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/PyQT5-No-Multiplus-Single-Charger-JBD-BMS.png?raw=true)    
     
 To install  
 git clone https://github.com/optio50/Victron_Modbus_TCP  
