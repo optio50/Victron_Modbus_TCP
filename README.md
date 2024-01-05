@@ -62,12 +62,13 @@ The connector included did not fit my BMS, YMMV. I cut the BMS BlueTooth cable i
 To install  
 git clone https://github.com/optio50/Victron_Modbus_TCP  
 cd Victron_Modbus_TCP  
-chmod +x Example.py  
+chmod +x MODBUS_Example.py    
+chmod +x MQTT_Example.py    
 pip3 install paho-mqtt  
 pip3 install pymodbus  
-./Example.py  
+./MODBUS_Example.py.py  
 or  
-./Example2.py    
+./MQTT_Example.py    
  
  
 To use the PyQt files you will need to.    
