@@ -19,7 +19,7 @@ import json
 ip = '192.168.20.167'
 
 # VRM Portal ID from GX device.
-VRMid = "XXXXXXXXXXXXXX"
+VRMid = "b827eba69d10"
 
 # MQTT Instance ID
 MQTT_SolarCharger_ID = 288 # Victron Smart MPPT
@@ -32,7 +32,7 @@ SolarChargerAmps  = None
 print("\033[H\033[J") # Clear screen
 print('\033[?25l', end="") # Hide Blinking Cursor
 clear = "\033[K\033[1K" # Eliminates screen flashing / blink during refresh
-                        # It clear's to end of line and moves to begining of line then prints
+                        # It clear's to end of line and moves to begining of line then prints the new line
 
 
 # Define callback functions
@@ -108,7 +108,7 @@ client = mqtt.Client()
 # Assign callback functions
 client.on_connect    = on_connect    # Do something on broker connection (Subscribe)
 client.on_message    = on_message    # Do something on the message that comes in (look at the message topic and assign a variable)
-                                     # Messages are only sent if they change or a full publish is requested (keep alive)
+                                     # Messages are only sent if they change or a full publish is requested (as in a keep alive)
 client.on_disconnect = on_disconnect # If disconnect is expected then exit, else try to reconnect
 
 # Connect to the broker
@@ -117,10 +117,10 @@ client.connect(ip, 1883, 60)
 # Start the non blocking loop
 client.loop_start()
 
-# send a keep alive to do a full publish of all topics (refresh)
+# send a keep alive to do a full send of all topics (refresh)
 mqttpublish.single("R/"+VRMid+"/keepalive", hostname=ip) # One time publish to refresh all topics
 
-# The variables in this list were set to None at the top of the script. Loop untill they are no longer None.
+# The variables in this list were set to None at the top of the script. Loop until they are no longer None.
 mqtt_list = [None]
 # You dont need to verify all your variables with this loop. After you send the keep alive and have a few they should all be good.
 # On a rare chance this could actually take up to the keep alive timeout
@@ -134,21 +134,26 @@ counter = 1
 try:
     while True: # print the variable and value on the screen
         print("\033[0;0f") # move to col 0 row 0 to start the printing at the same spot everytime
+                           # instead of having the text scoll up the screen just reuse the same spot on the screen
+                           # the "clear" in the following lines erases the line and reprints wih new values from the begining of the line
         print(f"\033[38;5;202m==================Loop Number {counter} ==================\033[0m")
-        counter += 1
-        print(f"{clear}{SolarName: <30} SolarName")
-        print(f"{clear}{SolarYield: <30} SolarYield")
-        print(f"{clear}{SolarWatts: <30} SolarWatts")
-        print(f"{clear}{SolarVolts: <30} SolarVolts")
-        print(f"{clear}{SolarChargerAmps: <30} SolarChargerAmps")
-        print(f"{clear}{SolarYieldYest: <30} SolarYieldYest")
-        print(f"{clear}{MaxSolarWatts: <30} MaxSolarWatts")
-        print(f"{clear}{SolarChargeLimit: <30} SolarChargeLimit")
-        print(f"{clear}{MaxSolarWattsYest: <30} MaxSolarWattsYest")
-        print(f"{clear}{SolarState: <30} SolarState")
-        print(f"{clear}{SolarError: <30} SolarError")
-        print(f"{clear}{SolarChargerMode: <30} SolarChargerMode")
-        time.sleep(.5) # how fast do you want to look for a new message? (refresh rate)
+        print(f"{clear}SolarName...........: {SolarName}")
+        print(f"{clear}SolarYield..........: {SolarYield:.2f}")
+        print(f"{clear}SolarWatts..........: {int(SolarWatts)}") # The int is to change it to a whole number
+        print(f"{clear}SolarVolts..........: {SolarVolts:.2f}") # The :.2f changes the resolution to 2 digits to the right
+        print(f"{clear}SolarChargerAmps....: {SolarChargerAmps:.2f}")
+        print(f"{clear}SolarYieldYest......: {SolarYieldYest:.2f}")
+        print(f"{clear}MaxSolarWatts.......: {MaxSolarWatts}")
+        print(f"{clear}SolarChargeLimit....: {SolarChargeLimit}")
+        print(f"{clear}MaxSolarWattsYest...: {MaxSolarWattsYest}")
+        print(f"{clear}SolarState..........: {SolarState}")
+        print(f"{clear}SolarError..........: {SolarError}") # You need a dict to know the error. This is only the value.
+        print(f"{clear}SolarChargerMode....: {SolarChargerMode}") # Normally You would need a dict to know the state
+                                                                  # but there are only two choices (on or off)
+                                                                  # so we make it known with an if statement in "on_message"
+        print(f"\n\n\n Ctrl✞C to Exit")
+        counter += 1 # increment the loop counter by 1 every loop
+        time.sleep(.5) # how fast do you want to look for a new message? (refresh rate in seconds)
 
 except KeyboardInterrupt:
         print("\033[J") # erase the screen from the cursor position to the end of the screen
