@@ -57,7 +57,7 @@ Venus OS Serial BMS info
 https://github.com/Louisvdw/dbus-serialbattery    
 USB Serial interface https://overkillsolar.com/product/usb-module-for-bms/    
 The connector included did not fit my BMS, YMMV. I cut the BMS BlueTooth cable in half and soldered the UART wire's to the connector wire's    
-![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/PyQT5-No-Multiplus-Single-Charger-JBD-BMS.png?raw=true)    
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/PyQT5-Single-Charger-JBD-BMS.png?raw=true)    
     
 To install  
 git clone https://github.com/optio50/Victron_Modbus_TCP  
