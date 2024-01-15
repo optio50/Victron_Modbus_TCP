@@ -42,8 +42,8 @@ You likely dont have the 3 temperature sensors included. Change the variable to 
    
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/Peek_2022-02-19_14-30.apng?raw=true)
   
-PyQT5-Dual-Charger.py    
-PyQT5-Dual-Charger.ui    
+PyQT5-Multiple-Chargers.py    
+PyQT5-Multiple-Chargers.ui    
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/PyQT5-Multiple-Charger.png?raw=true)    
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/MP-Status.png?raw=true)
 
