@@ -22,9 +22,9 @@ import subprocess
 ==========================================================
 ==========================================================
 '''
-Analog_Inputs = 'y'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
-ESS_Info      = 'y' # Y or N (case insensitive) to display ESS system information
-ip            = "192.168.20.156" # ip address of GX device or if on venus local try localhost
+Analog_Inputs = 'n'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
+ESS_Info      = 'n' # Y or N (case insensitive) to display ESS system information
+ip            = "localhost" # ip address of GX device or if on venus local try localhost
 
 # Value Refresh Rate in seconds
 RefreshRate = 1
