@@ -44,7 +44,7 @@ You likely dont have the 3 temperature sensors included. Change the variable to 
   
 PyQT5-Dual-Charger.py    
 PyQT5-Dual-Charger.ui    
-![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/PyQt-Dual-Charger3.apng?raw=true)    
+![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/PyQT5-Multiple-Charger.png?raw=true)    
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/MP-Status.png?raw=true)
 
 TK-VictronSolar.py    
