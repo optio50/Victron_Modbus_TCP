@@ -64,16 +64,16 @@ Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID" '''
 VRMid = "b827eba69d10"
 #===================================
 ''' Weather URL example https://wttr.in/dallas+texas ,use something such as manchester+england or nsw+australia or dallas+texas or a zip code'''
-weather_url = "https://www.worldweatheronline.com/v2/weather.aspx?q=99645"
-#weather_url = "https://wttr.in/palmer+alaska"
-#weather_url = "https://weatherstreet.com/weather-forecast/Palmer-AK-99645.htm"
-#weather_url = "https://www.weather-us.com/en/alaska-usa/palmer-long-term-weather-forecast?f,in,in,mi"
-#weather_url = "https://www.30dayweather.com/en/d/united-states/alaska/99645-palmer/"
+weather_url = "https://wttr.in/nsw+australia"
+#weather_url = "https://www.worldweatheronline.com/v2/weather.aspx?q=90210"
+#weather_url = "https://www.weather-us.com/en/california-usa/beverly-hills-long-term-weather-forecast?f,in,in,mi"
+#weather_url = "https://www.30dayweather.com/en/d/united-states/california/90210-beverly-hills/"
 #weather_url = "https://www.forecast.co.uk/united-states/dallas.html"
-#weather_url = "https://www.bing.com/search?q=10+day+forecast+in+palmer+alaska"
-#weather_url = "https://www.timeanddate.com/weather/@z-us-99645/ext"
-#weather_url = "https://forecast7.com/en/61d60n149d11/palmer/?unit=us"
-#weather_url = "https://forecast.weather.gov/MapClick.php?lat=61.5994&lon=-149.1174"
+#weather_url = "https://www.bing.com/search?q=10+day+forecast+in+dallas+texas"
+#weather_url = "https://www.msn.com/en-us/weather/forecast/in-Dallas,TX"
+#weather_url = "https://www.timeanddate.com/weather/@z-us-90210/ext"
+#weather_url = "https://forecast7.com/en/30d27n97d74/austin/?unit=us"
+#weather_url = "https://forecast.weather.gov/MapClick.php?CityName=Beverly+Hills&state=CA&site=LOX&lat=34.0995&lon=-118.414"
 '''
 ==========================================================
                  Change the Variables Below               
