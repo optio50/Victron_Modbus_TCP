@@ -191,7 +191,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Page1">
        <widget class="QWidget" name="layoutWidget">
@@ -210,11 +210,16 @@
        <widget class="QTextBrowser" name="textBrowser2">
         <property name="geometry">
          <rect>
-          <x>0</x>
+          <x>1</x>
           <y>-2</y>
           <width>961</width>
           <height>591</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Noto Sans Mono</family>
+         </font>
         </property>
        </widget>
       </widget>
@@ -321,6 +326,12 @@
     <property name="styleSheet">
      <string notr="true">color: rgb(0, 0, 102);</string>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
     <property name="text">
      <string extracomment="Big Watts">✞</string>
     </property>
@@ -372,6 +383,12 @@
        <property name="styleSheet">
         <string notr="true">background-color: rgb(85, 87, 83);</string>
        </property>
+       <property name="frameShape">
+        <enum>QFrame::WinPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
        <property name="lineWidth">
         <number>1</number>
        </property>
@@ -422,6 +439,12 @@
        <property name="styleSheet">
         <string notr="true">background-color: rgb(85, 87, 83);</string>
        </property>
+       <property name="frameShape">
+        <enum>QFrame::WinPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
        <property name="digitCount">
         <number>7</number>
        </property>
@@ -471,6 +494,12 @@
        </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(85, 87, 83);</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::WinPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
        </property>
        <property name="digitCount">
         <number>7</number>
@@ -1209,7 +1238,7 @@
     <property name="geometry">
      <rect>
       <x>1410</x>
-      <y>360</y>
+      <y>340</y>
       <width>91</width>
       <height>101</height>
      </rect>
@@ -1225,7 +1254,7 @@
     <property name="geometry">
      <rect>
       <x>1550</x>
-      <y>150</y>
+      <y>90</y>
       <width>362</width>
       <height>324</height>
      </rect>
@@ -1263,7 +1292,7 @@
     <property name="geometry">
      <rect>
       <x>1180</x>
-      <y>420</y>
+      <y>400</y>
       <width>371</width>
       <height>231</height>
      </rect>
@@ -1306,6 +1335,12 @@
     <property name="styleSheet">
      <string notr="true">background-color: rgb(85, 87, 83);</string>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::Panel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
     <property name="digitCount">
      <number>5</number>
     </property>
@@ -1322,8 +1357,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>1580</x>
-      <y>540</y>
+      <x>1630</x>
+      <y>515</y>
       <width>271</width>
       <height>294</height>
      </rect>
@@ -1901,82 +1936,12 @@ background-color: #047EC2;
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>1050</x>
-      <y>920</y>
-      <width>228</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_3">
-     <item row="0" column="0">
-      <widget class="QLabel" name="FirmWareCheck_label">
-       <property name="text">
-        <string>Check For New Firmware</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="FirmWareCheck_PushButton">
-       <property name="styleSheet">
-        <string notr="true">QPushButton:hover {
-background-color: green;
-
-}</string>
-       </property>
-       <property name="text">
-        <string>Check</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>1050</x>
-      <y>946</y>
-      <width>228</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_5">
-     <item row="0" column="0">
-      <widget class="QLabel" name="Reboot_label">
-       <property name="text">
-        <string>Reboot GX Device             </string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="Reboot_PushButton">
-       <property name="maximumSize">
-        <size>
-         <width>80</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton:hover {
-background-color: Red;
-
-}</string>
-       </property>
-       <property name="text">
-        <string>Reboot</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QFrame" name="Charge_frame">
     <property name="geometry">
      <rect>
-      <x>1050</x>
+      <x>1210</x>
       <y>660</y>
-      <width>441</width>
+      <width>411</width>
       <height>150</height>
      </rect>
     </property>
@@ -2196,14 +2161,14 @@ background-color: Red;
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>1052</x>
-      <y>810</y>
-      <width>181</width>
+      <x>979</x>
+      <y>660</y>
+      <width>191</width>
       <height>98</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_13">
-     <item>
+    <layout class="QGridLayout" name="gridLayout_11">
+     <item row="0" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
         <widget class="QLabel" name="Battery_State_label">
@@ -2230,7 +2195,7 @@ background-color: Red;
        </item>
       </layout>
      </item>
-     <item>
+     <item row="1" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QLabel" name="DVCC_Info_label">
@@ -2258,7 +2223,7 @@ background-color: Red;
        </item>
       </layout>
      </item>
-     <item>
+     <item row="2" column="0">
       <layout class="QGridLayout" name="gridLayout_8">
        <item row="0" column="0">
         <layout class="QFormLayout" name="formLayout">
@@ -2306,7 +2271,7 @@ background-color: Red;
       <x>10</x>
       <y>668</y>
       <width>256</width>
-      <height>279</height>
+      <height>281</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -2475,6 +2440,12 @@ background-color: Red;
          <property name="styleSheet">
           <string notr="true">background-color: rgb(85, 87, 83);</string>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
          <property name="smallDecimalPoint">
           <bool>false</bool>
          </property>
@@ -2516,6 +2487,12 @@ background-color: Red;
          <property name="styleSheet">
           <string notr="true">background-color: rgb(85, 87, 83);</string>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
          <property name="digitCount">
           <number>4</number>
          </property>
@@ -2551,8 +2528,14 @@ background-color: Red;
          <property name="styleSheet">
           <string notr="true">background-color: rgb(85, 87, 83);</string>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
          <property name="digitCount">
-          <number>5</number>
+          <number>4</number>
          </property>
          <property name="segmentStyle">
           <enum>QLCDNumber::Flat</enum>
@@ -2586,8 +2569,14 @@ background-color: Red;
          <property name="styleSheet">
           <string notr="true">background-color: rgb(85, 87, 83);</string>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
          <property name="digitCount">
-          <number>3</number>
+          <number>4</number>
          </property>
          <property name="segmentStyle">
           <enum>QLCDNumber::Flat</enum>
@@ -2621,8 +2610,14 @@ background-color: Red;
          <property name="styleSheet">
           <string notr="true">background-color: rgb(85, 87, 83);</string>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
          <property name="digitCount">
-          <number>3</number>
+          <number>6</number>
          </property>
          <property name="segmentStyle">
           <enum>QLCDNumber::Flat</enum>
@@ -2655,6 +2650,12 @@ background-color: Red;
          </property>
          <property name="styleSheet">
           <string notr="true">background-color: rgb(85, 87, 83);</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
          </property>
          <property name="digitCount">
           <number>5</number>
@@ -2691,6 +2692,12 @@ background-color: Red;
          <property name="styleSheet">
           <string notr="true">background-color: rgb(85, 87, 83);</string>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
          <property name="digitCount">
           <number>5</number>
          </property>
@@ -2723,6 +2730,9 @@ background-color: Red;
          <property name="styleSheet">
           <string notr="true">background-color: rgb(85, 87, 83);</string>
          </property>
+         <property name="frame">
+          <bool>true</bool>
+         </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
@@ -2752,29 +2762,16 @@ background-color: Red;
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="Shunt_Label">
-    <property name="geometry">
-     <rect>
-      <x>1330</x>
-      <y>841</y>
-      <width>321</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>SmartShunt.png</pixmap>
-    </property>
-   </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>717</x>
@@ -2824,6 +2821,9 @@ background-color: Red;
       <layout class="QHBoxLayout" name="horizontalLayout_12">
        <item>
         <widget class="QLabel" name="Battery_Temp_label">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Battery Temperature Out Of High / Low Range When LED On&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>Battery Temp:</string>
          </property>
@@ -2891,6 +2891,10 @@ Set in Victron Connect</string>
       <layout class="QFormLayout" name="formLayout_6">
        <item row="0" column="0">
         <widget class="QLabel" name="MQTT_label">
+         <property name="toolTip">
+          <string>Blinking Green if Connected and receiving messages.
+Red if Disconnected from broker.</string>
+         </property>
          <property name="text">
           <string>MQTT Messages:</string>
          </property>
@@ -2910,8 +2914,7 @@ Set in Victron Connect</string>
           </font>
          </property>
          <property name="toolTip">
-          <string>Blinking Green if Connected and receiving messages.
-Red if Disconnected from broker.</string>
+          <string/>
          </property>
          <property name="whatsThis">
           <string/>
@@ -2930,6 +2933,61 @@ Red if Disconnected from broker.</string>
       </layout>
      </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="Reload_Weather_PushButton">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>780</y>
+      <width>101</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="toolTip">
+     <string>Weather will auto refresh every 15 min.
+This button will manually refresh the Widget.</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:hover {
+background-color: green;
+
+}</string>
+    </property>
+    <property name="text">
+     <string>Refresh Weather</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Time_Label">
+    <property name="geometry">
+     <rect>
+      <x>1480</x>
+      <y>20</y>
+      <width>281</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>**</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_5">
+    <property name="geometry">
+     <rect>
+      <x>974</x>
+      <y>820</y>
+      <width>891</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="WeatherWidgetLayout"/>
    </widget>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
@@ -2952,12 +3010,12 @@ Red if Disconnected from broker.</string>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
    <zorder>TimeToSOC_frame</zorder>
    <zorder>Rasberry_Label</zorder>
-   <zorder>layoutWidget_2</zorder>
    <zorder>Charge_frame</zorder>
-   <zorder>Shunt_Label</zorder>
+   <zorder>Reload_Weather_PushButton</zorder>
+   <zorder>Time_Label</zorder>
+   <zorder>layoutWidget_5</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -2995,8 +3053,16 @@ Red if Disconnected from broker.</string>
     <addaction name="separator"/>
     <addaction name="actionChange_Background_Color"/>
    </widget>
+   <widget class="QMenu" name="menuSystem">
+    <property name="title">
+     <string>System</string>
+    </property>
+    <addaction name="actionCheck_For_New_Firmware"/>
+    <addaction name="actionReboot_GX_Device"/>
+   </widget>
    <addaction name="menuSolar_Charger"/>
    <addaction name="menuWindow"/>
+   <addaction name="menuSystem"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="font">
@@ -3103,6 +3169,16 @@ QSizeGrip {
   <action name="actionChange_Background_Color">
    <property name="text">
     <string>Change Background Color</string>
+   </property>
+  </action>
+  <action name="actionCheck_For_New_Firmware">
+   <property name="text">
+    <string>Check For New Firmware</string>
+   </property>
+  </action>
+  <action name="actionReboot_GX_Device">
+   <property name="text">
+    <string>Reboot GX Device</string>
    </property>
   </action>
  </widget>

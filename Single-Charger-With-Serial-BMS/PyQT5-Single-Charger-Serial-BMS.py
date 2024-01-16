@@ -20,16 +20,16 @@ from datetime import datetime
 from datetime import timedelta
 from threading import Thread
 from time import gmtime, strftime
-from itertools import cycle # Flash the LED's
+from itertools import cycle # Flash the alarm LED's on and off
 
 from PyQt5 import QtGui, uic, QtCore, QtWidgets, QtWebEngineWidgets
-from PyQt5.QtWebEngineWidgets import *
-from PyQt5.QtWebEngineWidgets import QWebEngineSettings as QWebSettings
+from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineProfile, QWebEngineSettings
+#from PyQt5.QtWebEngineWidgets import QWebEngineSettings
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QColor, QPalette
-from PyQt5.QtWebKit import QWebSettings
+#from PyQt5.QtWebKit import QWebSettings
 
 # PGlive (Charts)
 import pyqtgraph as pg
@@ -47,50 +47,67 @@ import paho.mqtt.client as mqtt
 import paho.mqtt.subscribe as subscribe
 import paho.mqtt.publish as mqttpublish
 '''
-This script "ONLY" uses MQTT for the variables. Enable on the GX device
+This script "ONLY" uses MQTT for the variables. Enable on the GX device.
 A keepalive request should be hosted on the venus device instead of in this script.
-https://github.com/optio50/Victron_Modbus_TCP    forever.py & keep-alive.py
+https://github.com/optio50/Victron_Modbus_TCP   --->    forever.py & keep-alive.py
+
+==========================================================
+==========================================================
+                 Change the Variables Below
+==========================================================
+==========================================================
 '''
+
 #===================================
 ''' GX Device I.P Address '''
 ip = '192.168.20.167'
+port = 1883 # 1883 is a MQTT standard port
 #===================================
+# VRM Portal ID from GX device.
 '''
-VRM Portal ID from GX device.
 This ID is needed even with no internet access as its the name of your venus device.
-Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID" '''
+Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
+'''
 VRMid = "b827eba69d10"
 #===================================
-''' Weather URL example https://wttr.in/dallas+texas ,use something such as manchester+england or nsw+australia or dallas+texas or a zip code'''
-weather_url = "https://www.worldweatheronline.com/v2/weather.aspx?q=99645"
-#weather_url = "https://wttr.in/palmer+alaska"
-#weather_url = "https://weatherstreet.com/weather-forecast/Palmer-AK-99645.htm"
-#weather_url = "https://www.weather-us.com/en/alaska-usa/palmer-long-term-weather-forecast?f,in,in,mi"
-#weather_url = "https://www.30dayweather.com/en/d/united-states/alaska/99645-palmer/"
-#weather_url = "https://www.forecast.co.uk/united-states/dallas.html"
-#weather_url = "https://www.bing.com/search?q=10+day+forecast+in+palmer+alaska"
-#weather_url = "https://www.timeanddate.com/weather/@z-us-99645/ext"
-#weather_url = "https://forecast7.com/en/61d60n149d11/palmer/?unit=us"
-#weather_url = "https://forecast.weather.gov/MapClick.php?lat=61.5994&lon=-149.1174"
+# Weather Widget
+'''
+Go to https://weatherwidget.io/ to get your weather location code (url only).
+You Only need the https url portion that looks like
+https://forecast7.com/en/34d10n118d41/90210/?unit=us
+and type in your desired text for "city name"
+'''
+weather_widget_url = "https://forecast7.com/en/30d27n97d74/austin/?unit=us"
+city_name = "Local"
 #===================================
+# Web browser url (the last tab of the Charts widget)
+# Not to be confused with the weather widget url above
 '''
-==========================================================
-                 Change the Variables Below               
-==========================================================
-==========================================================
+Weather URL example https://wttr.in/dallas+texas
+use something such as manchester+england or nsw+australia or dallas+texas or a zip code
 '''
+weather_url = "https://wttr.in/nsw+australia"
+#weather_url = "https://www.worldweatheronline.com/v2/weather.aspx?q=90210"
+#weather_url = "https://www.weather-us.com/en/california-usa/beverly-hills-long-term-weather-forecast?f,in,in,mi"
+#weather_url = "https://www.30dayweather.com/en/d/united-states/california/90210-beverly-hills/"
+#weather_url = "https://www.forecast.co.uk/united-states/dallas.html"
+#weather_url = "https://www.bing.com/search?q=10+day+forecast+in+dallas+texas"
+#weather_url = "https://www.msn.com/en-us/weather/forecast/in-Dallas,TX"
+#weather_url = "https://www.timeanddate.com/weather/@z-us-90210/ext"
+#weather_url = "https://forecast7.com/en/30d27n97d74/austin/?unit=us"
+#weather_url = "https://forecast.weather.gov/MapClick.php?CityName=Beverly+Hills&state=CA&site=LOX&lat=34.0995&lon=-118.414"
+
 #===================================
 # BMV and Inverter Optional Equipment Installed? Y or N
-BMV_Installed = "y"
-Inverter_Installed = "y"
+BMV_Installed      = "y"
+Inverter_Installed = "y" # Such as a Phoenix VE direct
 #===================================
 # MQTT Instance ID's Below.
 # MQTT Instance ID not to be confused with the Modbus Unit ID.
-# Device List in VRM or crossed referenced in the CCGX-Modbus-TCP-register-list.xlsx Tab #2
 #===================================
 # Louisvdw Battery Monitor driver.
 # https://github.com/Louisvdw/dbus-serialbattery
-MQTT_BatteryBMS_ID   = 4   # Serial BMS (Required) 
+MQTT_BatteryBMS_ID   = 4   # Serial BMS (Required)
 #===================================
 # Victron Smart Solar Charger
 MQTT_SolarCharger_ID = 288 # Victron Smart MPPT (Required)
@@ -101,12 +118,12 @@ else:
     MQTT_BMV_ID = None
 #===================================
 if Inverter_Installed.lower() == "y":
-    MQTT_Inverter_ID = 290 # Victron Phoenix Inverter (Optional)
+    MQTT_Inverter_ID = 290 # The small Victron Phoenix Inverter's (Optional)
 
 else:
     MQTT_Inverter_ID = None
 #===================================
-# Describe The Solar PAnel Array
+# Describe The Solar Panel Array
 Array1 = "Portable 100W Soft Panel"
 #===================================
 '''
@@ -121,19 +138,19 @@ Choosing "Other" will use the BMS shunt and values. Good Luck :-)
 Battery_Type = "LIFEPO4"
 #Battery_Type = "OTHER"
 #===================================
-# Temperature Sensor Needed
+# Temperature Sensor Needed (JBD BMS has one built-in)
 # Alarm LED for Battery Temperature Range Deg F
-Batt_Lo = 35 # Low Temperature °F
-Batt_Hi = 80 # High Temperature °F
+Batt_Lo = 35 # Low  Temperature °F Alarm
+Batt_Hi = 80 # High Temperature °F Alarm
 '''
 ==========================================================
-                Change the Variables Above                
+==========================================================
+                Change the Variables Above
 ==========================================================
 ==========================================================
 '''
 #======================================================================
-if Battery_Type == "LIFEPO4":
-    if MQTT_BMV_ID == None:
+if Battery_Type == "LIFEPO4" and MQTT_BMV_ID == None:
         print(f"MQTT_BMV_ID does not exist, A Victron Smart Shunt is required for a LIFEPO4 battery")
         sys.exit()
 #===================================
@@ -149,10 +166,11 @@ flag_connected      = 0
 #===================================
 try:
     os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-logging"
-    os.putenv("QT_LOGGING_RULES", "*.debug=false;qt.qpa.*=False")
+    os.environ['QT_LOGGING_RULES'] = 'qt.qpa.*=false;*.debug=false'
 except Exception as e:
-    print(f"An error occurred: {str(e)}") # Prevents QT mouse click button bug   qt.qpa.xcb: QXcbConnection: XCB error: 3 (BadWindow)
-#                                                               https://bugreports.qt.io/browse/QTBUG-56893
+    print(f"A logging error occurred: {str(e)}")
+# Prevents QT mouse click button bug   qt.qpa.xcb: QXcbConnection: XCB error: 3 (BadWindow)
+#                                               https://bugreports.qt.io/browse/QTBUG-56893
 #===================================
 # Datetime object containing date and time for App Start
 nowStart = datetime.now()
@@ -162,9 +180,9 @@ dt_stringStart = nowStart.strftime("%a %d %b %Y     %r")
 big_tab = "\t"*15 # used in the status bar because it compresses text
 #===================================
 # This will blink the Alarm LED's on and off
-blinkred_Battery_Temp       = cycle(["rgb(255, 0, 0)",   "rgb(28, 28, 0)"]) # Red
-blinkred_Inverter_Temp      = cycle(["rgb(255, 0, 0)",   "rgb(28, 28, 0)"]) # Red
-blinkred_Inverter_Overload  = cycle(["rgb(255, 0, 0)",   "rgb(28, 28, 0)"]) # Red
+blinkred_Battery_Temp       = cycle(["rgb(255, 0, 0)",   "rgb(28, 28, 0)"]) # Red to dark
+blinkred_Inverter_Temp      = cycle(["rgb(255, 0, 0)",   "rgb(28, 28, 0)"]) # Red to dark
+blinkred_Inverter_Overload  = cycle(["rgb(255, 0, 0)",   "rgb(28, 28, 0)"]) # Red to dark
 blinkgreen_MQTT             = cycle(["rgb(0,154 ,23  )",   "rgb(28, 28, 0)"]) # Blinking Green LED for MQTT connection
 #===================================
 InverterStateDict = {0:   "OFF",
@@ -301,7 +319,7 @@ def on_connect(client, userdata, flags, rc):
                   ("N/"+VRMid+"/battery/"+str(MQTT_BMV_ID)+"/Soc",0),
                   ("N/"+VRMid+"/battery/"+str(MQTT_BMV_ID)+"/TimeToGo",0)
                 ]
-              
+
     Inverter_Topics = [("N/"+VRMid+"/inverter/"+str(MQTT_Inverter_ID)+"/ProductName",0),
                       ("N/"+VRMid+"/inverter/"+str(MQTT_Inverter_ID)+"/Mode",0),
                       ("N/"+VRMid+"/inverter/"+str(MQTT_Inverter_ID)+"/State",0),
@@ -311,7 +329,7 @@ def on_connect(client, userdata, flags, rc):
                       ("N/"+VRMid+"/inverter/"+str(MQTT_Inverter_ID)+"/Ac/Out/L1/S",0),
                       ("N/"+VRMid+"/inverter/"+str(MQTT_Inverter_ID)+"/Ac/Out/L1/I",0)
                       ]
-    
+
     Solar_Charger_Topics = [("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/ProductName",0),
                           ("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit",0),
                           ("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/History/Daily/0/Yield",0),
@@ -349,7 +367,7 @@ def on_connect(client, userdata, flags, rc):
                              ("N/"+VRMid+"/battery/"+str(MQTT_BatteryBMS_ID)+"/Soc",0),
                              ("N/"+VRMid+"/battery/"+str(MQTT_BatteryBMS_ID)+"/TimeToGo",0)
                              ]
-    
+
     topics = Solar_Charger_Topics
     topics.extend(BatteryBMS_Topics)
     if BMV_Installed.lower() == "y":
@@ -367,19 +385,32 @@ def on_disconnect(client, userdata,rc):
     # This should survive a Venus Reboot and reconnect so previous chart data will not be lost
     global flag_connected
     flag_connected = 0
-    RC = {5: "Connection Refused",
+    RC = {1: "Out of memory",
+          2: "A network protocol error occurred when communicating with the broker.",
+          3: "Invalid function arguments provided.",
+          4: "The client is not currently connected.",
+          5: "Connection Refused",
           6: "Connection Not Found",
-          7: "Connection Lost"
+          7: "Connection Lost",
+          8: "A TLS error occurred.",
+          9: "Payload too large.",
+          10: "This feature is not supported.",
+          11: "Authorisation failed.",
+          12: "Access denied by ACL.",
+          13: "Unknown error.",
+          14: "Error defined by errno.",
+          15: "Message queue full.",
+          16: "Connection Lost for Unknown Reason"
          }
 
     if rc != 0:
         Disconnect = datetime.now()
         Disconnect_dt_string = Disconnect.strftime("%a %d %b %Y     %r")
         print(f"\033[38;5;196mUnexpected Disconnect \033[0m{Disconnect_dt_string}")
-        print(f"Disconnect Code {rc} {RC[rc]}" )
+        print(f"Disconnect Code {str(rc)} {RC[rc]}" )
         print(f"\033[38;5;196mTrying to Reconnect....\033[0m")
 
-        if rc in range(5, 8):
+        if rc in range(1, 17):
             try:
                 #time.sleep(10)
                 client.reconnect()
@@ -392,17 +423,8 @@ def on_disconnect(client, userdata,rc):
                 #time.sleep(60)
                 #client.reconnect()
         else:
-            try:
-                #time.sleep(10)
-                client.reconnect()
-            except ConnectionRefusedError:
-                print(f"Connection Refused Error...Retrying")
-                #time.sleep(60)
-                #client.reconnect()
-            except TimeoutError:
-                print(f"Connection Timeout Error...Retrying")
-                #time.sleep(60)
-                #client.reconnect()
+            print(f"\033[38;5;196mUnexpected Disconnect reason unknown \033[0m")
+            print(f"Disconnect Code {str(rc)}")
     else:
         client.loop_stop()
         print(f"\033[38;5;148mStopping MQTT Loop")
@@ -727,17 +749,13 @@ class Window(QMainWindow):
 
         if Inverter_Installed.lower() == "n":
             self.Inverter_frame.setHidden(True)
-        
-        if BMV_Installed.lower() == "n":
-            self.Shunt_Label.setHidden(True)
 
 
         def FirmWare_Check():
+            self.statusBar.showMessage("Checking for New Firmware", 5000)
             mqttpublish.single("W/"+VRMid+"/platform/0/Firmware/Online/Check",
-                               payload=json.dumps({"value": 1}), hostname=ip, port=1883)
-            time.sleep(.5)
+                               payload=json.dumps({"value": 1}), hostname=ip, port=port)
             mqttpublish.single("R/"+VRMid+"/keepalive", hostname=ip)
-            time.sleep(.5)
             if Installed_Version != Available_Version:
                 global dt_string
                 if Available_Version is not None:
@@ -751,17 +769,35 @@ class Window(QMainWindow):
         def Charger1_On():
             # 1 = On 4 = Off
             mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Mode",
-                                   payload=json.dumps({"value": 1}), hostname=ip, port=1883)
+                                   payload=json.dumps({"value": 1}), hostname=ip, port=port)
             global dt_string
             self.textBrowser2.append(f"<b><span style=\" color: black;\">{dt_string} ---- | ---- Solar Charger Mode Changed to On</span></b>")
+            self.statusBar.showMessage("Solar Charger Manually Changed to ON", 5000)
 
 
         def Charger1_Off():
             # 1 = On 4 = Off
             mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Mode",
-                                       payload=json.dumps({"value": 4}), hostname=ip, port=1883)
+                                       payload=json.dumps({"value": 4}), hostname=ip, port=port)
             global dt_string
             self.textBrowser2.append(f"<b><span style=\" color: black;\">{dt_string} ---- | ---- Solar Charger Mode Changed to OFF</span></b>")
+            self.statusBar.showMessage("Solar Charger Manually Changed to OFF", 5000)
+
+        def Mode_Label_Clicked(event):
+            global dt_string
+            if SolarChargerMode == "ON":
+                mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Mode",
+                                       payload=json.dumps({"value": 4}), hostname=ip, port=port) # Turn Off
+
+                self.textBrowser2.append(f"<b><span style=\" color: black;\">{dt_string} ---- | ---- Solar Charger Mode Manually Changed to OFF</span></b>")
+                self.statusBar.showMessage("Solar Charger MODE Manually Changed to OFF", 5000)
+
+            elif SolarChargerMode == "OFF":
+                mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Mode",
+                                   payload=json.dumps({"value": 1}), hostname=ip, port=port) # Turn On
+                self.textBrowser2.append(f"<b><span style=\" color: black;\">{dt_string} ---- | ---- Solar Charger Mode Manually Changed to ON</span></b>")
+                self.statusBar.showMessage("Solar Charger MODE Manually Changed to ON", 5000)
+
 
         #===========================================================================================
         # Inverter Control
@@ -769,20 +805,22 @@ class Window(QMainWindow):
         def Inverter_On():
             #client.write_registers(address=3126, values=2, unit=Inverter_ID) # Turn On
             mqttpublish.single("W/"+VRMid+"/inverter/"+str(MQTT_Inverter_ID)+"/Mode",
-                                        payload=json.dumps({"value": 2}), hostname=ip, port=1883)
-            
+                                        payload=json.dumps({"value": 2}), hostname=ip, port=port)
+
 
 
         def Inverter_Off():
             #client.write_registers(address=3126, values=4, unit=Inverter_ID) # Turn Off
             mqttpublish.single("W/"+VRMid+"/inverter/"+str(MQTT_Inverter_ID)+"/Mode",
-                                        payload=json.dumps({"value": 4}), hostname=ip, port=1883)
+                                        payload=json.dumps({"value": 4}), hostname=ip, port=port)
 
 
         def Inverter_Eco():
             #client.write_registers(address=3126, values=5, unit=Inverter_ID) # Eco
             mqttpublish.single("W/"+VRMid+"/inverter/"+str(MQTT_Inverter_ID)+"/Mode",
-                                        payload=json.dumps({"value": 5}), hostname=ip, port=1883)
+                                        payload=json.dumps({"value": 5}), hostname=ip, port=port)
+        #===========================================================================================
+
 
 
         # Add comboBox items to change stacked widget pages
@@ -791,6 +829,7 @@ class Window(QMainWindow):
         self.comboBox.activated[int].connect(self.stackedWidget.setCurrentIndex)
         self.comboBox.setCurrentIndex(1)
         self.stackedWidget.setCurrentIndex(1)
+
         # See if we have WAN access for weather info
         def is_connected():
             try:
@@ -812,30 +851,63 @@ class Window(QMainWindow):
         # Create a new profile
         self.profile = QWebEngineProfile()
         # Disable caching
-        self.profile.setHttpCacheType(QWebEngineProfile.MemoryHttpCache)
-        self.profile.setHttpCacheMaximumSize(0)
+        self.profile.setHttpCacheType(QWebEngineProfile.NoCache)
+        #self.profile.setHttpCacheType(QWebEngineProfile.MemoryHttpCache)
+        #self.profile.setHttpCacheMaximumSize(0)
         self.profile.setPersistentCookiesPolicy(QWebEngineProfile.NoPersistentCookies)
 
 
         # Load Web Browser if connected
         if internet: # If true load weather_url
-            self.browser = QtWebEngineWidgets.QWebEngineView()
-            self.page = WebEnginePage(self.profile,self.browser)
-            self.browser.setPage(self.page)
-            self.browser.setUrl(QUrl(weather_url))
-            self.webLayout.addWidget(self.browser)
+            self.Weatherbrowser = QtWebEngineWidgets.QWebEngineView()
+            self.Weatherbrowserpage = WebEnginePage(self.profile,self.Weatherbrowser)
+            self.Weatherbrowser.setPage(self.Weatherbrowserpage)
+            self.Weatherbrowser.setUrl(QUrl(weather_url))
+            self.webLayout.addWidget(self.Weatherbrowser)
             # see def closeEvent for additional settings for closing
 
-        '''# Check to see if we have WAN access for weather info
-        internet = is_connected()
+            # Weather widget https://weatherwidget.io/
+            self.WeatherWidget = QtWebEngineWidgets.QWebEngineView()
+            self.WeatherWidgetpage = WebEnginePage(self.profile,self.WeatherWidget)
+            self.WeatherWidget.setPage(self.WeatherWidgetpage)
+            self.WeatherWidget.loadFinished.connect(self.onLoadFinished)
+            self.web_settings = self.WeatherWidget.settings()
+            self.WeatherWidget.page().setBackgroundColor(QColor(0, 0, 0, 0))
+            self.web_settings.setAttribute(QWebEngineSettings.LocalStorageEnabled, False)
+            self.web_settings.setAttribute(QWebEngineSettings.ShowScrollBars, False)
+            self.WeatherWidget.setHtml(f"""
+                    <html>
+                    <head>
+                        <!-- Include the widget's styles -->
+                        <link rel="stylesheet" type="text/css" href="https://weatherwidget.io/css/style.css">
+                    </head>
+                    <body style="background-color: transparent;">
+                        <!-- Place the weather widget code here -->
+                        <a class="weatherwidget-io"
+                        href="{weather_widget_url}"
+                        data-label_1="{city_name}"
+                        data-label_2="Forecast"
+                        data-icons="Climacons Animated"
+                        data-highcolor="orangered"
+                        data-lowcolor="skyblue"
+                        data-suncolor="darkorange"
+                        data-cloudfill="gray"
+                        data-raincolor="deepskyblue"
+                        data-snowcolor="white"
+                        </a>
 
-        # Load Web Browser if connected
-        if internet: # If true load weather_url
-            self.browser = QtWebEngineWidgets.QWebEngineView()
-            self.page = WebEnginePage(self.browser)
-            self.browser.setPage(self.page)
-            self.browser.setUrl(QUrl(weather_url))
-            self.webLayout.addWidget(self.browser)'''
+                        <script>
+                        !function(d,s,id){{var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){{js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}}}(document,'script','weatherwidget-io-js');
+                        </script>
+                    </body>
+                    </html>
+            """, QUrl(''))
+
+            self.WeatherWidgetLayout.addWidget(self.WeatherWidget)
+
+
+
+
 
         if Battery_Type == "LIFEPO4":
             self.TimeToSOC_frame.setHidden(True)
@@ -850,7 +922,7 @@ class Window(QMainWindow):
             if Rebootbutton == QMessageBox.Yes:
                 global dt_string
                 mqttpublish.single("W/"+VRMid+"/platform/0/Device/Reboot",
-                                    payload=json.dumps({"value": 1}), hostname=ip, port=1883)
+                                    payload=json.dumps({"value": 1}), hostname=ip, port=port)
                 self.textBrowser2.append(f"<b><span style=\" color: orangered;\">{dt_string} ---- | ---- Rebooting GX Device</span></b>")
                 print("Rebooting GX Device")
 
@@ -869,7 +941,8 @@ class Window(QMainWindow):
             answer, ok = QInputDialog.getInt(self, 'Enter Charger Limit', 'Enter Charger Limit', int(f"{Limit:.0f}")) # Prefill the inpout with existing value
             if ok:
                 mqttpublish.single("W/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit",
-                                   payload=json.dumps({"value": answer}), hostname=ip, port=1883)
+                                   payload=json.dumps({"value": answer}), hostname=ip, port=port)
+                self.statusBar.showMessage(f"Setting Charger Limit to {answer} Amps", 5000)
 
 #============================================================================================
 #============================================================================================
@@ -921,8 +994,8 @@ class Window(QMainWindow):
         self.InverterEco_PushButton.clicked.connect(Inverter_Eco)
         self.InverterOn_PushButton.clicked.connect(Inverter_On)
         self.InverterOff_PushButton.clicked.connect(Inverter_Off)
-        self.FirmWareCheck_PushButton.clicked.connect(FirmWare_Check)
-        self.Reboot_PushButton.clicked.connect(Reboot)
+        self.Solar_Charger_Mode_lineEdit.mouseReleaseEvent = Mode_Label_Clicked
+        self.Reload_Weather_PushButton.clicked.connect(self.Reload_Weather)
 
 #===========================================================================================
         # make QTimer to show clock time
@@ -1003,10 +1076,23 @@ class Window(QMainWindow):
         self.qTimerMQTT = QTimer()
 
         # set interval
-        self.qTimerMQTT.setInterval(100) # 500 ms = 1 second cycle time
+        self.qTimerMQTT.setInterval(150) # 500 ms = 1 second cycle time
 
         # connect timeout signal to signal handler
         self.qTimerMQTT.timeout.connect(MQTTLED_Timer)
+
+#===========================================================================================
+        # make QTimer to show Refresh Weather Widget
+        self.qTimerWeatherWidget = QTimer()
+
+        # set interval to 30m
+        self.qTimerWeatherWidget.setInterval(900000) # 1000 ms = 1 s ... 1800000 = 30 Min
+
+        # connect timeout signal to signal handler
+        self.qTimerWeatherWidget.timeout.connect(self.Reload_Weather)
+
+        # start timer
+        self.qTimerWeatherWidget.start()
 
 # Begin Charts
 #===========================================================================================
@@ -1021,13 +1107,13 @@ class Window(QMainWindow):
 #===========================================================================================
 # Chart Solar Watts 24 Hrs
         # Chart Total Solar Watts & Solar Volts
-        
-        Solar_Watts_plot = LiveLinePlot(pen=(0,120,250), fillLevel=0, brush=(0,0,102,200))
+
+        Solar_Watts_plot = LiveLinePlot(pen=(0,120,250), name = "Watts",  fillLevel=0, brush=(0,0,102,200))
         #Solar_Watts_plot = LiveLinePlot(pen='blue', name = "Watts", fillLevel=0, brush=(0, 0, 108,200))
         Solar_Volts_plot = LiveLinePlot(pen='red', name = "Volts")
 
-        self.Solar_Watts_connector = DataConnector(Solar_Watts_plot, max_points=86400, update_rate=2) # 75600
-        self.Solar_Volts_connector = DataConnector(Solar_Volts_plot, max_points=86400, update_rate=2)
+        self.Solar_Watts_connector = DataConnector(Solar_Watts_plot, max_points=86400, update_rate=1) # 75600
+        self.Solar_Volts_connector = DataConnector(Solar_Volts_plot, max_points=86400, update_rate=1)
 
         watts_bottom_axis = LiveAxis("bottom", **{Axis.TICK_FORMAT: Axis.DATETIME})
 
@@ -1059,10 +1145,10 @@ class Window(QMainWindow):
         Battery_Temperature_plot = LiveLinePlot(pen= "green",     name = "°F",  brush=(0,80,0,100))
 
         # Data connectors for each plot with dequeue of max_points points
-        self.Battery_Volts_connector        = DataConnector(Battery_Volts_plot,       max_points=86400, update_rate=2)
-        self.Battery_Watts_connector        = DataConnector(Battery_Watts_plot,       max_points=86400, update_rate=2)
-        self.Battery_Amps_connector         = DataConnector(Battery_Amps_plot,        max_points=86400, update_rate=2)
-        self.Battery_Temperature_connector  = DataConnector(Battery_Temperature_plot, max_points=86400, update_rate=2)
+        self.Battery_Volts_connector        = DataConnector(Battery_Volts_plot,       max_points=86400, update_rate=1)
+        self.Battery_Watts_connector        = DataConnector(Battery_Watts_plot,       max_points=86400, update_rate=1)
+        self.Battery_Amps_connector         = DataConnector(Battery_Amps_plot,        max_points=86400, update_rate=1)
+        self.Battery_Temperature_connector  = DataConnector(Battery_Temperature_plot, max_points=86400, update_rate=1)
 
         #Battery_Volts_plot.set_leading_line(LeadingLine.HORIZONTAL, pen=mkPen("red"), text_axis=LeadingLine.AXIS_Y)
 
@@ -1083,11 +1169,7 @@ class Window(QMainWindow):
         # Show grid
         self.Battery_graph_Widget.showGrid(x=True, y=True, alpha=0.3)
 
-        # No reason to see huge range plot here. Limit for several volts above and below nominal
-        #self.Battery_Volts_graph_Widget.setLimits(yMin=10, yMax=16) # 12V system limits, 10-16. Change for 24V or 48V systems
-
         # Set labels
-
         self.Battery_graph_Widget.setLabel('bottom')
         self.Battery_graph_Widget.setLabel('left')
         self.Battery_graph_Widget.setLabel('right')
@@ -1154,10 +1236,10 @@ class Window(QMainWindow):
         C4_plot = LiveLinePlot(pen="blue",      name='Cell 4')
 
         # Data connectors for each plot with dequeue of max_points points
-        self.C1_connector = DataConnector(C1_plot, max_points=86400, update_rate=2) # 24 hours in seconds
-        self.C2_connector = DataConnector(C2_plot, max_points=86400, update_rate=2)
-        self.C3_connector = DataConnector(C3_plot, max_points=86400, update_rate=2)
-        self.C4_connector = DataConnector(C4_plot, max_points=86400, update_rate=2)
+        self.C1_connector = DataConnector(C1_plot, max_points=86400, update_rate=1)
+        self.C2_connector = DataConnector(C2_plot, max_points=86400, update_rate=1)
+        self.C3_connector = DataConnector(C3_plot, max_points=86400, update_rate=1)
+        self.C4_connector = DataConnector(C4_plot, max_points=86400, update_rate=1)
 
         #global NumOfCells
         if NumOfCells >= 8:
@@ -1165,10 +1247,10 @@ class Window(QMainWindow):
             C6_plot = LiveLinePlot(pen="red",     name='Cell 6')
             C7_plot = LiveLinePlot(pen="yellow",  name='Cell 7')
             C8_plot = LiveLinePlot(pen="pink",    name='Cell 8')
-            self.C5_connector = DataConnector(C5_plot, max_points=86400, update_rate=2) # 24 hours in seconds
-            self.C6_connector = DataConnector(C6_plot, max_points=86400, update_rate=2)
-            self.C7_connector = DataConnector(C7_plot, max_points=86400, update_rate=2)
-            self.C8_connector = DataConnector(C8_plot, max_points=86400, update_rate=2)
+            self.C5_connector = DataConnector(C5_plot, max_points=86400, update_rate=1)
+            self.C6_connector = DataConnector(C6_plot, max_points=86400, update_rate=1)
+            self.C7_connector = DataConnector(C7_plot, max_points=86400, update_rate=1)
+            self.C8_connector = DataConnector(C8_plot, max_points=86400, update_rate=1)
 
         if NumOfCells >= 16:
             C9_plot = LiveLinePlot(pen="lightcyan",     name='Cell 9') # 48 VDC
@@ -1179,14 +1261,14 @@ class Window(QMainWindow):
             C14_plot = LiveLinePlot(pen="mediumpurple", name='Cell 14')
             C15_plot = LiveLinePlot(pen="orange",       name='Cell 15')
             C16_plot = LiveLinePlot(pen="peru",         name='Cell 16')
-            self.C9_connector  = DataConnector(C9_plot,  max_points=86400, update_rate=2) # 24 hours in seconds
-            self.C10_connector = DataConnector(C10_plot, max_points=86400, update_rate=2)
-            self.C11_connector = DataConnector(C11_plot, max_points=86400, update_rate=2)
-            self.C12_connector = DataConnector(C12_plot, max_points=86400, update_rate=2)
-            self.C13_connector = DataConnector(C13_plot, max_points=86400, update_rate=2)
-            self.C14_connector = DataConnector(C14_plot, max_points=86400, update_rate=2)
-            self.C15_connector = DataConnector(C15_plot, max_points=86400, update_rate=2)
-            self.C16_connector = DataConnector(C16_plot, max_points=86400, update_rate=2)
+            self.C9_connector  = DataConnector(C9_plot,  max_points=86400, update_rate=1)
+            self.C10_connector = DataConnector(C10_plot, max_points=86400, update_rate=1)
+            self.C11_connector = DataConnector(C11_plot, max_points=86400, update_rate=1)
+            self.C12_connector = DataConnector(C12_plot, max_points=86400, update_rate=1)
+            self.C13_connector = DataConnector(C13_plot, max_points=86400, update_rate=1)
+            self.C14_connector = DataConnector(C14_plot, max_points=86400, update_rate=1)
+            self.C15_connector = DataConnector(C15_plot, max_points=86400, update_rate=1)
+            self.C16_connector = DataConnector(C16_plot, max_points=86400, update_rate=1)
 
         # Setup bottom axis with TIME tick format
         # use Axis.DATETIME to show date
@@ -1292,6 +1374,8 @@ class Window(QMainWindow):
         self.actionCharger_1_Off.triggered.connect(Charger1_Off)
         self.actionCharger_1_On.triggered.connect(Charger1_On)
         self.actionSet_Current_Limit_1.triggered.connect(Charger1_Limit)
+        self.actionReboot_GX_Device.triggered.connect(Reboot)
+        self.actionCheck_For_New_Firmware.triggered.connect(FirmWare_Check)
 
         # Full Screen & Normanl
         self.actionNormal_Screen.triggered.connect(self.showNormal)
@@ -1301,14 +1385,58 @@ class Window(QMainWindow):
         Thread(target=self.update_charts).start()
 #===========================================================================================
 
+    # Reload Wether Widget
+    def Reload_Weather(self):
+        sender = self.sender()
+        self.WeatherWidget.setHtml(f"""
+                    <html>
+                    <head>
+                        <!-- Include the widget's styles -->
+                        <link rel="stylesheet" type="text/css" href="https://weatherwidget.io/css/style.css">
+                    </head>
+                    <body style="background-color: transparent;">
+                        <!-- Place the weather widget code here -->
+                        <a class="weatherwidget-io"
+                        href="{weather_widget_url}"
+                        data-label_1="{city_name}"
+                        data-label_2="Forecast"
+                        data-icons="Climacons Animated"
+                        data-highcolor="orangered"
+                        data-lowcolor="skyblue"
+                        data-suncolor="darkorange"
+                        data-cloudfill="gray"
+                        data-raincolor="deepskyblue"
+                        data-snowcolor="white"
+                        </a>
+
+                        <script>
+                        !function(d,s,id){{var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){{js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}}}(document,'script','weatherwidget-io-js');
+                        </script>
+                    </body>
+                    </html>
+            """, QUrl(''))
+        self.statusBar.showMessage("Weather Widget Refreshing", 5000)
+        if sender is self.Reload_Weather_PushButton:
+            # reset the weather widget refresh timer to zero. No need for multiple refresh's within the timer interval.
+            self.qTimerWeatherWidget.stop()
+            self.qTimerWeatherWidget.start()
+            self.textBrowser2.append(f"<b><span style=\" color: black;\">{dt_string} ---- | ---- Weather Widget Manually Refreshed</span></b>")
+
     def showTime(self):
         # Datetime object containing current date and time
         now = datetime.now()
-
-        # Fri 21 Jan 2022     09:06:57 PM
         global dt_string
+        # Fri 21 Jan 2022     09:06:57 PM
         dt_string = now.strftime("%a %d %b %Y     %r")
-        self.statusBar.showMessage(f"{dt_string}")
+        self.Time_Label.setText(f"{dt_string}")
+
+
+    def onLoadFinished(self, ok):
+        now = datetime.now()
+        dt_string = now.strftime("%a %d %b %Y     %r")
+        if not ok:
+            self.textBrowser2.append(f"<b><span style=\" color: red;\">{dt_string} ---- | ---- Weather Widget Did NOT Auto Refresh Correctly</span></b>")
+
 
     def closeEvent(self, event: QtGui.QCloseEvent):
         global running
@@ -1318,8 +1446,10 @@ class Window(QMainWindow):
         client.disconnect()
         global internet
         if internet:
-            self.page.deleteLater()
-            self.browser.close()
+            self.Weatherbrowserpage.deleteLater()
+            self.Weatherbrowser.close()
+            self.WeatherWidgetpage.deleteLater()
+            self.WeatherWidget.close()
 
 
 
@@ -1328,7 +1458,6 @@ class Window(QMainWindow):
 
     def update_charts(self):
         while running:
-            # all the below sleep calls "combined" should not exceed 1 second in total (update rate in hz)
             timestamp = time.time()
             start = time.monotonic_ns()
 
@@ -1373,7 +1502,7 @@ class Window(QMainWindow):
                 SolarStateIndex  = list(SolarStateDict.keys()).index(SolarState)
 
                 self.state_connector.cb_append_data_point([categories[SolarStateIndex]], timestamp)
-                time.sleep(.1)
+                time.sleep(.2)
 
             except AttributeError:
                 print(f"\033[38;5;27mAttributeError in Update Charts, on Line {sys.exc_info()[-1].tb_lineno} Retrying......\033[0m")
@@ -1384,7 +1513,7 @@ class Window(QMainWindow):
             except TypeError:
                 print(f"\033[38;5;27mTypeError in Update Charts, on Line {sys.exc_info()[-1].tb_lineno} Retrying......\033[0m")
                 continue
-            time.sleep(.1)
+            time.sleep(.2)
             #finish=time.monotonic_ns()
             #duration = finish -  start
             #print('\033[38;5;65m'f"Duration is {duration//1000000}ms")
@@ -1427,7 +1556,7 @@ class Window(QMainWindow):
 
             #global BatteryTTG
             if BatteryTTG == None:
-                New_BatteryTTG = "*"
+                New_BatteryTTG = "Infinite"
             else:
             # BatteryTTG has a value of seconds. We dont want to change its "type" to "datetime"
             # because we dont want to pass a "datetime" to timedelta on the second+ update because it change's.
@@ -1436,7 +1565,10 @@ class Window(QMainWindow):
                 New_BatteryTTG = f"{New_BatteryTTG:.0f}"
                 New_BatteryTTG = timedelta(seconds = int(New_BatteryTTG))
 
-            if BatteryWatts == 0:
+            if BatteryAmps > SolarChargerAmps:
+                BatteryState = 'External Charging'
+
+            elif BatteryWatts == 0:
                 BatteryState = 'Idle'
 
             elif BatteryWatts < 0:
@@ -1444,6 +1576,7 @@ class Window(QMainWindow):
 
             elif BatteryWatts > 0:
                 BatteryState = 'Charging'
+
     #===========================================================================================
 
     # Battery Box Temp LED Alarm
@@ -1468,7 +1601,7 @@ class Window(QMainWindow):
                         self.textBrowser2.append(f"<b><span style=\" color: blue;\">{dt_string} ---- | ---- Inverter High Temperature Returned to Normal</span></b>")
                         self.qTimerInverterTemp.stop()
                     self.Inverter_HighTemperature_LED.setStyleSheet("color: rgb(28, 28, 28)") # dark
-    
+
                 elif InverterHighTemp == 1: # Blink
                     if not self.qTimerInverterTemp.isActive():
                         self.textBrowser2.append(f"<b><span style=\" color: red;\">{dt_string} ---- | ---- Inverter High Temperature Alarm.</span></b>")
@@ -1480,7 +1613,7 @@ class Window(QMainWindow):
                         self.textBrowser2.append(f"<b><span style=\" color: blue;\">{dt_string} ---- | ---- Inverter Overload Returned to Normal</span></b>")
                         self.qTimerInverterOverload.stop()
                     self.Inverter_Overload_LED.setStyleSheet("color: rgb(28, 28, 28)") # dark
-    
+
                 elif InverterOverload == 1: # Blink
                     if not self.qTimerInverterOverload.isActive():
                         self.textBrowser2.append(f"<b><span style=\" color: red;\">{dt_string} ---- | ---- Inverter Overload Alarm.</span></b>")
