@@ -61,7 +61,7 @@ VRM Portal ID from GX device.
 This ID is needed even with no internet access as its the name of your venus device.
 Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID" '''
 #===================================
-VRMid = "b827eba69d10"
+VRMid = "zzzzzzzzzzzzz"
 #===================================
 ''' Weather URL example https://wttr.in/dallas+texas ,use something such as manchester+england or nsw+australia or dallas+texas or a zip code'''
 weather_url = "https://wttr.in/nsw+australia"
