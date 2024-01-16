@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+
+##################################################################
+# The TKinter files no longer work with the newest Venus firmware
+# These files were an example only and are now unmaintained
+##################################################################
+
+
 from tkinter import *
 from tkinter import ttk
 from itertools import cycle
