@@ -88,13 +88,13 @@ ip = '192.168.20.156'
  This ID is needed even with no internet access as its the name of your venus device.
  Menu -->> Settings -->> VRM Online Portal -->> VRM Portal ID
 '''
-VRMid = "d41243d31a90"
+VRMid = "xxxxxxxxxxxxxx"
 #===================================
 '''
 Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
 Turn this off if you dont have the Temperature sensors
 '''
-Analog_Inputs  = 'Y'
+Analog_Inputs  = 'n'
 
 #===================================
 '''
