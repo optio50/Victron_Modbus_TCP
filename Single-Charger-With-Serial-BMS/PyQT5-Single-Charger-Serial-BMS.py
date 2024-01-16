@@ -68,7 +68,7 @@ port = 1883 # 1883 is a MQTT standard port
 This ID is needed even with no internet access as its the name of your venus device.
 Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
 '''
-VRMid = "b827eba69d10"
+VRMid = "xxxxxxxxxxxxxxxx"
 #===================================
 # Weather Widget
 '''
