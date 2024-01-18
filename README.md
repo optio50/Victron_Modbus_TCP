@@ -66,7 +66,7 @@ chmod +x MODBUS_Example.py
 chmod +x MQTT_Example.py    
 pip3 install paho-mqtt  
 pip3 install pymodbus  
-./MODBUS_Example.py.py  
+./MODBUS_Example.py  
 or  
 ./MQTT_Example.py    
  
