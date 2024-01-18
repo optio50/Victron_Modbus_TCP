@@ -19,7 +19,7 @@ import json
 ip = '192.168.20.167'
 
 # VRM Portal ID from GX device.
-VRMid = "b827eba69d10"
+VRMid = "xxxxxxxxxxx"
 
 # MQTT Instance ID
 MQTT_SolarCharger_ID = 288 # Victron Smart MPPT
