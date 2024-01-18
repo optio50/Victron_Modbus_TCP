@@ -78,7 +78,7 @@ To use the PyQt files you will need to.
 install PyQT5 with your package manager.     
 such as ```sudo apt install python3-pyqt5```
     
-The PyQT5-Dual-Charger.py and PyQT5-Dual-Charger.ui are PYQT5 files that are used together.    
+The PyQT5-Multiple-Chargers.py and PyQT5-Multiple-Chargers.ui are PYQT5 files that are used together.    
 Same with PyQT5-Single-Charger.py and PyQT5-Single-Charger.ui    
 Just run the .py file and the .ui file will auto load.    
 execute in the cloned directory as the icon file is in that location.    
