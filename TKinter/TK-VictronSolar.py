@@ -46,7 +46,7 @@ client = ModbusClient(ip, port='502')
 # VRM Portal ID from GX device. 
 # AFAIK this ID is needed even with no internet access as its the name of your venus device.
 # Menu -->> Settings -->> "VRM Online Portal -->> VRM Portal ID"
-VRMid = "d41243d31a90"
+VRMid = "xxxxxxxxxxxxx"
 
 # Describe the Solar Array
 Array = "4 X 100W Array"
