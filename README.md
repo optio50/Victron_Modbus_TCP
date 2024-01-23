@@ -58,14 +58,26 @@ https://github.com/Louisvdw/dbus-serialbattery
 USB Serial interface https://overkillsolar.com/product/usb-module-for-bms/    
 The connector included did not fit my BMS, YMMV. I cut the BMS BlueTooth cable in half and soldered the UART wire's to the connector wire's    
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/PyQT5-Single-Charger-JBD-BMS.png?raw=true)    
-    
+
+
+
+it seems there is issues with the latest versions of pymodbus.   
+2.1.0 is verified as working   
+if you are on ubuntu the package manager will install the 2.1.0 version   
+sudo apt install python3-pymodbus
+
+or   
+
+pip install pymodbus==2.1.0
+
+
 To install  
 git clone https://github.com/optio50/Victron_Modbus_TCP  
 cd Victron_Modbus_TCP  
 chmod +x MODBUS_Example.py    
 chmod +x MQTT_Example.py    
-pip3 install paho-mqtt  
-pip3 install pymodbus  
+pip3 install paho-mqtt   
+pip install pymodbus==2.1.0   
 ./MODBUS_Example.py  
 or  
 ./MQTT_Example.py    
@@ -73,7 +85,7 @@ or
  
 To use the PyQt files you will need to.    
 
-```pip install pymodbus paho-mqtt```    
+```pip install paho-mqtt```    
 ```pip install pglive```    
 install PyQT5 with your package manager.     
 such as ```sudo apt install python3-pyqt5```
