@@ -1,6 +1,8 @@
 # Victron_Modbus_TCP
 Victron Modbus TCP & MQTT Example
 
+Confirmed working with pymodbus 3.6.3
+
 These file's are based on a system that has victron equipment in an "ESS" system. Multiplus, Solar charger, BMV
 
 Regarding the GX MQTT keepalive.  
