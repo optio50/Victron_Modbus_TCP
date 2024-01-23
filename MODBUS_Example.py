@@ -6,9 +6,8 @@ You shouldnt have to change anything but some variables to make this work with y
 provided you actually have the requisite victron equipment.
 '''
 
-from pymodbus.constants import Defaults
 from pymodbus.constants import Endian
-from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+from pymodbus.client import ModbusTcpClient as ModbusClient
 from pymodbus.payload import BinaryPayloadDecoder
 from datetime import datetime
 import sys
@@ -64,7 +63,7 @@ client = ModbusClient(ip, port='502')
 
 # All modbus variable requests are sent to this function and it return's the requested value
 def modbus_register(address, unit):
-    msg     = client.read_input_registers(address, unit=unit)
+    msg     = client.read_input_registers(address, slave=unit)
     decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, byteorder=Endian.Big)
     msg     = decoder.decode_16bit_int()
     return msg
