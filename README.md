@@ -60,24 +60,13 @@ The connector included did not fit my BMS, YMMV. I cut the BMS BlueTooth cable i
 ![alt text](https://github.com/optio50/Victron_Modbus_TCP/blob/main/ScreenShots/PyQT5-Single-Charger-JBD-BMS.png?raw=true)    
 
 
-
-it seems there is issues with the latest versions of pymodbus.   
-2.1.0 is verified as working   
-if you are on ubuntu the package manager will install the 2.1.0 version   
-sudo apt install python3-pymodbus
-
-or   
-
-pip install pymodbus==2.1.0
-
-
 To install  
 git clone https://github.com/optio50/Victron_Modbus_TCP  
 cd Victron_Modbus_TCP  
 chmod +x MODBUS_Example.py    
 chmod +x MQTT_Example.py    
 pip3 install paho-mqtt   
-pip install pymodbus==2.1.0   
+pip install pymodbus   
 ./MODBUS_Example.py  
 or  
 ./MQTT_Example.py    
