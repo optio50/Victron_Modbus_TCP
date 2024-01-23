@@ -9,6 +9,7 @@ provided you actually have the requisite victron equipment.
 from pymodbus.constants import Endian
 from pymodbus.client import ModbusTcpClient as ModbusClient
 from pymodbus.payload import BinaryPayloadDecoder
+
 from datetime import datetime
 import sys
 import os
@@ -23,7 +24,9 @@ import subprocess
 '''
 Analog_Inputs = 'n'  # Y or N (case insensitive) to display Gerbo GX Analog Temperature inputs
 ESS_Info      = 'n' # Y or N (case insensitive) to display ESS system information
-ip            = "localhost" # ip address of GX device or if on venus local try localhost
+ip            = "192.168.20.156" # ip address of GX device or if on venus local try localhost
+
+client = ModbusClient(ip, port='502')
 
 # Value Refresh Rate in seconds
 RefreshRate = 1
@@ -63,8 +66,8 @@ client = ModbusClient(ip, port='502')
 
 # All modbus variable requests are sent to this function and it return's the requested value
 def modbus_register(address, unit):
-    msg     = client.read_input_registers(address, slave=unit)
-    decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, byteorder=Endian.Big)
+    msg     = client.read_holding_registers(address, slave=unit)
+    decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, byteorder=Endian.BIG)
     msg     = decoder.decode_16bit_int()
     return msg
 
@@ -231,12 +234,9 @@ VEbusErrorDict = {
 def spacer():
     print(colors.fg.gray, "="*80, sep="")
 
-try:
-    subprocess.call(['resize', '-s', '35', '83'])
-except FileNotFoundError:
-    pass
 
 
+print(f"Test")
 while True:
     print("\033[0;0f") # move to col 0 row 0
     screensize = os.get_terminal_size()
