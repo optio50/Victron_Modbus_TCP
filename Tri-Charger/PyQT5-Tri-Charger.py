@@ -24,13 +24,6 @@ import paho.mqtt.client as mqtt
 import paho.mqtt.subscribe as subscribe
 import paho.mqtt.publish as mqttpublish
 
-# Modbus
-from pymodbus.constants import Defaults
-from pymodbus.constants import Endian
-from pymodbus.client.sync import ModbusTcpClient as ModbusClient
-from pymodbus.payload import BinaryPayloadDecoder
-from pymodbus.payload import BinaryPayloadBuilder
-
 # Chart
 import pyqtgraph as pg
 from pyqtgraph import mkPen
