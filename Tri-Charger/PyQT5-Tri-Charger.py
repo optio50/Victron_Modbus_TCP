@@ -106,7 +106,10 @@ if Analog_Inputs.lower() == 'y':
     MQTT_TempSens1_ID = 24
     MQTT_TempSens2_ID = 25
     MQTT_TempSens3_ID = 26
-
+else:
+    MQTT_TempSens1_ID = None
+    MQTT_TempSens2_ID = None
+    MQTT_TempSens3_ID = None
 
 if Analog_Inputs.lower() == 'y':
     Tempsensor1_Name = "Battery Box Temperature     °F"
