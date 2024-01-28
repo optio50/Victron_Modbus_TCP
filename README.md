@@ -21,7 +21,7 @@ ctrl+o to write the file to disk and ctrl+x to exit
 reboot the cerbo and the keep-alive should do its job.  
 the sleep command is to ensure the cerbo has had time to accomplish a full startup routine.
 
-If you want to run the keep-alive in the script instead of the standalone keep-alive you will need the MQTT request in the update_value function with a counter.
+If you want to run the keep-alive in the script instead of the standalone keep-alive you will need the MQTT request in the update_value function with a counter or timer.
 
 An example of the Victron TCP Modbus.  
 If you intend to use this example for yourself it will require tweaking a few things. 
