@@ -68,7 +68,8 @@ cd Victron_Modbus_TCP
 chmod +x MODBUS_Example.py    
 chmod +x MQTT_Example.py    
 pip3 install paho-mqtt   
-pip install pymodbus   
+pip install pymodbus  
+Change the VRMid and ip address, turn the analog sensors on or off in the script.     
 ./MODBUS_Example.py  
 or  
 ./MQTT_Example.py    
@@ -79,7 +80,8 @@ To use the PyQt files you will need to.
 ```pip install paho-mqtt```    
 ```pip install pglive```    
 install PyQT5 with your package manager.     
-such as ```sudo apt install python3-pyqt5```
+such as ```sudo apt install python3-pyqt5```   
+and ```sudo apt install python3-pyqt5.qtwebengine```
     
 The PyQT5-Multiple-Chargers.py and PyQT5-Multiple-Chargers.ui are PYQT5 files that are used together.    
 Same with PyQT5-Single-Charger.py and PyQT5-Single-Charger.ui    
