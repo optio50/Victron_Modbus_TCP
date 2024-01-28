@@ -23,7 +23,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QColor, QPalette
-from PyQt5.QtWebKit import QWebSettings
+#from PyQt5.QtWebKit import QWebSettings
 
 # PGlive (Charts)
 import pyqtgraph as pg
