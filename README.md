@@ -82,7 +82,7 @@ To use the PyQt files you will need to.
 install PyQT5 with your package manager.     
 such as ```sudo apt install python3-pyqt5```   
 and ```sudo apt install python3-pyqt5.qtwebengine```   
-and ```sudo apt install python3-pyqt5.qtwebkit```   
+ 
     
 The PyQT5-Multiple-Chargers.py and PyQT5-Multiple-Chargers.ui are PYQT5 files that are used together.    
 Same with PyQT5-Single-Charger.py and PyQT5-Single-Charger.ui    
