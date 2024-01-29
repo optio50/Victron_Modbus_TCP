@@ -13,9 +13,9 @@ ip = 'localhost'
 VRMid = "xxxxxxxxxxx"
 
 #===================================
-#mqttpublish.single("R/"+VRMid+"/system/0/Serial", hostname=ip, port=1883)
+mqttpublish.single("R/"+VRMid+"/system/0/Serial", hostname=ip, port=1883)
 # "Keep-Alive" MQTT request
 while True:
-    mqttpublish.single("R/"+VRMid+"/keepalive", hostname=ip)
+    mqttpublish.single("R/"+VRMid+"/system/0/Serial", hostname=ip, port=1883)
     #print("Keep Alive Sent")
     time.sleep(30) # send keep-alive every 30 seconds
