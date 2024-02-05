@@ -449,8 +449,8 @@ def on_message(client, userdata, msg):
 
 #===================================
     # Uncomment to watch all messages come in via terminal output.
-    NEW_message = json.loads(msg.payload)['value']
-    print(f"{str(NEW_message): <60} {msg.topic}")
+    #NEW_message = json.loads(msg.payload)['value']
+    #print(f"{str(NEW_message): <60} {msg.topic}")
 #===================================
 # BatteryBMS
 
