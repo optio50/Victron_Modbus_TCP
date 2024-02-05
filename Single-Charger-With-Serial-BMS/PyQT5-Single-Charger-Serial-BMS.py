@@ -93,7 +93,6 @@ Weather URL example https://wttr.in/dallas+texas
 use something such as manchester+england or nsw+australia or dallas+texas or a zip code
 '''
 # Seclect one or a custom one of your choice
-#weather_url = "https://wttr.in/palmer+alaska"
 weather_url = "https://www.forecast.co.uk/united-states/dallas.html"
 
 #===================================
