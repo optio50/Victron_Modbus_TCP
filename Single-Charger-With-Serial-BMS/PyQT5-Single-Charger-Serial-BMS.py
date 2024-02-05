@@ -94,6 +94,7 @@ use something such as manchester+england or nsw+australia or dallas+texas or a z
 '''
 # Seclect one or a custom one of your choice
 weather_url = "https://www.forecast.co.uk/united-states/dallas.html"
+#weather_url = "https://wttr.in/nsw+australia"
 
 #===================================
 # BMV and Inverter Optional Equipment Installed? Y or N
