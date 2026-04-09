@@ -16,10 +16,15 @@ import time
 import json
 
 # GX Device IP Address
-ip = '192.168.20.167'
+ip = '192.168.20.156'
 
 # VRM Portal ID from GX device.
-VRMid = "xxxxxxxxxxx"
+VRMid = "xxxxxxxxxxxx"  # Replace with your actual VRM ID
+
+if VRMid.upper() == "X" * len(VRMid) or VRMid.strip() == "":
+    print("\033[48;5;197m ERROR: VRMid is not set. Edit the VRMid variable at the top of this script. \033[0m")
+    print('\033[?25h', end="")
+    exit(1)
 
 # MQTT Instance ID
 MQTT_SolarCharger_ID = 288 # Victron Smart MPPT
@@ -37,7 +42,7 @@ clear = "\033[K\033[1K" # Eliminates screen flashing / blink during refresh
 
 # Define callback functions
 # On Connect, subscribe to these topics. The 0 is the QOS
-def on_connect(client, userdata, flags, rc):
+def on_connect(client, userdata, flags, rc, properties=None):
     topics = [("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/ProductName",0),
             ("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/Settings/ChargeCurrentLimit",0),
             ("N/"+VRMid+"/solarcharger/"+str(MQTT_SolarCharger_ID)+"/History/Daily/0/Yield",0),
@@ -55,7 +60,7 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(topics)
 
 
-def on_disconnect(client, userdata,rc=0):
+def on_disconnect(client, userdata, flags, rc=0, properties=None):
     client.loop_stop()
     print("Loop Stopped")
     print("Disconnected result code "+str(rc))
@@ -103,7 +108,7 @@ def on_message(client, userdata, msg):
 
 
 # Create a mqtt client instance
-client = mqtt.Client()
+client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2, protocol=mqtt.MQTTv5)
 
 # Assign callback functions
 client.on_connect    = on_connect    # Do something on broker connection (Subscribe)
