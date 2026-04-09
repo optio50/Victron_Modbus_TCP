@@ -10,8 +10,13 @@ import textwrap
 import subprocess
 
 # User-configurable variables
-VRMid = "xxxxxxxxxxx"  # Replace with your actual VRM ID
+VRMid = "xxxxxxxxx"  # Replace with your actual VRM ID
 ip = "192.168.20.156"  # IP address of GX device or localhost
+
+if VRMid.upper() == "X" * len(VRMid) or VRMid.strip() == "":
+    print("\033[48;5;197m ERROR: VRMid is not set. Edit the VRMid variable at the top of this script. \033[0m")
+    print('\033[?25h', end="")
+    exit(1)
 Analog_Inputs = 'n'    # Y or N (case insensitive) to display Cerbo GX Analog Temperature inputs
 ESS_Info = 'n'         # Y or N (case insensitive) to display ESS system information
 RefreshRate = 1        # Value Refresh Rate in seconds
